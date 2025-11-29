@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KOMERCIA Email Template</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .email-header {
+            background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 32px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+        
+        .header-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .email-body {
+            padding: 40px 30px;
+        }
+        
+        .greeting {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            color: #4b5563;
+            font-size: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+            border-left: 4px solid #14b8a6;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+        }
+        
+        .highlight-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f766e;
+            margin-bottom: 10px;
+        }
+        
+        .highlight-content {
+            color: #115e59;
+            font-size: 14px;
+        }
+        
+        .otp-code {
+            background: #ffffff;
+            border: 2px dashed #14b8a6;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            margin: 25px 0;
+        }
+        
+        .otp-label {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .otp-digits {
+            font-size: 36px;
+            font-weight: 700;
+            color: #14b8a6;
+            letter-spacing: 8px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .otp-expiry {
+            font-size: 13px;
+            color: #ef4444;
+            margin-top: 10px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+            color: #ffffff;
+            padding: 14px 32px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            margin: 20px 0;
+            transition: transform 0.2s;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .info-list {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .info-item {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #374151;
+            min-width: 140px;
+            font-size: 14px;
+        }
+        
+        .info-value {
+            color: #6b7280;
+            font-size: 14px;
+        }
+        
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #e5e7eb, transparent);
+            margin: 30px 0;
+        }
+        
+        .footer-note {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 25px 0;
+        }
+        
+        .footer-note-text {
+            color: #92400e;
+            font-size: 13px;
+        }
+        
+        .email-footer {
+            background: #f9fafb;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .footer-links {
+            margin-bottom: 20px;
+        }
+        
+        .footer-link {
+            color: #14b8a6;
+            text-decoration: none;
+            font-size: 13px;
+            margin: 0 12px;
+            font-weight: 500;
+        }
+        
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+        
+        .social-links {
+            margin: 20px 0;
+        }
+        
+        .social-link {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            background: #14b8a6;
+            color: #ffffff;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 36px;
+            margin: 0 6px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        
+        .footer-text {
+            color: #6b7280;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+        
+        .copyright {
+            color: #9ca3af;
+            font-size: 12px;
+            margin-top: 15px;
+        }
+        
+        @media only screen and (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            
+            .email-header {
+                padding: 30px 20px;
+            }
+            
+            .email-body {
+                padding: 30px 20px;
+            }
+            
+            .logo {
+                font-size: 26px;
+            }
+            
+            .otp-digits {
+                font-size: 28px;
+                letter-spacing: 4px;
+            }
+            
+            .info-item {
+                flex-direction: column;
+            }
+            
+            .info-label {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="email-header">
+            <div class="logo">KOMERCIA</div>
+            <div class="header-subtitle">Plateforme de Gestion Commerciale</div>
+        </div>
+        
+        <!-- Body -->
+        <div class="email-body">
+            <!-- Greeting -->
+            <div class="greeting">Bonjour [Nom du destinataire],</div>
+            
+            <!-- Main Content -->
+            <div class="content">
+                Nous vous remercions de votre inscription sur KOMERCIA. Pour finaliser la création de votre compte, veuillez utiliser le code de vérification ci-dessous.
+            </div>
+            
+            <!-- OTP Code Box (Example) -->
+            <div class="otp-code">
+                <div class="otp-label">Code de vérification</div>
+                <div class="otp-digits">123456</div>
+                <div class="otp-expiry">⏱️ Ce code expire dans 1 minute 30 secondes</div>
+            </div>
+            
+            <!-- Highlight Box (Alternative style) -->
+            <div class="highlight-box">
+                <div class="highlight-title">📌 Information importante</div>
+                <div class="highlight-content">
+                    Ce code est strictement personnel et confidentiel. Ne le partagez avec personne. Notre équipe ne vous demandera jamais ce code par téléphone ou par email.
+                </div>
+            </div>
+            
+            <!-- Info List (Example for account details) -->
+            <div class="info-list">
+                <div class="info-item">
+                    <div class="info-label">Type de compte :</div>
+                    <div class="info-value">Entreprise</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Email :</div>
+                    <div class="info-value">exemple@email.com</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Date d'inscription :</div>
+                    <div class="info-value">28 Mars 2024</div>
+                </div>
+            </div>
+            
+            <!-- CTA Button -->
+            <div style="text-align: center;">
+                <a href="#" class="cta-button">Vérifier mon compte</a>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <!-- Additional Content -->
+            <div class="content">
+                Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet email en toute sécurité. Votre compte restera protégé.
+            </div>
+            
+            <!-- Footer Note -->
+            <div class="footer-note">
+                <div class="footer-note-text">
+                    <strong>💡 Astuce :</strong> Pour une expérience optimale, nous vous recommandons de compléter votre profil dès votre première connexion.
+                </div>
+            </div>
+            
+            <div class="content" style="margin-top: 30px;">
+                Cordialement,<br>
+                <strong>L'équipe KOMERCIA</strong>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="email-footer">
+            <div class="footer-links">
+                <a href="#" class="footer-link">Centre d'aide</a>
+                <a href="#" class="footer-link">Conditions d'utilisation</a>
+                <a href="#" class="footer-link">Confidentialité</a>
+                <a href="#" class="footer-link">Contact</a>
+            </div>
+            
+            <div class="social-links">
+                <a href="#" class="social-link">
+                    <i class="ri-facebook-fill"></i>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="ri-twitter-fill"></i>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="ri-linkedin-fill"></i>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="ri-instagram-line"></i>
+                </a>
+            </div>
+            
+            <div class="footer-text">
+                KOMERCIA - Plateforme de Gestion Commerciale<br>
+                123 Avenue des Affaires, 75001 Paris, France<br>
+                Tél: +33 1 23 45 67 89 | Email: contact@komercia.com
+            </div>
+            
+            <div class="copyright">
+                © 2024 KOMERCIA. Tous droits réservés.
+            </div>
+        </div>
+    </div>
+</body>
+</html>
