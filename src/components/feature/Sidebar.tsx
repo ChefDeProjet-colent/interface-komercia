@@ -35,6 +35,10 @@ function SidebarLink({ href, icon, label, isActive, onClick }: SidebarLinkProps)
   );
 }
 
+interface SidebarProps {
+  onSectionChange?: (section: string) => void;
+}
+
 export default function Sidebar({ onSectionChange }: SidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
@@ -88,15 +92,15 @@ export default function Sidebar({ onSectionChange }: SidebarProps) {
   ];
 
   return (
-    <div className="w-64 bg-gray-800 text-white h-screen flex flex-col">
+    <div className="w-64 bg-gray-800 text-white h-screen flex flex-col overflow-y-auto">
       {/* Logo */}
-      <div className="p-6 border-b border-gray-700">
+      <div className="p-6 border-b border-gray-700 flex-shrink-0">
         <h1 className="text-xl font-bold">Komercia</h1>
         <p className="text-sm text-gray-400">CRM Commercial</p>
       </div>
 
       {/* Navigation */}
-      <nav className="mt-8">
+      <nav className="mt-8 flex-1 overflow-y-auto px-3">
         <div className="space-y-1">
           <SidebarLink 
             href="/" 
@@ -188,7 +192,7 @@ export default function Sidebar({ onSectionChange }: SidebarProps) {
       </nav>
 
       {/* User Profile */}
-      <div className="mt-auto p-4 border-t border-gray-700">
+      <div className="mt-auto p-4 border-t border-gray-700 flex-shrink-0">
         <div className="flex items-center">
           <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
             <i className="ri-user-line text-sm"></i>

@@ -90,6 +90,148 @@ interface Notification {
   actionUrl?: string;
 }
 
+interface Objective {
+  id: string;
+  title: string;
+  description: string;
+  targetValue: number;
+  currentValue: number;
+  unit: string;
+  startDate: string;
+  endDate: string;
+  status: 'en_cours' | 'atteint' | 'echoue';
+  category: 'ventes' | 'leads' | 'meetings' | 'revenue';
+  priority: 'high' | 'medium' | 'low';
+  milestones: Milestone[];
+}
+
+interface Milestone {
+  id: string;
+  title: string;
+  targetDate: string;
+  completed: boolean;
+  value: number;
+}
+
+interface AffiliatedProduct {
+  id: string;
+  name: string;
+  company: string;
+  category: string;
+  description: string;
+  price: number;
+  commission: number;
+  commissionType: 'percentage' | 'fixed';
+  image: string;
+  features: string[];
+  targetMarket: string[];
+  salesMaterials: SalesMaterial[];
+  performance: ProductPerformance;
+  status: 'active' | 'inactive';
+}
+
+interface SalesMaterial {
+  id: string;
+  type: 'brochure' | 'video' | 'demo' | 'presentation';
+  title: string;
+  url: string;
+  size?: string;
+}
+
+interface ProductPerformance {
+  totalSales: number;
+  totalRevenue: number;
+  totalCommission: number;
+  conversionRate: number;
+  averageOrderValue: number;
+}
+
+interface CallForTender {
+  id: string;
+  title: string;
+  company: string;
+  sector: string;
+  budget: string;
+  deadline: string;
+  description: string;
+  requirements: string[];
+  status: 'open' | 'in_progress' | 'closed' | 'won' | 'lost';
+  publishDate: string;
+  location: string;
+  contactPerson: string;
+  contactEmail: string;
+  contactPhone: string;
+  documents: TenderDocument[];
+  myApplication?: TenderApplication;
+}
+
+interface TenderDocument {
+  id: string;
+  name: string;
+  type: string;
+  url: string;
+  size: string;
+}
+
+interface TenderApplication {
+  id: string;
+  tenderId: string;
+  submittedDate: string;
+  status: 'draft' | 'submitted' | 'under_review' | 'accepted' | 'rejected';
+  proposal: string;
+  estimatedPrice: number;
+  deliveryTime: string;
+  documents: TenderDocument[];
+}
+
+interface CommercialProfile {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  avatar: string;
+  position: string;
+  department: string;
+  startDate: string;
+  specializations: string[];
+  languages: string[];
+  certifications: Certification[];
+  performance: PerformanceMetrics;
+  preferences: ProfilePreferences;
+}
+
+interface Certification {
+  id: string;
+  name: string;
+  issuer: string;
+  date: string;
+  expiryDate?: string;
+  credentialId?: string;
+}
+
+interface PerformanceMetrics {
+  totalSales: number;
+  totalRevenue: number;
+  totalCommission: number;
+  conversionRate: number;
+  averageOrderValue: number;
+  customerSatisfaction: number;
+  leadsGenerated: number;
+  dealsWon: number;
+}
+
+interface ProfilePreferences {
+  notifications: {
+    email: boolean;
+    sms: boolean;
+    push: boolean;
+  };
+  language: string;
+  timezone: string;
+  theme: 'light' | 'dark';
+}
+
 export default function CommercialPage() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [calculatorAmount, setCalculatorAmount] = useState('');
@@ -716,6 +858,447 @@ export default function CommercialPage() {
 
   const sectors = ['Technologie', 'Services', 'Santé', 'Environnement', 'Finance', 'Industrie'];
   const locations = ['Paris', 'Lyon', 'Marseille', 'Toulouse', 'Nantes', 'Bordeaux'];
+
+  // Données du profil commercial
+  const [profile, setProfile] = useState<CommercialProfile>({
+    id: '1',
+    firstName: 'Marc',
+    lastName: 'Dubois',
+    email: 'marc.dubois@komercia.fr',
+    phone: '+33 6 12 34 56 78',
+    avatar: 'https://readdy.ai/api/search-image?query=professional%20business%20man%20portrait%20headshot%20suit%20confident%20smile%20office%20background%20corporate%20style%20modern%20clean&width=200&height=200&seq=profile-avatar-001&orientation=squarish',
+    position: 'Commercial Senior',
+    department: 'Ventes B2B',
+    startDate: '2020-03-15',
+    specializations: ['CRM', 'Solutions SaaS', 'Transformation Digitale', 'Vente Consultative'],
+    languages: ['Français', 'Anglais', 'Espagnol'],
+    certifications: [
+      {
+        id: '1',
+        name: 'Certified Sales Professional',
+        issuer: 'Sales Management Association',
+        date: '2022-06-15',
+        credentialId: 'CSP-2022-456789'
+      },
+      {
+        id: '2',
+        name: 'Advanced CRM Specialist',
+        issuer: 'Salesforce',
+        date: '2023-01-20',
+        expiryDate: '2025-01-20',
+        credentialId: 'SF-CRM-2023-123'
+      }
+    ],
+    performance: {
+      totalSales: 127,
+      totalRevenue: 2450000,
+      totalCommission: 185000,
+      conversionRate: 28.5,
+      averageOrderValue: 19291,
+      customerSatisfaction: 4.7,
+      leadsGenerated: 445,
+      dealsWon: 127
+    },
+    preferences: {
+      notifications: {
+        email: true,
+        sms: true,
+        push: true
+      },
+      language: 'fr',
+      timezone: 'Europe/Paris',
+      theme: 'light'
+    }
+  });
+
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [editedProfile, setEditedProfile] = useState(profile);
+
+  // Données des objectifs
+  const [objectives, setObjectives] = useState<Objective[]>([
+    {
+      id: '1',
+      title: 'Chiffre d\'affaires mensuel',
+      description: 'Atteindre 150,000€ de CA ce mois',
+      targetValue: 150000,
+      currentValue: 127500,
+      unit: '€',
+      startDate: '2024-01-01',
+      endDate: '2024-01-31',
+      status: 'en_cours',
+      category: 'revenue',
+      priority: 'high',
+      milestones: [
+        { id: '1', title: '50K€', targetDate: '2024-01-10', completed: true, value: 50000 },
+        { id: '2', title: '100K€', targetDate: '2024-01-20', completed: true, value: 100000 },
+        { id: '3', title: '150K€', targetDate: '2024-01-31', completed: false, value: 150000 }
+      ]
+    },
+    {
+      id: '2',
+      title: 'Nouveaux leads qualifiés',
+      description: 'Générer 50 nouveaux leads qualifiés',
+      targetValue: 50,
+      currentValue: 42,
+      unit: 'leads',
+      startDate: '2024-01-01',
+      endDate: '2024-01-31',
+      status: 'en_cours',
+      category: 'leads',
+      priority: 'high',
+      milestones: [
+        { id: '1', title: '20 leads', targetDate: '2024-01-10', completed: true, value: 20 },
+        { id: '2', title: '35 leads', targetDate: '2024-01-20', completed: true, value: 35 },
+        { id: '3', title: '50 leads', targetDate: '2024-01-31', completed: false, value: 50 }
+      ]
+    },
+    {
+      id: '3',
+      title: 'Rendez-vous clients',
+      description: 'Réaliser 30 rendez-vous clients',
+      targetValue: 30,
+      currentValue: 28,
+      unit: 'RDV',
+      startDate: '2024-01-01',
+      endDate: '2024-01-31',
+      status: 'en_cours',
+      category: 'meetings',
+      priority: 'medium',
+      milestones: [
+        { id: '1', title: '10 RDV', targetDate: '2024-01-10', completed: true, value: 10 },
+        { id: '2', title: '20 RDV', targetDate: '2024-01-20', completed: true, value: 20 },
+        { id: '3', title: '30 RDV', targetDate: '2024-01-31', completed: false, value: 30 }
+      ]
+    },
+    {
+      id: '4',
+      title: 'Taux de conversion',
+      description: 'Maintenir un taux de conversion de 30%',
+      targetValue: 30,
+      currentValue: 28.5,
+      unit: '%',
+      startDate: '2024-01-01',
+      endDate: '2024-01-31',
+      status: 'en_cours',
+      category: 'ventes',
+      priority: 'medium',
+      milestones: []
+    }
+  ]);
+
+  const [showNewObjective, setShowNewObjective] = useState(false);
+  const [newObjective, setNewObjective] = useState({
+    title: '',
+    description: '',
+    targetValue: 0,
+    unit: '€',
+    endDate: '',
+    category: 'revenue',
+    priority: 'medium'
+  });
+
+  // Données des produits affiliés
+  const [affiliatedProducts, setAffiliatedProducts] = useState<AffiliatedProduct[]>([
+    {
+      id: '1',
+      name: 'CRM Pro Enterprise',
+      company: 'TechCorp Solutions',
+      category: 'CRM',
+      description: 'Solution CRM complète pour grandes entreprises avec intégration email, téléphonie et analytics avancés',
+      price: 75000,
+      commission: 12,
+      commissionType: 'percentage',
+      image: 'https://readdy.ai/api/search-image?query=modern%20crm%20software%20dashboard%20interface%20professional%20business%20analytics%20charts%20clean%20design%20blue%20white%20technology&width=400&height=300&seq=product-crm-001&orientation=landscape',
+      features: [
+        'Gestion complète des contacts et leads',
+        'Pipeline de ventes visuel',
+        'Intégration email et calendrier',
+        'Rapports et analytics en temps réel',
+        'Application mobile iOS et Android',
+        'Support 24/7'
+      ],
+      targetMarket: ['Grandes entreprises', 'PME', 'Startups en croissance'],
+      salesMaterials: [
+        { id: '1', type: 'brochure', title: 'Brochure produit CRM Pro', url: '#', size: '2.5 MB' },
+        { id: '2', type: 'video', title: 'Démo vidéo 10 min', url: '#', size: '45 MB' },
+        { id: '3', type: 'presentation', title: 'Présentation commerciale', url: '#', size: '8 MB' }
+      ],
+      performance: {
+        totalSales: 23,
+        totalRevenue: 1725000,
+        totalCommission: 207000,
+        conversionRate: 32.5,
+        averageOrderValue: 75000
+      },
+      status: 'active'
+    },
+    {
+      id: '2',
+      name: 'Analytics BI Suite',
+      company: 'DataFlow Analytics',
+      category: 'Business Intelligence',
+      description: 'Suite complète d\'analyse de données avec tableaux de bord personnalisables et IA prédictive',
+      price: 120000,
+      commission: 15,
+      commissionType: 'percentage',
+      image: 'https://readdy.ai/api/search-image?query=business%20intelligence%20analytics%20dashboard%20data%20visualization%20charts%20graphs%20modern%20interface%20professional%20technology&width=400&height=300&seq=product-bi-002&orientation=landscape',
+      features: [
+        'Tableaux de bord personnalisables',
+        'IA prédictive et machine learning',
+        'Intégration multi-sources',
+        'Rapports automatisés',
+        'Visualisations interactives',
+        'API REST complète'
+      ],
+      targetMarket: ['Grandes entreprises', 'Secteur financier', 'E-commerce'],
+      salesMaterials: [
+        { id: '1', type: 'brochure', title: 'Guide Analytics BI', url: '#', size: '3.2 MB' },
+        { id: '2', type: 'demo', title: 'Démo interactive', url: '#' },
+        { id: '3', type: 'video', title: 'Cas d\'usage clients', url: '#', size: '67 MB' }
+      ],
+      performance: {
+        totalSales: 12,
+        totalRevenue: 1440000,
+        totalCommission: 216000,
+        conversionRate: 28.0,
+        averageOrderValue: 120000
+      },
+      status: 'active'
+    },
+    {
+      id: '3',
+      name: 'Marketing Automation Pro',
+      company: 'InnovateSAS',
+      category: 'Marketing',
+      description: 'Plateforme d\'automatisation marketing avec email, SMS, réseaux sociaux et scoring de leads',
+      price: 45000,
+      commission: 10,
+      commissionType: 'percentage',
+      image: 'https://readdy.ai/api/search-image?query=marketing%20automation%20software%20email%20campaigns%20social%20media%20management%20professional%20interface%20modern%20design&width=400&height=300&seq=product-marketing-003&orientation=landscape',
+      features: [
+        'Campagnes email automatisées',
+        'Gestion réseaux sociaux',
+        'Lead scoring intelligent',
+        'A/B testing avancé',
+        'Segmentation comportementale',
+        'Intégration CRM'
+      ],
+      targetMarket: ['PME', 'Agences marketing', 'E-commerce'],
+      salesMaterials: [
+        { id: '1', type: 'brochure', title: 'Brochure Marketing Pro', url: '#', size: '1.8 MB' },
+        { id: '2', type: 'presentation', title: 'Pitch deck', url: '#', size: '5 MB' }
+      ],
+      performance: {
+        totalSales: 18,
+        totalRevenue: 810000,
+        totalCommission: 81000,
+        conversionRate: 25.0,
+        averageOrderValue: 45000
+      },
+      status: 'active'
+    }
+  ]);
+
+  const [selectedProduct, setSelectedProduct] = useState<AffiliatedProduct | null>(null);
+  const [showProductDetails, setShowProductDetails] = useState(false);
+
+  // Données des appels d'offres
+  const [callsForTenders, setCallsForTenders] = useState<CallForTender[]>([
+    {
+      id: '1',
+      title: 'Déploiement CRM pour groupe bancaire',
+      company: 'Banque Nationale de France',
+      sector: 'Finance',
+      budget: '500,000 - 800,000€',
+      deadline: '2024-02-15',
+      description: 'Recherche solution CRM complète pour 500 utilisateurs avec intégration systèmes bancaires existants',
+      requirements: [
+        'Expérience secteur bancaire obligatoire',
+        'Certification sécurité ISO 27001',
+        'Support 24/7 en français',
+        'Formation équipe incluse',
+        'Migration données depuis système actuel'
+      ],
+      status: 'open',
+      publishDate: '2024-01-10',
+      location: 'Paris, France',
+      contactPerson: 'Sophie Martin',
+      contactEmail: 's.martin@bnf.fr',
+      contactPhone: '+33 1 42 86 75 30',
+      documents: [
+        { id: '1', name: 'Cahier des charges.pdf', type: 'pdf', url: '#', size: '2.5 MB' },
+        { id: '2', name: 'Spécifications techniques.pdf', type: 'pdf', url: '#', size: '1.8 MB' }
+      ],
+      myApplication: undefined
+    },
+    {
+      id: '2',
+      title: 'Solution BI pour réseau de distribution',
+      company: 'RetailCorp International',
+      sector: 'Distribution',
+      budget: '300,000 - 500,000€',
+      deadline: '2024-02-28',
+      description: 'Mise en place solution Business Intelligence pour analyse ventes multi-magasins',
+      requirements: [
+        'Intégration systèmes de caisse',
+        'Tableaux de bord temps réel',
+        'Application mobile pour managers',
+        'Formation utilisateurs',
+        'Maintenance 3 ans incluse'
+      ],
+      status: 'in_progress',
+      publishDate: '2024-01-05',
+      location: 'Lyon, France',
+      contactPerson: 'Pierre Rousseau',
+      contactEmail: 'p.rousseau@retailcorp.fr',
+      contactPhone: '+33 4 78 92 15 67',
+      documents: [
+        { id: '1', name: 'Appel d\'offres.pdf', type: 'pdf', url: '#', size: '3.2 MB' }
+      ],
+      myApplication: {
+        id: '1',
+        tenderId: '2',
+        submittedDate: '2024-01-18',
+        status: 'under_review',
+        proposal: 'Proposition complète avec solution Analytics BI Suite adaptée au secteur retail',
+        estimatedPrice: 380000,
+        deliveryTime: '6 mois',
+        documents: [
+          { id: '1', name: 'Proposition commerciale.pdf', type: 'pdf', url: '#', size: '4.5 MB' },
+          { id: '2', name: 'Planning projet.pdf', type: 'pdf', url: '#', size: '1.2 MB' }
+        ]
+      }
+    },
+    {
+      id: '3',
+      title: 'Plateforme marketing automation',
+      company: 'EcoTech Industries',
+      sector: 'Environnement',
+      budget: '150,000 - 250,000€',
+      deadline: '2024-03-15',
+      description: 'Recherche plateforme marketing automation pour campagnes B2B et lead nurturing',
+      requirements: [
+        'Intégration CRM Salesforce',
+        'Gestion multi-canaux',
+        'Scoring de leads',
+        'Rapports personnalisés',
+        'Support en français'
+      ],
+      status: 'open',
+      publishDate: '2024-01-15',
+      location: 'Toulouse, France',
+      contactPerson: 'Marie Dubois',
+      contactEmail: 'm.dubois@ecotech.fr',
+      contactPhone: '+33 5 61 23 45 78',
+      documents: [
+        { id: '1', name: 'Besoin client.pdf', type: 'pdf', url: '#', size: '1.5 MB' }
+      ],
+      myApplication: undefined
+    }
+  ]);
+
+  const [selectedTender, setSelectedTender] = useState<CallForTender | null>(null);
+  const [showTenderDetails, setShowTenderDetails] = useState(false);
+  const [showTenderApplication, setShowTenderApplication] = useState(false);
+  const [tenderApplication, setTenderApplication] = useState({
+    proposal: '',
+    estimatedPrice: 0,
+    deliveryTime: '',
+    documents: [] as File[]
+  });
+
+  // Fonctions pour les objectifs
+  const getObjectiveProgress = (objective: Objective) => {
+    return Math.min((objective.currentValue / objective.targetValue) * 100, 100);
+  };
+
+  const getObjectiveStatus = (objective: Objective) => {
+    const progress = getObjectiveProgress(objective);
+    const daysLeft = Math.ceil((new Date(objective.endDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (progress >= 100) return { label: 'Atteint', color: 'bg-green-100 text-green-800' };
+    if (daysLeft < 0) return { label: 'Échoué', color: 'bg-red-100 text-red-800' };
+    if (progress >= 80) return { label: 'En bonne voie', color: 'bg-blue-100 text-blue-800' };
+    if (progress >= 50) return { label: 'En cours', color: 'bg-yellow-100 text-yellow-800' };
+    return { label: 'À risque', color: 'bg-orange-100 text-orange-800' };
+  };
+
+  const handleCreateObjective = () => {
+    if (!newObjective.title || !newObjective.targetValue || !newObjective.endDate) {
+      alert('Veuillez remplir tous les champs obligatoires');
+      return;
+    }
+
+    const objective: Objective = {
+      id: Date.now().toString(),
+      title: newObjective.title,
+      description: newObjective.description,
+      targetValue: newObjective.targetValue,
+      currentValue: 0,
+      unit: newObjective.unit,
+      startDate: new Date().toISOString().split('T')[0],
+      endDate: newObjective.endDate,
+      status: 'en_cours',
+      category: newObjective.category as any,
+      priority: newObjective.priority as any,
+      milestones: []
+    };
+
+    setObjectives(prev => [objective, ...prev]);
+    setShowNewObjective(false);
+    setNewObjective({
+      title: '',
+      description: '',
+      targetValue: 0,
+      unit: '€',
+      endDate: '',
+      category: 'revenue',
+      priority: 'medium'
+    });
+
+    trackAction('create-objective', { category: objective.category });
+  };
+
+  const handleUpdateObjectiveProgress = (objectiveId: string, newValue: number) => {
+    setObjectives(prev => prev.map(obj => 
+      obj.id === objectiveId ? { ...obj, currentValue: newValue } : obj
+    ));
+  };
+
+  // Fonctions pour les appels d'offres
+  const handleSubmitTenderApplication = () => {
+    if (!selectedTender || !tenderApplication.proposal || !tenderApplication.estimatedPrice) {
+      alert('Veuillez remplir tous les champs obligatoires');
+      return;
+    }
+
+    const application: TenderApplication = {
+      id: Date.now().toString(),
+      tenderId: selectedTender.id,
+      submittedDate: new Date().toISOString().split('T')[0],
+      status: 'submitted',
+      proposal: tenderApplication.proposal,
+      estimatedPrice: tenderApplication.estimatedPrice,
+      deliveryTime: tenderApplication.deliveryTime,
+      documents: []
+    };
+
+    setCallsForTenders(prev => prev.map(tender =>
+      tender.id === selectedTender.id
+        ? { ...tender, myApplication: application, status: 'in_progress' }
+        : tender
+    ));
+
+    setShowTenderApplication(false);
+    setTenderApplication({
+      proposal: '',
+      estimatedPrice: 0,
+      deliveryTime: '',
+      documents: []
+    });
+
+    trackAction('submit-tender-application', { tenderId: selectedTender.id });
+  };
 
   const renderCommissions = () => (
     <div className="space-y-6">
@@ -2828,8 +3411,1225 @@ export default function CommercialPage() {
     </div>
   );
 
+  // Fonction pour afficher le profil commercial
+  const renderProfile = () => (
+    <div className="space-y-6">
+      {/* Bannière publicitaire pour développement professionnel */}
+      <AdBanner 
+        position="commercial-profile-header"
+        format="compact"
+        section="commercial-profile"
+        userContext={{ userType: 'commercial', section: 'profile' }}
+        priority="medium"
+        targetCategories={['professional-development', 'training', 'certification']}
+        className="mb-4"
+      />
+
+      {/* En-tête du profil avec photo */}
+      <Card>
+        <div className="flex items-start space-x-6">
+          <div className="relative">
+            <img
+              src={profile.avatar}
+              alt={`${profile.firstName} ${profile.lastName}`}
+              className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
+            />
+            {isEditingProfile && (
+              <button className="absolute bottom-0 right-0 w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 cursor-pointer">
+                <i className="ri-camera-line"></i>
+              </button>
+            )}
+          </div>
+
+          <div className="flex-1">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {profile.firstName} {profile.lastName}
+                </h2>
+                <p className="text-gray-600">{profile.position} - {profile.department}</p>
+                <p className="text-sm text-gray-500 mt-1">
+                  <i className="ri-calendar-line mr-1"></i>
+                  Membre depuis {new Date(profile.startDate).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
+                </p>
+              </div>
+              <Button
+                variant={isEditingProfile ? 'primary' : 'outline'}
+                onClick={() => {
+                  if (isEditingProfile) {
+                    setProfile(editedProfile);
+                  }
+                  setIsEditingProfile(!isEditingProfile);
+                }}
+              >
+                <i className={`${isEditingProfile ? 'ri-save-line' : 'ri-edit-line'} mr-2`}></i>
+                {isEditingProfile ? 'Enregistrer' : 'Modifier le profil'}
+              </Button>
+            </div>
+
+            {/* Statistiques de performance */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="bg-blue-50 rounded-lg p-3">
+                <p className="text-sm text-blue-600 font-medium">Ventes totales</p>
+                <p className="text-2xl font-bold text-blue-900">{profile.performance.totalSales}</p>
+              </div>
+              <div className="bg-green-50 rounded-lg p-3">
+                <p className="text-sm text-green-600 font-medium">CA généré</p>
+                <p className="text-2xl font-bold text-green-900">{(profile.performance.totalRevenue / 1000000).toFixed(1)}M€</p>
+              </div>
+              <div className="bg-purple-50 rounded-lg p-3">
+                <p className="text-sm text-purple-600 font-medium">Taux conversion</p>
+                <p className="text-2xl font-bold text-purple-900">{profile.performance.conversionRate}%</p>
+              </div>
+              <div className="bg-orange-50 rounded-lg p-3">
+                <p className="text-sm text-orange-600 font-medium">Satisfaction</p>
+                <p className="text-2xl font-bold text-orange-900">{profile.performance.customerSatisfaction}/5</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Informations personnelles */}
+        <div className="lg:col-span-2 space-y-6">
+          <Card>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Informations Personnelles</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Prénom</label>
+                <input
+                  type="text"
+                  value={isEditingProfile ? editedProfile.firstName : profile.firstName}
+                  onChange={(e) => setEditedProfile(prev => ({ ...prev, firstName: e.target.value }))}
+                  disabled={!isEditingProfile}
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm disabled:bg-gray-50"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Nom</label>
+                <input
+                  type="text"
+                  value={isEditingProfile ? editedProfile.lastName : profile.lastName}
+                  onChange={(e) => setEditedProfile(prev => ({ ...prev, lastName: e.target.value }))}
+                  disabled={!isEditingProfile}
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm disabled:bg-gray-50"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                <input
+                  type="email"
+                  value={isEditingProfile ? editedProfile.email : profile.email}
+                  onChange={(e) => setEditedProfile(prev => ({ ...prev, email: e.target.value }))}
+                  disabled={!isEditingProfile}
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm disabled:bg-gray-50"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
+                <input
+                  type="tel"
+                  value={isEditingProfile ? editedProfile.phone : profile.phone}
+                  onChange={(e) => setEditedProfile(prev => ({ ...prev, phone: e.target.value }))}
+                  disabled={!isEditingProfile}
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm disabled:bg-gray-50"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Poste</label>
+                <input
+                  type="text"
+                  value={isEditingProfile ? editedProfile.position : profile.position}
+                  onChange={(e) => setEditedProfile(prev => ({ ...prev, position: e.target.value }))}
+                  disabled={!isEditingProfile}
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm disabled:bg-gray-50"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Département</label>
+                <input
+                  type="text"
+                  value={isEditingProfile ? editedProfile.department : profile.department}
+                  onChange={(e) => setEditedProfile(prev => ({ ...prev, department: e.target.value }))}
+                  disabled={!isEditingProfile}
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm disabled:bg-gray-50"
+                />
+              </div>
+            </div>
+          </Card>
+
+          {/* Compétences et langues */}
+          <Card>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Compétences et Langues</h3>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Domaines d'expertise</label>
+                <div className="flex flex-wrap gap-2">
+                  {profile.specializations.map((spec, index) => (
+                    <div key={index} className="flex items-center space-x-1">
+                      <Badge variant="info">{spec}</Badge>
+                      {isEditingProfile && (
+                        <button 
+                          onClick={() => {
+                            setProfile(prev => ({
+                              ...prev,
+                              specializations: prev.specializations.filter((_, i) => i !== index)
+                            }));
+                            setEditedProfile(prev => ({
+                              ...prev,
+                              specializations: prev.specializations.filter((_, i) => i !== index)
+                            }));
+                          }}
+                          className="w-5 h-5 flex items-center justify-center text-red-600 hover:bg-red-50 rounded-full cursor-pointer"
+                        >
+                          <i className="ri-close-line text-xs"></i>
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  {isEditingProfile && (
+                    <button 
+                      onClick={() => {
+                        const newSpec = prompt('Ajouter une compétence:');
+                        if (newSpec) {
+                          setProfile(prev => ({
+                            ...prev,
+                            specializations: [...prev.specializations, newSpec]
+                          }));
+                          setEditedProfile(prev => ({
+                            ...prev,
+                            specializations: [...prev.specializations, newSpec]
+                          }));
+                        }
+                      }}
+                      className="px-3 py-1 border-2 border-dashed border-gray-300 rounded-full text-sm text-gray-600 hover:border-blue-500 hover:text-blue-600 cursor-pointer"
+                    >
+                      <i className="ri-add-line mr-1"></i>
+                      Ajouter
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Langues parlées</label>
+                <div className="flex flex-wrap gap-2">
+                  {profile.languages.map((lang, index) => (
+                    <div key={index} className="flex items-center space-x-1">
+                      <Badge variant="success">{lang}</Badge>
+                      {isEditingProfile && (
+                        <button 
+                          onClick={() => {
+                            setProfile(prev => ({
+                              ...prev,
+                              languages: prev.languages.filter((_, i) => i !== index)
+                            }));
+                            setEditedProfile(prev => ({
+                              ...prev,
+                              languages: prev.languages.filter((_, i) => i !== index)
+                            }));
+                          }}
+                          className="w-5 h-5 flex items-center justify-center text-red-600 hover:bg-red-50 rounded-full cursor-pointer"
+                        >
+                          <i className="ri-close-line text-xs"></i>
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  {isEditingProfile && (
+                    <button 
+                      onClick={() => {
+                        const newLang = prompt('Ajouter une langue:');
+                        if (newLang) {
+                          setProfile(prev => ({
+                            ...prev,
+                            languages: [...prev.languages, newLang]
+                          }));
+                          setEditedProfile(prev => ({
+                            ...prev,
+                            languages: [...prev.languages, newLang]
+                          }));
+                        }
+                      }}
+                      className="px-3 py-1 border-2 border-dashed border-gray-300 rounded-full text-sm text-gray-600 hover:border-blue-500 hover:text-blue-600 cursor-pointer"
+                    >
+                      <i className="ri-add-line mr-1"></i>
+                      Ajouter
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* Certifications */}
+          <Card>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Certifications Professionnelles</h3>
+            
+            <div className="space-y-3">
+              {profile.certifications.map((cert) => (
+                <div key={cert.id} className="p-4 bg-gray-50 rounded-lg">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <h4 className="font-medium text-gray-900">{cert.name}</h4>
+                      <p className="text-sm text-gray-600 mt-1">{cert.issuer}</p>
+                      <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
+                        <span>
+                          <i className="ri-calendar-line mr-1"></i>
+                          Obtenue le {new Date(cert.date).toLocaleDateString('fr-FR')}
+                        </span>
+                        {cert.expiryDate && (
+                          <span>
+                            <i className="ri-time-line mr-1"></i>
+                            Expire le {new Date(cert.expiryDate).toLocaleDateString('fr-FR')}
+                          </span>
+                        )}
+                      </div>
+                      {cert.credentialId && (
+                        <p className="text-xs text-gray-500 mt-1">ID: {cert.credentialId}</p>
+                      )}
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <i className="ri-medal-line text-2xl text-yellow-500"></i>
+                      {isEditingProfile && (
+                        <button 
+                          onClick={() => {
+                            setProfile(prev => ({
+                              ...prev,
+                              certifications: prev.certifications.filter(c => c.id !== cert.id)
+                            }));
+                            setEditedProfile(prev => ({
+                              ...prev,
+                              certifications: prev.certifications.filter(c => c.id !== cert.id)
+                            }));
+                          }}
+                          className="w-8 h-8 flex items-center justify-center text-red-600 hover:bg-red-50 rounded-full cursor-pointer"
+                        >
+                          <i className="ri-delete-bin-line"></i>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+              {isEditingProfile && (
+                <button 
+                  onClick={() => {
+                    const name = prompt('Nom de la certification:');
+                    if (!name) return;
+                    const issuer = prompt('Organisme émetteur:');
+                    if (!issuer) return;
+                    const date = prompt('Date d\'obtention (YYYY-MM-DD):');
+                    if (!date) return;
+                    const credentialId = prompt('ID de certification (optionnel):');
+                    
+                    const newCert: Certification = {
+                      id: Date.now().toString(),
+                      name,
+                      issuer,
+                      date,
+                      credentialId: credentialId || undefined
+                    };
+                    
+                    setProfile(prev => ({
+                      ...prev,
+                      certifications: [...prev.certifications, newCert]
+                    }));
+                    setEditedProfile(prev => ({
+                      ...prev,
+                      certifications: [...prev.certifications, newCert]
+                    }));
+                  }}
+                  className="w-full p-4 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-blue-500 hover:text-blue-600 cursor-pointer"
+                >
+                  <i className="ri-add-line mr-2"></i>
+                  Ajouter une certification
+                </button>
+              )}
+            </div>
+          </Card>
+        </div>
+
+        {/* Préférences et statistiques */}
+        <div className="lg:col-span-1 space-y-6">
+          <Card>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Préférences</h3>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Notifications</label>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-700">Email</span>
+                    <input
+                      type="checkbox"
+                      checked={profile.preferences.notifications.email}
+                      disabled={!isEditingProfile}
+                      className="w-4 h-4 text-blue-600 rounded cursor-pointer"
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-700">SMS</span>
+                    <input
+                      type="checkbox"
+                      checked={profile.preferences.notifications.sms}
+                      disabled={!isEditingProfile}
+                      className="w-4 h-4 text-blue-600 rounded cursor-pointer"
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-700">Push</span>
+                    <input
+                      type="checkbox"
+                      checked={profile.preferences.notifications.push}
+                      disabled={!isEditingProfile}
+                      className="w-4 h-4 text-blue-600 rounded cursor-pointer"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Langue</label>
+                <select
+                  value={profile.preferences.language}
+                  disabled={!isEditingProfile}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm disabled:bg-gray-50"
+                >
+                  <option value="fr">Français</option>
+                  <option value="en">English</option>
+                  <option value="es">Español</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Fuseau horaire</label>
+                <select
+                  value={profile.preferences.timezone}
+                  disabled={!isEditingProfile}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm disabled:bg-gray-50"
+                >
+                  <option value="Europe/Paris">Europe/Paris (GMT+1)</option>
+                  <option value="Europe/London">Europe/London (GMT)</option>
+                  <option value="America/New_York">America/New_York (GMT-5)</option>
+                </select>
+              </div>
+            </div>
+          </Card>
+
+          <Card>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Statistiques Détaillées</h3>
+            
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Leads générés</span>
+                <span className="font-semibold text-gray-900">{profile.performance.leadsGenerated}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Ventes conclues</span>
+                <span className="font-semibold text-gray-900">{profile.performance.dealsWon}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Panier moyen</span>
+                <span className="font-semibold text-gray-900">{profile.performance.averageOrderValue.toLocaleString()}€</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Commissions totales</span>
+                <span className="font-semibold text-green-600">{profile.performance.totalCommission.toLocaleString()}€</span>
+              </div>
+            </div>
+          </Card>
+
+          {/* Bannière publicitaire pour formation */}
+          <AdBanner 
+            position="commercial-profile-sidebar"
+            format="compact"
+            section="commercial-profile"
+            userContext={{ userType: 'commercial', section: 'profile' }}
+            priority="medium"
+            targetCategories={['training', 'certification', 'professional-development']}
+          />
+        </div>
+      </div>
+
+      {/* Bannière publicitaire en bas */}
+      <AdBanner 
+        position="commercial-profile-footer"
+        format="compact"
+        section="commercial-profile"
+        userContext={{ userType: 'commercial', section: 'profile' }}
+        priority="low"
+        targetCategories={['career-development', 'coaching', 'mentoring']}
+      />
+    </div>
+  );
+
+  // Fonction pour afficher les objectifs
+  const renderObjectives = () => (
+    <div className="space-y-6">
+      {/* Bannière publicitaire pour outils de suivi d'objectifs */}
+      <AdBanner 
+        position="commercial-objectives-header"
+        format="compact"
+        section="commercial-objectives"
+        userContext={{ userType: 'commercial', section: 'objectives' }}
+        priority="medium"
+        targetCategories={['goal-tracking', 'performance-management', 'productivity-tools']}
+        className="mb-4"
+      />
+
+      {/* En-tête avec bouton Nouvel Objectif */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="text-xl font-semibold text-gray-900">Mes Objectifs Mensuels</h2>
+          <p className="text-sm text-gray-600 mt-1">Suivez et atteignez vos objectifs commerciaux</p>
+        </div>
+        <Button
+          variant="primary"
+          onClick={() => setShowNewObjective(true)}
+        >
+          <i className="ri-add-line mr-2"></i>
+          Nouvel Objectif
+        </Button>
+      </div>
+
+      {/* Statistiques globales */}
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+        <Card>
+          <div className="text-center">
+            <p className="text-2xl font-bold text-blue-600">{objectives.length}</p>
+            <p className="text-sm text-gray-600">Objectifs actifs</p>
+          </div>
+        </Card>
+        <Card>
+          <div className="text-center">
+            <p className="text-2xl font-bold text-green-600">
+              {objectives.filter(obj => getObjectiveProgress(obj) >= 100).length}
+            </p>
+            <p className="text-sm text-gray-600">Atteints</p>
+          </div>
+        </Card>
+        <Card>
+          <div className="text-center">
+            <p className="text-2xl font-bold text-orange-600">
+              {objectives.filter(obj => getObjectiveProgress(obj) < 100).length}
+            </p>
+            <p className="text-sm text-gray-600">En cours</p>
+          </div>
+        </Card>
+        <Card>
+          <div className="text-center">
+            <p className="text-2xl font-bold text-purple-600">
+              {Math.round(objectives.reduce((sum, obj) => sum + getObjectiveProgress(obj), 0) / objectives.length)}%
+            </p>
+            <p className="text-sm text-gray-600">Progression moyenne</p>
+          </div>
+        </Card>
+        <Card>
+          <div className="text-center">
+            <p className="text-2xl font-bold text-red-600">
+              {Math.ceil((new Date(objectives[0]?.endDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))}
+            </p>
+            <p className="text-sm text-gray-600">Jours restants</p>
+          </div>
+        </Card>
+      </div>
+
+      {/* Liste des objectifs */}
+      <div className="space-y-4">
+        {objectives.map((objective) => {
+          const progress = getObjectiveProgress(objective);
+          const status = getObjectiveStatus(objective);
+          const daysLeft = Math.ceil((new Date(objective.endDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+
+          return (
+            <Card key={objective.id}>
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex-1">
+                  <div className="flex items-center space-x-3 mb-2">
+                    <h3 className="text-lg font-semibold text-gray-900">{objective.title}</h3>
+                    <Badge className={status.color}>{status.label}</Badge>
+                    <Badge className={getPriorityColor(objective.priority)}>
+                      {objective.priority === 'high' ? 'Priorité haute' : 
+                       objective.priority === 'medium' ? 'Priorité moyenne' : 'Priorité basse'}
+                    </Badge>
+                  </div>
+                  <p className="text-gray-600 mb-3">{objective.description}</p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div>
+                      <p className="text-sm text-gray-600">Progression actuelle</p>
+                      <p className="text-2xl font-bold text-blue-600">
+                        {objective.currentValue.toLocaleString()} {objective.unit}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Objectif cible</p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {objective.targetValue.toLocaleString()} {objective.unit}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Temps restant</p>
+                      <p className="text-2xl font-bold text-orange-600">
+                        {daysLeft > 0 ? `${daysLeft} jours` : 'Expiré'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Barre de progression */}
+                  <div className="mb-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-gray-700">Progression</span>
+                      <span className="text-sm font-bold text-blue-600">{progress.toFixed(1)}%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-3">
+                      <div
+                        className={`h-3 rounded-full transition-all ${
+                          progress >= 100 ? 'bg-green-500' :
+                          progress >= 80 ? 'bg-blue-500' :
+                          progress >= 50 ? 'bg-yellow-500' : 'bg-orange-500'
+                        }`}
+                        style={{ width: `${Math.min(progress, 100)}%` }}
+                      ></div>
+                    </div>
+                  </div>
+
+                  {/* Jalons */}
+                  {objective.milestones.length > 0 && (
+                    <div className="mb-4">
+                      <p className="text-sm font-medium text-gray-700 mb-2">Jalons intermédiaires</p>
+                      <div className="space-y-2">
+                        {objective.milestones.map((milestone) => (
+                          <div key={milestone.id} className="flex items-center space-x-3">
+                            <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
+                              milestone.completed ? 'bg-green-500' : 'bg-gray-300'
+                            }`}>
+                              {milestone.completed && <i className="ri-check-line text-white text-xs"></i>}
+                            </div>
+                            <span className={`text-sm ${milestone.completed ? 'text-gray-900 font-medium' : 'text-gray-600'}`}>
+                              {milestone.title} - {new Date(milestone.targetDate).toLocaleDateString('fr-FR')}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex space-x-3">
+                <Button
+                  variant="primary"
+                  size="sm"
+                  className="flex-1"
+                  onClick={() => {
+                    const newValue = prompt(`Entrez la nouvelle valeur (actuelle: ${objective.currentValue})`);
+                    if (newValue) {
+                      handleUpdateObjectiveProgress(objective.id, parseFloat(newValue));
+                    }
+                  }}
+                >
+                  <i className="ri-refresh-line mr-2"></i>
+                  Mettre à jour
+                </Button>
+                <Button variant="outline" size="sm" className="flex-1">
+                  <i className="ri-edit-line mr-2"></i>
+                  Modifier
+                </Button>
+                <Button variant="outline" size="sm">
+                  <i className="ri-delete-bin-line mr-2"></i>
+                  Supprimer
+                </Button>
+              </div>
+            </Card>
+          );
+        })}
+      </div>
+
+      {/* Bannière publicitaire pour outils de gestion */}
+      <AdBanner 
+        position="commercial-objectives-footer"
+        format="compact"
+        section="commercial-objectives"
+        userContext={{ userType: 'commercial', section: 'objectives' }}
+        priority="medium"
+        targetCategories={['goal-tracking', 'performance-management', 'analytics']}
+      />
+    </div>
+  );
+
+  // Fonction pour afficher les produits affiliés
+  const renderAffiliatedProducts = () => (
+    <div className="space-y-6">
+      {/* Bannière publicitaire pour catalogues produits */}
+      <AdBanner 
+        position="commercial-products-header"
+        format="compact"
+        section="commercial-products"
+        userContext={{ userType: 'commercial', section: 'affiliated-products' }}
+        priority="medium"
+        targetCategories={['product-catalogs', 'sales-materials', 'marketing-tools']}
+        className="mb-4"
+      />
+
+      {/* En-tête */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="text-xl font-semibold text-gray-900">Produits Affiliés</h2>
+          <p className="text-sm text-gray-600 mt-1">Catalogue des produits que vous pouvez vendre</p>
+        </div>
+        <div className="flex space-x-2">
+          <Button variant="outline">
+            <i className="ri-download-line mr-2"></i>
+            Exporter le catalogue
+          </Button>
+          <Button variant="outline">
+            <i className="ri-filter-line mr-2"></i>
+            Filtrer
+          </Button>
+        </div>
+      </div>
+
+      {/* Statistiques globales */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <Card>
+          <div className="text-center">
+            <p className="text-2xl font-bold text-blue-600">{affiliatedProducts.length}</p>
+            <p className="text-sm text-gray-600">Produits actifs</p>
+          </div>
+        </Card>
+        <Card>
+          <div className="text-center">
+            <p className="text-2xl font-bold text-green-600">
+              {affiliatedProducts.reduce((sum, p) => sum + p.performance.totalSales, 0)}
+            </p>
+            <p className="text-sm text-gray-600">Ventes totales</p>
+          </div>
+        </Card>
+        <Card>
+          <div className="text-center">
+            <p className="text-2xl font-bold text-purple-600">
+              {(affiliatedProducts.reduce((sum, p) => sum + p.performance.totalRevenue, 0) / 1000000).toFixed(1)}M€
+            </p>
+            <p className="text-sm text-gray-600">CA généré</p>
+          </div>
+        </Card>
+        <Card>
+          <div className="text-center">
+            <p className="text-2xl font-bold text-orange-600">
+              {affiliatedProducts.reduce((sum, p) => sum + p.performance.totalCommission, 0).toLocaleString()}€
+            </p>
+            <p className="text-sm text-gray-600">Commissions</p>
+          </div>
+        </Card>
+      </div>
+
+      {/* Liste des produits */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {affiliatedProducts.map((product) => (
+          <Card key={product.id}>
+            <img
+              src={product.image}
+              alt={product.name}
+              className="w-full h-48 object-cover rounded-lg mb-4"
+            />
+            
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex-1">
+                <h3 className="font-semibold text-gray-900 mb-1">{product.name}</h3>
+                <p className="text-sm text-gray-600">{product.company}</p>
+                <Badge variant="info" className="mt-2">{product.category}</Badge>
+              </div>
+              <Badge className={product.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
+                {product.status === 'active' ? 'Actif' : 'Inactif'}
+              </Badge>
+            </div>
+
+            <p className="text-sm text-gray-700 mb-4 line-clamp-2">{product.description}</p>
+
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <div className="bg-blue-50 rounded-lg p-3">
+                <p className="text-xs text-blue-600 font-medium">Prix de vente</p>
+                <p className="text-lg font-bold text-blue-900">{product.price.toLocaleString()}€</p>
+              </div>
+              <div className="bg-green-50 rounded-lg p-3">
+                <p className="text-xs text-green-600 font-medium">Commission</p>
+                <p className="text-lg font-bold text-green-900">
+                  {product.commissionType === 'percentage' ? `${product.commission}%` : `${product.commission}€`}
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-2 mb-4 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Ventes:</span>
+                <span className="font-medium">{product.performance.totalSales}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">CA généré:</span>
+                <span className="font-medium">{product.performance.totalRevenue.toLocaleString()}€</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Taux conversion:</span>
+                <span className="font-medium text-green-600">{product.performance.conversionRate}%</span>
+              </div>
+            </div>
+
+            <div className="flex space-x-2">
+              <Button
+                variant="primary"
+                size="sm"
+                className="flex-1"
+                onClick={() => {
+                  setSelectedProduct(product);
+                  setShowProductDetails(true);
+                }}
+              >
+                <i className="ri-eye-line mr-2"></i>
+                Détails
+              </Button>
+              <Button variant="outline" size="sm">
+                <i className="ri-download-line mr-2"></i>
+                Supports
+              </Button>
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      {/* Modal détails produit */}
+      {showProductDetails && selectedProduct && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold text-gray-900">{selectedProduct.name}</h3>
+              <button
+                onClick={() => setShowProductDetails(false)}
+                className="text-gray-400 hover:text-gray-600 w-8 h-8 flex items-center justify-center cursor-pointer"
+              >
+                <i className="ri-close-line text-2xl"></i>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div>
+                <img
+                  src={selectedProduct.image}
+                  alt={selectedProduct.name}
+                  className="w-full h-64 object-cover rounded-lg mb-4"
+                />
+                
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-2">Description</h4>
+                    <p className="text-gray-700">{selectedProduct.description}</p>
+                  </div>
+
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-2">Fonctionnalités clés</h4>
+                    <ul className="space-y-1">
+                      {selectedProduct.features.map((feature, index) => (
+                        <li key={index} className="flex items-start text-sm text-gray-700">
+                          <i className="ri-check-line text-green-600 mr-2 mt-0.5"></i>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-2">Marchés cibles</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedProduct.targetMarket.map((market, index) => (
+                        <Badge key={index} variant="info">{market}</Badge>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                  <h4 className="font-semibold text-gray-900 mb-3">Informations commerciales</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Prix de vente:</span>
+                      <span className="font-bold text-gray-900">{selectedProduct.price.toLocaleString()}€</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Commission:</span>
+                      <span className="font-bold text-green-600">
+                        {selectedProduct.commissionType === 'percentage' 
+                          ? `${selectedProduct.commission}% (${(selectedProduct.price * selectedProduct.commission / 100).toLocaleString()}€)`
+                          : `${selectedProduct.commission}€`}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Entreprise:</span>
+                      <span className="font-medium">{selectedProduct.company}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Catégorie:</span>
+                      <span className="font-medium">{selectedProduct.category}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-blue-50 rounded-lg p-4 mb-4">
+                  <h4 className="font-semibold text-blue-900 mb-3">Performances</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-blue-700">Ventes totales:</span>
+                      <span className="font-bold text-blue-900">{selectedProduct.performance.totalSales}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-blue-700">CA généré:</span>
+                      <span className="font-bold text-blue-900">{selectedProduct.performance.totalRevenue.toLocaleString()}€</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-blue-700">Commissions gagnées:</span>
+                      <span className="font-bold text-green-600">{selectedProduct.performance.totalCommission.toLocaleString()}€</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-blue-700">Taux de conversion:</span>
+                      <span className="font-bold text-blue-900">{selectedProduct.performance.conversionRate}%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-blue-700">Panier moyen:</span>
+                      <span className="font-bold text-blue-900">{selectedProduct.performance.averageOrderValue.toLocaleString()}€</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-3">Supports de vente</h4>
+                  <div className="space-y-2">
+                    {selectedProduct.salesMaterials.map((material) => (
+                      <div key={material.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div className="flex items-center space-x-3">
+                          <i className={`${
+                            material.type === 'brochure' ? 'ri-file-text-line' :
+                            material.type === 'video' ? 'ri-video-line' :
+                            material.type === 'demo' ? 'ri-play-circle-line' :
+                            'ri-presentation-line'
+                          } text-xl text-gray-600`}></i>
+                          <div>
+                            <p className="text-sm font-medium text-gray-900">{material.title}</p>
+                            {material.size && <p className="text-xs text-gray-500">{material.size}</p>}
+                          </div>
+                        </div>
+                        <Button variant="outline" size="sm">
+                          <i className="ri-download-line"></i>
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex space-x-3 mt-6 pt-6 border-t border-gray-200">
+              <Button variant="outline" className="flex-1" onClick={() => setShowProductDetails(false)}>
+                Fermer
+              </Button>
+              <Button variant="primary" className="flex-1">
+                <i className="ri-shopping-cart-line mr-2"></i>
+                Créer une opportunité
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bannière publicitaire pour matériel de vente */}
+      <AdBanner 
+        position="commercial-products-footer"
+        format="compact"
+        section="commercial-products"
+        userContext={{ userType: 'commercial', section: 'affiliated-products' }}
+        priority="medium"
+        targetCategories={['sales-materials', 'marketing-tools', 'product-catalogs']}
+      />
+    </div>
+  );
+
+  // Fonction pour afficher les appels d'offres
+  const renderCallsForTenders = () => (
+    <div className="space-y-6">
+      {/* Bannière publicitaire pour gestion d'appels d'offres */}
+      <AdBanner 
+        position="commercial-tenders-header"
+        format="compact"
+        section="commercial-tenders"
+        userContext={{ userType: 'commercial', section: 'call-for-tenders' }}
+        priority="medium"
+        targetCategories={['tender-management', 'proposal-tools', 'business-development']}
+        className="mb-4"
+      />
+
+      {/* En-tête */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="text-xl font-semibold text-gray-900">Appels d'Offres</h2>
+          <p className="text-sm text-gray-600 mt-1">Consultez et candidatez aux appels d'offres disponibles</p>
+        </div>
+        <div className="flex space-x-2">
+          <Button variant="outline">
+            <i className="ri-filter-line mr-2"></i>
+            Filtrer
+          </Button>
+          <Button variant="outline">
+            <i className="ri-notification-3-line mr-2"></i>
+            Alertes
+          </Button>
+        </div>
+      </div>
+
+      {/* Statistiques */}
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+        <Card>
+          <div className="text-center">
+            <p className="text-2xl font-bold text-blue-600">{callsForTenders.length}</p>
+            <p className="text-sm text-gray-600">Total offres</p>
+          </div>
+        </Card>
+        <Card>
+          <div className="text-center">
+            <p className="text-2xl font-bold text-green-600">
+              {callsForTenders.filter(t => t.status === 'open').length}
+            </p>
+            <p className="text-sm text-gray-600">Ouvertes</p>
+          </div>
+        </Card>
+        <Card>
+          <div className="text-center">
+            <p className="text-2xl font-bold text-purple-600">
+              {callsForTenders.filter(t => t.myApplication).length}
+            </p>
+            <p className="text-sm text-gray-600">Mes candidatures</p>
+          </div>
+        </Card>
+        <Card>
+          <div className="text-center">
+            <p className="text-2xl font-bold text-orange-600">
+              {callsForTenders.filter(t => t.myApplication?.status === 'under_review').length}
+            </p>
+            <p className="text-sm text-gray-600">En évaluation</p>
+          </div>
+        </Card>
+        <Card>
+          <div className="text-center">
+            <p className="text-2xl font-bold text-red-600">
+              {callsForTenders.filter(t => {
+                const daysLeft = Math.ceil((new Date(t.deadline).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+                return daysLeft < 7 && t.status === 'open';
+              }).length}
+            </p>
+            <p className="text-sm text-gray-600">Urgentes</p>
+          </div>
+        </Card>
+      </div>
+
+      {/* Liste des appels d'offres */}
+      <div className="space-y-4">
+        {callsForTenders.map((tender) => {
+          const daysLeft = Math.ceil((new Date(tender.deadline).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+          const isUrgent = daysLeft < 7 && tender.status === 'open';
+
+          return (
+            <Card key={tender.id} className={isUrgent ? 'border-2 border-red-500' : ''}>
+              {isUrgent && (
+                <div className="bg-red-50 border-l-4 border-red-500 p-3 mb-4">
+                  <div className="flex items-center">
+                    <i className="ri-alarm-warning-line text-red-600 text-xl mr-2"></i>
+                    <p className="text-sm font-medium text-red-800">
+                      Urgent ! Plus que {daysLeft} jour{daysLeft > 1 ? 's' : ''} pour candidater
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex-1">
+                  <div className="flex items-center space-x-3 mb-2">
+                    <h3 className="text-lg font-semibold text-gray-900">{tender.title}</h3>
+                    <Badge className={
+                      tender.status === 'open' ? 'bg-green-100 text-green-800' :
+                      tender.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
+                      tender.status === 'closed' ? 'bg-gray-100 text-gray-800' :
+                      tender.status === 'won' ? 'bg-purple-100 text-purple-800' :
+                      'bg-red-100 text-red-800'
+                    }>
+                      {tender.status === 'open' ? 'Ouvert' :
+                       tender.status === 'in_progress' ? 'En cours' :
+                       tender.status === 'closed' ? 'Fermé' :
+                       tender.status === 'won' ? 'Gagné' : 'Perdu'}
+                    </Badge>
+                    {tender.myApplication && (
+                      <Badge variant="info">Candidature envoyée</Badge>
+                    )}
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-3">
+                    <div>
+                      <p className="text-sm text-gray-600">Entreprise</p>
+                      <p className="font-medium text-gray-900">{tender.company}</p>
+                      <p className="text-xs text-gray-500">{tender.sector}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Budget</p>
+                      <p className="font-medium text-gray-900">{tender.budget}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Échéance</p>
+                      <p className="font-medium text-gray-900">{new Date(tender.deadline).toLocaleDateString('fr-FR')}</p>
+                      <p className="text-xs text-gray-500">{daysLeft} jours restants</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Localisation</p>
+                      <p className="font-medium text-gray-900">{tender.location}</p>
+                    </div>
+                  </div>
+                  
+                  <p className="text-gray-700 mb-3">{tender.description}</p>
+                  
+                  <div className="mb-3">
+                    <p className="text-sm font-medium text-gray-900 mb-2">Exigences:</p>
+                    <ul className="space-y-1">
+                      {tender.requirements.map((req, index) => (
+                        <li key={index} className="flex items-start text-sm text-gray-700">
+                          <i className="ri-checkbox-circle-line text-blue-600 mr-2 mt-0.5"></i>
+                          {req}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="mb-3">
+                    <p className="text-sm font-medium text-gray-900 mb-2">Contact:</p>
+                    <div className="flex items-center space-x-4 text-sm text-gray-700">
+                      <span>
+                        <i className="ri-user-line mr-1"></i>
+                        {tender.contactPerson}
+                      </span>
+                      <span>
+                        <i className="ri-mail-line mr-1"></i>
+                        {tender.contactEmail}
+                      </span>
+                      <span>
+                        <i className="ri-phone-line mr-1"></i>
+                        {tender.contactPhone}
+                      </span>
+                    </div>
+                  </div>
+
+                  {tender.documents.length > 0 && (
+                    <div className="mb-3">
+                      <p className="text-sm font-medium text-gray-900 mb-2">Documents:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {tender.documents.map((doc) => (
+                          <button key={doc.id} className="flex items-center space-x-2 px-3 py-2 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer">
+                            <i className="ri-file-text-line text-gray-600"></i>
+                            <span className="text-sm text-gray-700">{doc.name}</span>
+                            <span className="text-xs text-gray-500">({doc.size})</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {tender.myApplication && (
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
+                      <h4 className="font-medium text-blue-900 mb-2">Ma candidature</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+                        <div>
+                          <p className="text-blue-700">Date d'envoi:</p>
+                          <p className="font-medium text-blue-900">{new Date(tender.myApplication.submittedDate).toLocaleDateString('fr-FR')}</p>
+                        </div>
+                        <div>
+                          <p className="text-blue-700">Prix proposé:</p>
+                          <p className="font-medium text-blue-900">{tender.myApplication.estimatedPrice.toLocaleString()}€</p>
+                        </div>
+                        <div>
+                          <p className="text-blue-700">Statut:</p>
+                          <Badge className={
+                            tender.myApplication.status === 'submitted' ? 'bg-blue-100 text-blue-800' :
+                            tender.myApplication.status === 'under_review' ? 'bg-yellow-100 text-yellow-800' :
+                            tender.myApplication.status === 'accepted' ? 'bg-green-100 text-green-800' :
+                            'bg-red-100 text-red-800'
+                          }>
+                            {tender.myApplication.status === 'submitted' ? 'Envoyée' :
+                             tender.myApplication.status === 'under_review' ? 'En évaluation' :
+                             tender.myApplication.status === 'accepted' ? 'Acceptée' : 'Refusée'}
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex space-x-3">
+                <Button
+                  variant="primary"
+                  size="sm"
+                  className="flex-1"
+                  onClick={() => {
+                    setSelectedTender(tender);
+                    setShowTenderDetails(true);
+                  }}
+                >
+                  <i className="ri-eye-line mr-2"></i>
+                  Voir les détails
+                </Button>
+                {!tender.myApplication && tender.status === 'open' && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => {
+                      setSelectedTender(tender);
+                      setShowTenderApplication(true);
+                    }}
+                  >
+                    <i className="ri-send-plane-line mr-2"></i>
+                    Candidater
+                  </Button>
+                )}
+                <Button variant="outline" size="sm">
+                  <i className="ri-download-line mr-2"></i>
+                  Documents
+                </Button>
+              </div>
+            </Card>
+          );
+        })}
+      </div>
+
+      {/* Bannière publicitaire pour outils de proposition */}
+      <AdBanner 
+        position="commercial-tenders-footer"
+        format="compact"
+        section="commercial-tenders"
+        userContext={{ userType: 'commercial', section: 'call-for-tenders' }}
+        priority="medium"
+        targetCategories={['proposal-tools', 'tender-management', 'business-development']}
+      />
+    </div>
+  );
+
   const tabs = [
     { id: 'dashboard', label: 'Tableau de Bord', icon: 'ri-dashboard-line', count: null },
+    { id: 'profile', label: 'Mon Profil', icon: 'ri-user-line', count: null },
+    { id: 'objectives', label: 'Objectifs', icon: 'ri-target-line', count: objectives.length },
+    { id: 'affiliated-products', label: 'Produits Affiliés', icon: 'ri-shopping-bag-line', count: affiliatedProducts.length },
+    { id: 'call-for-tenders', label: 'Appels d\'Offres', icon: 'ri-file-list-3-line', count: callsForTenders.filter(t => t.status === 'open').length },
     { id: 'leads', label: 'Leads Qualifiés', icon: 'ri-user-star-line', count: getFilteredLeads().length },
     { id: 'pipeline', label: 'Pipeline de Ventes', icon: 'ri-flow-chart', count: pipelineData.length },
     { id: 'commissions', label: 'Commissions', icon: 'ri-money-euro-circle-line', count: null },
@@ -2873,8 +4673,8 @@ export default function CommercialPage() {
         </div>
 
         {/* Navigation Tabs */}
-        <div className="px-6">
-          <nav className="flex space-x-8">
+        <div className="px-6 overflow-x-auto">
+          <nav className="flex space-x-8 min-w-max">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
@@ -2975,6 +4775,10 @@ export default function CommercialPage() {
           {/* Contenu principal */}
           <div className="lg:col-span-3">
             {activeTab === 'dashboard' && renderDashboard()}
+            {activeTab === 'profile' && renderProfile()}
+            {activeTab === 'objectives' && renderObjectives()}
+            {activeTab === 'affiliated-products' && renderAffiliatedProducts()}
+            {activeTab === 'call-for-tenders' && renderCallsForTenders()}
             {activeTab === 'leads' && renderLeads()}
             {activeTab === 'pipeline' && renderPipeline()}
             {activeTab === 'commissions' && renderCommissions()}
@@ -3062,6 +4866,228 @@ export default function CommercialPage() {
       {/* Messages de succès */}
       {renderSuccessMessage()}
       {renderLeadSuccessMessage()}
+
+      {/* Modal nouvel objectif */}
+      {showNewObjective && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-xl font-bold text-gray-900">Créer un Nouvel Objectif</h3>
+                <p className="text-sm text-gray-600 mt-1">Définissez un objectif mensuel à atteindre</p>
+              </div>
+              <button
+                onClick={() => setShowNewObjective(false)}
+                className="text-gray-400 hover:text-gray-600 w-8 h-8 flex items-center justify-center cursor-pointer"
+              >
+                <i className="ri-close-line text-2xl"></i>
+              </button>
+            </div>
+
+            <div className="space-y-5">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Titre de l'objectif <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={newObjective.title}
+                  onChange={(e) => setNewObjective(prev => ({ ...prev, title: e.target.value }))}
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  placeholder="Ex: Atteindre 150,000€ de CA"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                <textarea
+                  value={newObjective.description}
+                  onChange={(e) => setNewObjective(prev => ({ ...prev, description: e.target.value }))}
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  rows={3}
+                  placeholder="Décrivez votre objectif..."
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Catégorie</label>
+                  <select
+                    value={newObjective.category}
+                    onChange={(e) => setNewObjective(prev => ({ ...prev, category: e.target.value }))}
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm pr-8"
+                  >
+                    <option value="revenue">Chiffre d'affaires</option>
+                    <option value="leads">Génération de leads</option>
+                    <option value="meetings">Rendez-vous</option>
+                    <option value="ventes">Ventes</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Priorité</label>
+                  <select
+                    value={newObjective.priority}
+                    onChange={(e) => setNewObjective(prev => ({ ...prev, priority: e.target.value }))}
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm pr-8"
+                  >
+                    <option value="low">🟢 Basse</option>
+                    <option value="medium">🟡 Moyenne</option>
+                    <option value="high">🔴 Haute</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Valeur cible <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    value={newObjective.targetValue}
+                    onChange={(e) => setNewObjective(prev => ({ ...prev, targetValue: parseFloat(e.target.value) }))}
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    placeholder="Ex: 150000"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Unité</label>
+                  <select
+                    value={newObjective.unit}
+                    onChange={(e) => setNewObjective(prev => ({ ...prev, unit: e.target.value }))}
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm pr-8"
+                  >
+                    <option value="€">€ (Euros)</option>
+                    <option value="leads">Leads</option>
+                    <option value="RDV">Rendez-vous</option>
+                    <option value="%">% (Pourcentage)</option>
+                    <option value="ventes">Ventes</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Date d'échéance <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  value={newObjective.endDate}
+                  onChange={(e) => setNewObjective(prev => ({ ...prev, endDate: e.target.value }))}
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                />
+              </div>
+            </div>
+
+            <div className="flex space-x-3 mt-6 pt-6 border-t border-gray-200">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => setShowNewObjective(false)}
+              >
+                <i className="ri-close-line mr-2"></i>
+                Annuler
+              </Button>
+              <Button
+                variant="primary"
+                className="flex-1"
+                onClick={handleCreateObjective}
+              >
+                <i className="ri-add-line mr-2"></i>
+                Créer l'objectif
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal candidature appel d'offres */}
+      {showTenderApplication && selectedTender && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-xl font-bold text-gray-900">Candidater à l'Appel d'Offres</h3>
+                <p className="text-sm text-gray-600 mt-1">{selectedTender.title}</p>
+              </div>
+              <button
+                onClick={() => setShowTenderApplication(false)}
+                className="text-gray-400 hover:text-gray-600 w-8 h-8 flex items-center justify-center cursor-pointer"
+              >
+                <i className="ri-close-line text-2xl"></i>
+              </button>
+            </div>
+
+            <div className="space-y-5">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Proposition commerciale <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  value={tenderApplication.proposal}
+                  onChange={(e) => setTenderApplication(prev => ({ ...prev, proposal: e.target.value }))}
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  rows={6}
+                  placeholder="Décrivez votre proposition détaillée..."
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Prix proposé (€) <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    value={tenderApplication.estimatedPrice}
+                    onChange={(e) => setTenderApplication(prev => ({ ...prev, estimatedPrice: parseFloat(e.target.value) }))}
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    placeholder="Ex: 380000"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Délai de livraison</label>
+                  <input
+                    type="text"
+                    value={tenderApplication.deliveryTime}
+                    onChange={(e) => setTenderApplication(prev => ({ ...prev, deliveryTime: e.target.value }))}
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    placeholder="Ex: 6 mois"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Documents à joindre</label>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                  <i className="ri-upload-cloud-line text-4xl text-gray-400 mb-2"></i>
+                  <p className="text-sm text-gray-600">Glissez-déposez vos fichiers ici ou cliquez pour parcourir</p>
+                  <p className="text-xs text-gray-500 mt-1">PDF, DOC, DOCX jusqu'à 10MB</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex space-x-3 mt-6 pt-6 border-t border-gray-200">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => setShowTenderApplication(false)}
+              >
+                <i className="ri-close-line mr-2"></i>
+                Annuler
+              </Button>
+              <Button
+                variant="primary"
+                className="flex-1"
+                onClick={handleSubmitTenderApplication}
+              >
+                <i className="ri-send-plane-line mr-2"></i>
+                Envoyer la candidature
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -27,6 +27,21 @@ export default function EnterprisePage() {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingSaved, setEditingSaved] = useState(false);
+  const [showProductModal, setShowProductModal] = useState(false);
+  const [productSaved, setProductSaved] = useState(false);
+  const [productForm, setProductForm] = useState({
+    name: '',
+    category: '',
+    description: '',
+    price: '',
+    commission: '',
+    targetMarket: '',
+    salesMaterials: '',
+    technicalSpecs: '',
+    competitiveAdvantages: '',
+    trainingRequired: false,
+    certificationRequired: false
+  });
   const [contactForm, setContactForm] = useState({
     subject: '',
     message: '',
@@ -895,6 +910,47 @@ export default function EnterprisePage() {
     }, 2000);
   };
 
+  const handleAddProduct = () => {
+    setShowProductModal(true);
+    setProductSaved(false);
+    setProductForm({
+      name: '',
+      category: '',
+      description: '',
+      price: '',
+      commission: '',
+      targetMarket: '',
+      salesMaterials: '',
+      technicalSpecs: '',
+      competitiveAdvantages: '',
+      trainingRequired: false,
+      certificationRequired: false
+    });
+    trackAction('add-product-service');
+  };
+
+  const handleSaveProduct = () => {
+    if (!productForm.name || !productForm.category || !productForm.description) {
+      alert('Veuillez remplir tous les champs obligatoires');
+      return;
+    }
+
+    // Simuler la sauvegarde du produit
+    console.log('Produit/Service ajouté:', productForm);
+    
+    setProductSaved(true);
+    trackAction('save-product-service', { 
+      productName: productForm.name,
+      category: productForm.category
+    });
+
+    // Fermer le modal après 2 secondes
+    setTimeout(() => {
+      setShowProductModal(false);
+      setProductSaved(false);
+    }, 2000);
+  };
+
   const renderDashboard = () => (
     <div className="space-y-6">
       {/* Statistiques principales */}
@@ -1005,7 +1061,7 @@ export default function EnterprisePage() {
           <i className="ri-dashboard-line mr-2"></i>
           Accès Rapide
         </h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <Button
             variant="outline"
             className="h-20 flex flex-col items-center justify-center hover:bg-blue-50 hover:border-blue-300"
@@ -1037,6 +1093,14 @@ export default function EnterprisePage() {
           >
             <i className="ri-search-eye-line text-xl mb-2 text-orange-600"></i>
             <span className="text-sm font-medium">Outils Prospection</span>
+          </Button>
+          <Button
+            variant="outline"
+            className="h-20 flex flex-col items-center justify-center hover:bg-teal-50 hover:border-teal-300"
+            onClick={handleAddProduct}
+          >
+            <i className="ri-add-box-line text-xl mb-2 text-teal-600"></i>
+            <span className="text-sm font-medium">Ajouter Produit</span>
           </Button>
         </div>
       </Card>
@@ -2343,6 +2407,13 @@ export default function EnterprisePage() {
               <i className="ri-megaphone-line mr-3"></i>
               Appels d'Offres
             </button>
+            <button
+              onClick={() => window.REACT_APP_NAVIGATE('/enterprise/products')}
+              className="w-full flex items-center px-3 py-2 text-left rounded-lg transition-colors text-gray-700 hover:bg-gray-100 cursor-pointer"
+            >
+              <i className="ri-shopping-bag-line mr-3"></i>
+              Mes Produits
+            </button>
           </div>
         </nav>
 
@@ -2388,6 +2459,398 @@ export default function EnterprisePage() {
           {activeSection === 'prospection' && renderProspection()}
         </div>
       </div>
+
+      {/* Modal Ajout Produit/Service */}
+      {showProductModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            {!productSaved ? (
+              <>
+                <div className="p-6 border-b border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <div className="w-12 h-12 bg-gradient-to-r from-teal-500 to-cyan-600 rounded-full flex items-center justify-center mr-4">
+                        <i className="ri-shopping-bag-line text-2xl text-white"></i>
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-bold text-gray-900">Ajouter un Produit ou Service</h3>
+                        <p className="text-sm text-gray-600">Créez une fiche complète pour vos commerciaux</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setShowProductModal(false)}
+                      className="text-gray-400 hover:text-gray-600 cursor-pointer"
+                    >
+                      <i className="ri-close-line text-2xl"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="p-6">
+                  <form className="space-y-6">
+                    {/* Informations de base */}
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-4 flex items-center">
+                        <i className="ri-information-line mr-2 text-teal-600"></i>
+                        Informations de Base
+                      </h4>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <i className="ri-product-hunt-line mr-1"></i>
+                            Nom du produit/service <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            value={productForm.name}
+                            onChange={(e) => setProductForm({ ...productForm, name: e.target.value })}
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                            placeholder="Ex: CRM Enterprise Pro"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <i className="ri-folder-line mr-1"></i>
+                            Catégorie <span className="text-red-500">*</span>
+                          </label>
+                          <div className="relative">
+                            <select
+                              value={productForm.category}
+                              onChange={(e) => setProductForm({ ...productForm, category: e.target.value })}
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 pr-8"
+                              required
+                            >
+                              <option value="">Sélectionner une catégorie</option>
+                              <option value="Logiciel SaaS">Logiciel SaaS</option>
+                              <option value="Solution Cloud">Solution Cloud</option>
+                              <option value="Service Conseil">Service Conseil</option>
+                              <option value="Formation">Formation</option>
+                              <option value="Matériel">Matériel</option>
+                              <option value="Maintenance">Maintenance</option>
+                              <option value="Intégration">Intégration</option>
+                              <option value="Support">Support</option>
+                            </select>
+                            <i className="ri-arrow-down-s-line absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <i className="ri-file-text-line mr-1"></i>
+                          Description détaillée <span className="text-red-500">*</span>
+                        </label>
+                        <textarea
+                          value={productForm.description}
+                          onChange={(e) => setProductForm({ ...productForm, description: e.target.value })}
+                          rows={4}
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                          placeholder="Décrivez en détail votre produit ou service, ses fonctionnalités principales, ses avantages..."
+                          required
+                        ></textarea>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <i className="ri-money-euro-circle-line mr-1"></i>
+                            Prix de vente (€)
+                          </label>
+                          <input
+                            type="number"
+                            value={productForm.price}
+                            onChange={(e) => setProductForm({ ...productForm, price: e.target.value })}
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                            placeholder="Ex: 5000"
+                            min="0"
+                            step="100"
+                          />
+                          <p className="text-xs text-gray-500 mt-1">Prix public conseillé ou fourchette de prix</p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <i className="ri-percent-line mr-1"></i>
+                            Commission commerciale (%)
+                          </label>
+                          <input
+                            type="number"
+                            value={productForm.commission}
+                            onChange={(e) => setProductForm({ ...productForm, commission: e.target.value })}
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                            placeholder="Ex: 10"
+                            min="0"
+                            max="100"
+                            step="0.5"
+                          />
+                          <p className="text-xs text-gray-500 mt-1">Taux de commission pour les commerciaux</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Marché cible */}
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-4 flex items-center">
+                        <i className="ri-target-line mr-2 text-teal-600"></i>
+                        Marché Cible
+                      </h4>
+                      
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <i className="ri-group-line mr-1"></i>
+                          Clients cibles
+                        </label>
+                        <textarea
+                          value={productForm.targetMarket}
+                          onChange={(e) => setProductForm({ ...productForm, targetMarket: e.target.value })}
+                          rows={3}
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                          placeholder="Ex: PME de 50-200 employés, secteur technologie, décideurs IT..."
+                        ></textarea>
+                      </div>
+                    </div>
+
+                    {/* Supports de vente */}
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-4 flex items-center">
+                        <i className="ri-folder-open-line mr-2 text-teal-600"></i>
+                        Supports de Vente
+                      </h4>
+                      
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <i className="ri-file-list-line mr-1"></i>
+                          Documentation commerciale
+                        </label>
+                        <textarea
+                          value={productForm.salesMaterials}
+                          onChange={(e) => setProductForm({ ...productForm, salesMaterials: e.target.value })}
+                          rows={3}
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                          placeholder="Listez les supports disponibles: brochures, présentations, vidéos de démo, études de cas..."
+                        ></textarea>
+                      </div>
+
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <i className="ri-settings-line mr-1"></i>
+                          Spécifications techniques
+                        </label>
+                        <textarea
+                          value={productForm.technicalSpecs}
+                          onChange={(e) => setProductForm({ ...productForm, technicalSpecs: e.target.value })}
+                          rows={3}
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                          placeholder="Caractéristiques techniques, prérequis, compatibilité..."
+                        ></textarea>
+                      </div>
+
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <i className="ri-trophy-line mr-1"></i>
+                          Avantages concurrentiels
+                        </label>
+                        <textarea
+                          value={productForm.competitiveAdvantages}
+                          onChange={(e) => setProductForm({ ...productForm, competitiveAdvantages: e.target.value })}
+                          rows={3}
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                          placeholder="Points forts par rapport à la concurrence, USP, différenciateurs..."
+                        ></textarea>
+                      </div>
+                    </div>
+
+                    {/* Exigences */}
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-4 flex items-center">
+                        <i className="ri-checkbox-circle-line mr-2 text-teal-600"></i>
+                        Exigences pour les Commerciaux
+                      </h4>
+                      
+                      <div className="space-y-3 p-4 bg-gray-50 rounded-lg">
+                        <label className="flex items-start cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={productForm.trainingRequired}
+                            onChange={(e) => setProductForm({ ...productForm, trainingRequired: e.target.checked })}
+                            className="w-5 h-5 text-teal-600 border-gray-300 rounded focus:ring-teal-500 cursor-pointer mt-0.5"
+                          />
+                          <div className="ml-3">
+                            <span className="text-sm font-medium text-gray-700">
+                              <i className="ri-book-open-line mr-1 text-teal-600"></i>
+                              Formation obligatoire
+                            </span>
+                            <p className="text-xs text-gray-600 mt-1">
+                              Les commerciaux devront suivre une formation avant de vendre ce produit
+                            </p>
+                          </div>
+                        </label>
+
+                        <label className="flex items-start cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={productForm.certificationRequired}
+                            onChange={(e) => setProductForm({ ...productForm, certificationRequired: e.target.checked })}
+                            className="w-5 h-5 text-teal-600 border-gray-300 rounded focus:ring-teal-500 cursor-pointer mt-0.5"
+                          />
+                          <div className="ml-3">
+                            <span className="text-sm font-medium text-gray-700">
+                              <i className="ri-medal-line mr-1 text-teal-600"></i>
+                              Certification requise
+                            </span>
+                            <p className="text-xs text-gray-600 mt-1">
+                              Une certification officielle est nécessaire pour commercialiser ce produit
+                            </p>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+
+                    {/* Conseils */}
+                    <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                      <h5 className="font-medium text-blue-900 mb-3 flex items-center">
+                        <i className="ri-lightbulb-line mr-2"></i>
+                        Conseils pour une Fiche Produit Efficace
+                      </h5>
+                      <ul className="space-y-2 text-sm text-blue-800">
+                        <li className="flex items-start">
+                          <i className="ri-check-line text-blue-600 mr-2 mt-0.5"></i>
+                          <span>Soyez précis et détaillé dans la description pour faciliter le travail des commerciaux</span>
+                        </li>
+                        <li className="flex items-start">
+                          <i className="ri-check-line text-blue-600 mr-2 mt-0.5"></i>
+                          <span>Mettez en avant les bénéfices clients plutôt que les caractéristiques techniques</span>
+                        </li>
+                        <li className="flex items-start">
+                          <i className="ri-check-line text-blue-600 mr-2 mt-0.5"></i>
+                          <span>Fournissez des arguments de vente concrets et des cas d'usage</span>
+                        </li>
+                        <li className="flex items-start">
+                          <i className="ri-check-line text-blue-600 mr-2 mt-0.5"></i>
+                          <span>Indiquez clairement les avantages concurrentiels pour se démarquer</span>
+                        </li>
+                        <li className="flex items-start">
+                          <i className="ri-check-line text-blue-600 mr-2 mt-0.5"></i>
+                          <span>Mettez à jour régulièrement les informations et les supports de vente</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex space-x-3 pt-6 border-t border-gray-200">
+                      <Button 
+                        variant="primary" 
+                        className="flex-1 bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700"
+                        onClick={handleSaveProduct}
+                      >
+                        <i className="ri-save-line mr-2"></i>
+                        Enregistrer le produit/service
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        onClick={() => setShowProductModal(false)}
+                      >
+                        <i className="ri-close-line mr-2"></i>
+                        Annuler
+                      </Button>
+                    </div>
+
+                    <p className="text-center text-xs text-gray-500 mt-2">
+                      <i className="ri-information-line mr-1"></i>
+                      Ce produit sera visible par tous vos commerciaux et pourra être assigné dans les contrats
+                    </p>
+                  </form>
+                </div>
+              </>
+            ) : (
+              /* Message de confirmation */
+              <div className="p-8 text-center">
+                <div className="w-20 h-20 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i className="ri-check-line text-4xl text-white"></i>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Produit ajouté avec succès !</h3>
+                <p className="text-gray-600 mb-6">
+                  Votre produit/service a été enregistré dans votre catalogue
+                </p>
+                
+                <div className="max-w-2xl mx-auto mb-6">
+                  <div className="p-4 bg-green-50 border border-green-200 rounded-lg text-left">
+                    <h4 className="font-semibold text-green-900 mb-3 flex items-center">
+                      <i className="ri-checkbox-circle-line mr-2"></i>
+                      Résumé du Produit
+                    </h4>
+                    <div className="space-y-2 text-sm text-green-800">
+                      <div className="flex justify-between">
+                        <span className="font-medium">Nom:</span>
+                        <span>{productForm.name}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-medium">Catégorie:</span>
+                        <span>{productForm.category}</span>
+                      </div>
+                      {productForm.price && (
+                        <div className="flex justify-between">
+                          <span className="font-medium">Prix:</span>
+                          <span>{productForm.price}€</span>
+                        </div>
+                      )}
+                      {productForm.commission && (
+                        <div className="flex justify-between">
+                          <span className="font-medium">Commission:</span>
+                          <span>{productForm.commission}%</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg text-left mt-4">
+                    <h4 className="font-semibold text-blue-900 mb-2 flex items-center">
+                      <i className="ri-information-line mr-2"></i>
+                      Prochaines Étapes
+                    </h4>
+                    <ul className="space-y-2 text-sm text-blue-800">
+                      <li className="flex items-start">
+                        <i className="ri-check-line text-blue-600 mr-2 mt-0.5"></i>
+                        <span>Le produit est maintenant visible dans votre catalogue</span>
+                      </li>
+                      <li className="flex items-start">
+                        <i className="ri-check-line text-blue-600 mr-2 mt-0.5"></i>
+                        <span>Vous pouvez l'assigner à vos commerciaux dans les contrats</span>
+                      </li>
+                      <li className="flex items-start">
+                        <i className="ri-check-line text-blue-600 mr-2 mt-0.5"></i>
+                        <span>Les commerciaux auront accès à toutes les informations de vente</span>
+                      </li>
+                      <li className="flex items-start">
+                        <i className="ri-check-line text-blue-600 mr-2 mt-0.5"></i>
+                        <span>Vous pouvez modifier ou supprimer ce produit à tout moment</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="flex justify-center space-x-3">
+                  <Button 
+                    variant="primary"
+                    onClick={handleAddProduct}
+                  >
+                    <i className="ri-add-line mr-2"></i>
+                    Ajouter un autre produit
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setShowProductModal(false)}
+                  >
+                    <i className="ri-dashboard-line mr-2"></i>
+                    Retour au tableau de bord
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Modals */}
       {showContractModal && (

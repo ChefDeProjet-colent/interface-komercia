@@ -23,6 +23,7 @@ const PartnersPage = lazy(() => import('../pages/partners/page'));
 const EventsPage = lazy(() => import('../pages/events/page'));
 const FinancialInstitutionsPage = lazy(() => import('../pages/financial-institutions/page'));
 const EnterprisePage = lazy(() => import('../pages/enterprise/page'));
+const EnterpriseProductsPage = lazy(() => import('../pages/enterprise/products/page'));
 const MerchantsPage = lazy(() => import('../pages/merchants/page'));
 const InformalMerchantsPage = lazy(() => import('../pages/informal-merchants/page'));
 const KomerciaPage = lazy(() => import('../pages/komercia/page'));
@@ -200,6 +201,14 @@ const routes: RouteObject[] = [
   {
     path: '/enterprise/call-for-tenders',
     element: <EnterpriseCallForTendersPage />,
+  },
+  {
+    path: '/enterprise/products',
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <EnterpriseProductsPage />
+      </Suspense>
+    )
   },
   {
     path: '/merchants',
