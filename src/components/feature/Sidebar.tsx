@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 
 interface SidebarLinkProps {
   href: string;
@@ -39,9 +39,10 @@ interface SidebarProps {
   onSectionChange?: (section: string) => void;
 }
 
-export default function Sidebar({ onSectionChange }: SidebarProps) {
+export default function Sidebar({ userRole }: SidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
     { icon: 'ri-dashboard-line', label: 'Tableau de Bord', path: '/dashboard' },
@@ -92,117 +93,83 @@ export default function Sidebar({ onSectionChange }: SidebarProps) {
   ];
 
   return (
-    <div className="w-64 bg-gray-800 text-white h-screen flex flex-col overflow-y-auto">
-      {/* Logo */}
-      <div className="p-6 border-b border-gray-700 flex-shrink-0">
-        <h1 className="text-xl font-bold">Komercia</h1>
-        <p className="text-sm text-gray-400">CRM Commercial</p>
-      </div>
+    <>
+      {/* Mobile Menu Button */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="lg:hidden fixed top-4 left-4 z-50 w-10 h-10 bg-teal-500 text-white rounded-lg flex items-center justify-center hover:bg-teal-600 transition-colors shadow-lg"
+      >
+        <i className={`${isOpen ? 'ri-close-line' : 'ri-menu-line'} text-xl`}></i>
+      </button>
 
-      {/* Navigation */}
-      <nav className="mt-8 flex-1 overflow-y-auto px-3">
-        <div className="space-y-1">
-          <SidebarLink 
-            href="/" 
-            icon="ri-home-line" 
-            label="Accueil" 
-            isActive={location.pathname === '/'}
-          />
-          <SidebarLink 
-            href="/commercial" 
-            icon="ri-dashboard-line" 
-            label="Tableau de Bord" 
-            isActive={location.pathname === '/commercial' || location.pathname === '/dashboard'}
-          />
-          <SidebarLink 
-            href="/leads" 
-            icon="ri-user-star-line" 
-            label="Leads" 
-            isActive={location.pathname === '/leads'}
-          />
-          <SidebarLink 
-            href="/pipeline" 
-            icon="ri-flow-chart" 
-            label="Pipeline" 
-            isActive={location.pathname === '/pipeline'}
-          />
-          <SidebarLink 
-            href="/activities" 
-            icon="ri-calendar-check-line" 
-            label="Activités" 
-            isActive={location.pathname === '/activities'}
-          />
-          <SidebarLink 
-            href="/analytics" 
-            icon="ri-bar-chart-line" 
-            label="Analytics" 
-            isActive={location.pathname === '/analytics'}
-          />
-          <SidebarLink 
-            href="/commissions" 
-            icon="ri-money-euro-circle-line" 
-            label="Commissions" 
-            isActive={location.pathname === '/commissions'}
-          />
-        </div>
+      {/* Overlay */}
+      {isOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black/50 z-40"
+          onClick={() => setIsOpen(false)}
+        ></div>
+      )}
 
-        <div className="mt-8">
-          <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-            Gestion
-          </h3>
-          <div className="mt-2 space-y-1">
-            <SidebarLink 
-              href="/managers" 
-              icon="ri-team-line" 
-              label="Managers" 
-              isActive={location.pathname === '/managers'}
-            />
-            <SidebarLink 
-              href="/merchants" 
-              icon="ri-store-line" 
-              label="Marchands" 
-              isActive={location.pathname === '/merchants'}
-            />
-            <SidebarLink 
-              href="/enterprise" 
-              icon="ri-building-line" 
-              label="Entreprises" 
-              isActive={location.pathname === '/enterprise'}
-            />
-            <SidebarLink 
-              href="/startups" 
-              icon="ri-rocket-line" 
-              label="Startups" 
-              isActive={location.pathname === '/startups'}
-            />
-            <SidebarLink 
-              href="/events" 
-              icon="ri-calendar-event-line" 
-              label="Événements" 
-              isActive={location.pathname === '/events'}
-            />
-            <SidebarLink 
-              href="/consultants" 
-              icon="ri-user-settings-line" 
-              label="Consultants" 
-              isActive={location.pathname === '/consultants'}
-            />
+      {/* Sidebar */}
+      <div
+        className={`fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-200 z-40 transform transition-transform duration-300 ease-in-out flex flex-col ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
+        } lg:translate-x-0`}
+      >
+        {/* Logo - Fixed at top */}
+        <div className="p-4 sm:p-6 border-b border-gray-200 flex-shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center">
+              <i className="ri-building-line text-xl text-white"></i>
+            </div>
+            <div>
+              <h1 className="text-lg font-bold text-gray-900">Komercia</h1>
+              <p className="text-xs text-gray-600 capitalize">{userRole}</p>
+            </div>
           </div>
         </div>
-      </nav>
 
-      {/* User Profile */}
-      <div className="mt-auto p-4 border-t border-gray-700 flex-shrink-0">
-        <div className="flex items-center">
-          <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-            <i className="ri-user-line text-sm"></i>
+        {/* Navigation - Scrollable */}
+        <nav className="flex-1 overflow-y-auto p-4">
+          <div className="space-y-1">
+            {menuItems.map((item) => {
+              const isActive = location.pathname === item.path;
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setIsOpen(false)}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                    isActive
+                      ? 'bg-teal-50 text-teal-600 font-medium'
+                      : 'text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  <i className={`${item.icon} text-lg`}></i>
+                  <span className="text-sm">{item.label}</span>
+                </Link>
+              );
+            })}
           </div>
-          <div className="ml-3">
-            <p className="text-sm font-medium">Commercial Pro</p>
-            <p className="text-xs text-gray-400">En ligne</p>
+        </nav>
+
+        {/* User Profile - Fixed at bottom */}
+        <div className="p-4 border-t border-gray-200 flex-shrink-0">
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-gray-50">
+            <div className="w-10 h-10 bg-gradient-to-br from-teal-400 to-teal-600 rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0">
+              JD
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-gray-900 truncate">John Doe</p>
+              <p className="text-xs text-gray-600 truncate">john@example.com</p>
+            </div>
           </div>
+          <button className="w-full mt-3 flex items-center justify-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+            <i className="ri-logout-box-line"></i>
+            <span>Déconnexion</span>
+          </button>
         </div>
       </div>
-    </div>
+    </>
   );
 }
