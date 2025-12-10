@@ -3,8 +3,8 @@ import { lazy, Suspense } from 'react';
 import HomePage from '../pages/home/page';
 import RegisterPage from '../pages/register/page';
 import VerifyOTPPage from '../pages/verify-otp/page';
-import EnterpriseProfilePage from '../pages/enterprise/profile/page';
-import EnterpriseCallForTendersPage from '../pages/enterprise/call-for-tenders/page';
+import EntrepriseProfilePage from '../pages/enterprise/profile/page';
+import EntrepriseCallForTendersPage from '../pages/enterprise/call-for-tenders/page';
 
 // Lazy load components
 const LoginPage = lazy(() => import('../pages/login/page'));
@@ -22,8 +22,8 @@ const StartupsPage = lazy(() => import('../pages/startups/page'));
 const PartnersPage = lazy(() => import('../pages/partners/page'));
 const EventsPage = lazy(() => import('../pages/events/page'));
 const FinancialInstitutionsPage = lazy(() => import('../pages/financial-institutions/page'));
-const EnterprisePage = lazy(() => import('../pages/enterprise/page'));
-const EnterpriseProductsPage = lazy(() => import('../pages/enterprise/products/page'));
+const EntreprisePage = lazy(() => import('../pages/enterprise/page'));
+const EntrepriseProductsPage = lazy(() => import('../pages/enterprise/products/page'));
 const MerchantsPage = lazy(() => import('../pages/merchants/page'));
 const InformalMerchantsPage = lazy(() => import('../pages/informal-merchants/page'));
 const KomerciaPage = lazy(() => import('../pages/komercia/page'));
@@ -187,26 +187,26 @@ const routes: RouteObject[] = [
     )
   },
   {
-    path: '/enterprise',
+    path: '/entreprise',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <EnterprisePage />
+        <EntreprisePage />
       </Suspense>
     )
   },
   {
-    path: '/enterprise/profile',
-    element: <EnterpriseProfilePage />,
+    path: '/entreprise/profile',
+    element: <EntrepriseProfilePage />,
   },
   {
-    path: '/enterprise/call-for-tenders',
-    element: <EnterpriseCallForTendersPage />,
+    path: '/entreprise/call-for-tenders',
+    element: <EntrepriseCallForTendersPage />,
   },
   {
-    path: '/enterprise/products',
+    path: '/entreprise/products',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <EnterpriseProductsPage />
+        <EntrepriseProductsPage />
       </Suspense>
     )
   },
