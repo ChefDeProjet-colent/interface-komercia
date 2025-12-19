@@ -92,6 +92,17 @@ export default function Sidebar({ userRole }: SidebarProps) {
     }
   ];
 
+  const getMenuItems = () => {
+    if (userRole === 'entreprise' || userRole === 'enterprise') {
+      return [
+        { path: '/enterprise', icon: 'ri-dashboard-line', label: 'Tableau de bord' },
+        { path: '/enterprise/profile', icon: 'ri-building-line', label: 'Profil Entreprise' },
+        { path: '/enterprise/call-for-tenders', icon: 'ri-megaphone-line', label: 'Appels d\'Offres' },
+        { path: '/enterprise/products', icon: 'ri-shopping-bag-line', label: 'Produits & Services' },
+      ];
+    }
+  };
+
   return (
     <>
       {/* Mobile Menu Button */}

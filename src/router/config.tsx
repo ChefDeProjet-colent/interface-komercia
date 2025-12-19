@@ -3,6 +3,7 @@ import { lazy, Suspense } from 'react';
 import HomePage from '../pages/home/page';
 import RegisterPage from '../pages/register/page';
 import VerifyOTPPage from '../pages/verify-otp/page';
+import EntrepriseLayout from '../pages/enterprise/layout';
 import EntrepriseProfilePage from '../pages/enterprise/profile/page';
 import EntrepriseCallForTendersPage from '../pages/enterprise/call-for-tenders/page';
 
@@ -187,28 +188,34 @@ const routes: RouteObject[] = [
     )
   },
   {
-    path: '/entreprise',
-    element: (
-      <Suspense fallback={<LoadingSpinner />}>
-        <EntreprisePage />
-      </Suspense>
-    )
-  },
-  {
-    path: '/entreprise/profile',
-    element: <EntrepriseProfilePage />,
-  },
-  {
-    path: '/entreprise/call-for-tenders',
-    element: <EntrepriseCallForTendersPage />,
-  },
-  {
-    path: '/entreprise/products',
-    element: (
-      <Suspense fallback={<LoadingSpinner />}>
-        <EntrepriseProductsPage />
-      </Suspense>
-    )
+    path: '/enterprise',
+    element: <EntrepriseLayout />,
+    children: [
+      {
+        index: true,
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <EntreprisePage />
+          </Suspense>
+        )
+      },
+      {
+        path: 'profile',
+        element: <EntrepriseProfilePage />,
+      },
+      {
+        path: 'call-for-tenders',
+        element: <EntrepriseCallForTendersPage />,
+      },
+      {
+        path: 'products',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <EntrepriseProductsPage />
+          </Suspense>
+        )
+      }
+    ]
   },
   {
     path: '/merchants',
