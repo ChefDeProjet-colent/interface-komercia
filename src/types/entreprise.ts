@@ -35,7 +35,7 @@ export interface Entreprise {
   rccm?: File | string; // Document RCCM (file)
   nif?: string; // Numéro d'Identification Fiscale
   nif_document?: File | string; // Document NIF (file)
-  secteur_activite: string; // obligatoire - Menu déroulant
+  secteur_activite: string; // obligatoire - Menu déroulante
   taille: "Micro (1-10 employés)" | "Petite (11-50)" | "Moyenne (51-250)" | "Grande (250+)"; // obligatoire
   
   // Localisation avec listes déroulantes
@@ -179,3 +179,131 @@ export const VILLES_PAR_PAYS: Record<string, string[]> = {
   'Madagascar': ['Antananarivo', 'Toamasina', 'Antsirabe', 'Mahajanga', 'Fianarantsoa', 'Toliara'],
   'Maurice': ['Port-Louis', 'Beau Bassin-Rose Hill', 'Vacoas-Phoenix', 'Curepipe', 'Quatre Bornes'],
 };
+
+// ============================================
+// INTERFACES POUR RECRUTEMENT DE COMMERCIAUX
+// ============================================
+
+// Types de rémunération
+export type TypeRemuneration = 'Fixe' | 'Commission' | 'Fixe+Commission';
+
+export interface RemunerationDetails {
+  type: TypeRemuneration;
+  montant_fixe?: number; // Si type = 'Fixe' ou 'Fixe+Commission'
+  taux_commission?: number; // Si type = 'Commission' ou 'Fixe+Commission' (en %)
+}
+
+export interface OffreRecrutement {
+  id?: string;
+  
+  // Section 1: Informations Générales sur le Recrutement
+  titre: string; // obligatoire
+  description: string; // obligatoire
+  type_contrat: 'CDI' | 'CDD' | 'Freelance' | 'Temps partiel'; // obligatoire
+  duree_contrat?: string; // optionnel - Ex: "6 mois renouvelables"
+  remuneration?: RemunerationDetails; // optionnel - Structure détaillée
+  
+  // Section 2: Critères de Recrutement
+  experience_requise: string; // obligatoire - Ex: "3 ans minimum en prospection B2B"
+  competences_recherchees: string[]; // obligatoire - Liste de mots-clés
+  langues_requises?: string[]; // optionnel - Ex: ["Français", "Anglais"]
+  disponibilite?: 'Immédiate' | 'Sous 1 mois' | 'Flexible'; // optionnel
+  mobilite_geographique?: 'Locale' | 'Régionale' | 'Internationale'; // optionnel
+  
+  // Section 3: Détails sur la Mission
+  objectifs_vente: string; // obligatoire - Ex: "Atteindre un CA de 50 000 $ en 6 mois"
+  zone_intervention: string[]; // obligatoire - Liste des pays (choix multiple)
+  produits_services_promouvoir: string[]; // obligatoire - Liste des produits/services de l'entreprise (choix multiple)
+  support_fourni?: string; // optionnel - Ex: "Formation initiale, outils CRM, base prospects"
+  
+  // Section 4: Gestion des Candidatures
+  nombre_postes: number; // obligatoire
+  statut: 'Ouverte' | 'Fermée' | 'En cours de traitement'; // obligatoire
+  
+  // Section 5: Suivi et Analyse (calculés automatiquement)
+  nombre_vues?: number;
+  nombre_candidatures?: number;
+  taux_conversion?: number;
+  
+  // Métadonnées
+  date_creation?: string;
+  date_limite?: string;
+  entreprise_id?: string;
+}
+
+export interface CandidatureCommercial {
+  id?: string;
+  offre_id: string;
+  offre_titre?: string; // Titre de l'offre pour affichage
+  nom_candidat: string;
+  email: string;
+  telephone: string;
+  code_pays?: string;
+  competences_principales: string[];
+  experience: string;
+  statut: typeof STATUTS_CANDIDATURE[number];
+  date_candidature: string;
+  lettre_motivation?: string;
+  cv_url?: string;
+  entretien_planifie?: {
+    date: string;
+    heure: string;
+    lieu: string;
+  };
+  notes?: string;
+}
+
+// Constantes pour les listes déroulantes
+export const TYPES_CONTRAT = ['CDI', 'CDD', 'Freelance', 'Temps partiel'] as const;
+
+export const TYPES_REMUNERATION: TypeRemuneration[] = ['Fixe', 'Commission', 'Fixe+Commission'];
+
+export const DISPONIBILITES = ['Immédiate', 'Sous 1 mois', 'Flexible'] as const;
+
+export const MOBILITES = ['Locale', 'Régionale', 'Internationale'] as const;
+
+export const STATUTS_OFFRE = ['Ouverte', 'Fermée', 'En cours de traitement'] as const;
+
+export const STATUTS_CANDIDATURE = [
+  'En attente',
+  'En cours d\'évaluation',
+  'Acceptée',
+  'Rejetée'
+] as const;
+
+export const COMPETENCES_SUGGESTIONS = [
+  'Négociation',
+  'Prospection',
+  'CRM',
+  'Closing',
+  'Vente B2B',
+  'Vente B2C',
+  'Gestion de la relation client',
+  'Développement commercial',
+  'Marketing digital',
+  'Réseautage',
+  'Présentation commerciale',
+  'Analyse de marché',
+  'Gestion de pipeline',
+  'Cold calling',
+  'Lead generation',
+  'Account management',
+  'Vente consultative',
+  'Cross-selling',
+  'Up-selling',
+  'Fidélisation client'
+];
+
+export const LANGUES_DISPONIBLES = [
+  'Français',
+  'Anglais',
+  'Arabe',
+  'Espagnol',
+  'Portugais',
+  'Allemand',
+  'Chinois',
+  'Swahili',
+  'Wolof',
+  'Bambara',
+  'Lingala'
+];

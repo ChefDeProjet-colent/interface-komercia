@@ -1,14 +1,16 @@
-import { RouteObject } from 'react-router-dom';
+import { type RouteObject } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import HomePage from '../pages/home/page';
 import RegisterPage from '../pages/register/page';
 import VerifyOTPPage from '../pages/verify-otp/page';
-import EntrepriseProfilePage from '../pages/enterprise/profile/page';
-import EntrepriseCallForTendersPage from '../pages/enterprise/call-for-tenders/page';
+import EntrepriseLayout from '../pages/enterprise/layout';
 
 // Lazy load components
 const LoginPage = lazy(() => import('../pages/login/page'));
 const CommercialPage = lazy(() => import('../pages/commercial/page'));
+const CommercialProfilePage = lazy(() => import('../pages/commercial/profile/ProfileCommercial'));
+const CommercialCallForTendersPage = lazy(() => import('../pages/commercial/call-for-tenders/page'));
+const CommercialEntretiensPage = lazy(() => import('../pages/commercial/entretiens/page'));
 const LeadsPage = lazy(() => import('../pages/leads/page'));
 const PipelinePage = lazy(() => import('../pages/pipeline/page'));
 const ActivitiesPage = lazy(() => import('../pages/activities/page'));
@@ -23,7 +25,11 @@ const PartnersPage = lazy(() => import('../pages/partners/page'));
 const EventsPage = lazy(() => import('../pages/events/page'));
 const FinancialInstitutionsPage = lazy(() => import('../pages/financial-institutions/page'));
 const EntreprisePage = lazy(() => import('../pages/enterprise/page'));
+const EntrepriseProfilePage = lazy(() => import('../pages/enterprise/profile/page'));
+const EntrepriseCallForTendersPage = lazy(() => import('../pages/enterprise/call-for-tenders/page').then(module => ({ default: module.default })));
 const EntrepriseProductsPage = lazy(() => import('../pages/enterprise/products/page'));
+const EntrepriseCandidaturesPage = lazy(() => import('../pages/enterprise/candidatures/page'));
+const EntrepriseEntretiensPage = lazy(() => import('../pages/enterprise/entretiens/page'));
 const MerchantsPage = lazy(() => import('../pages/merchants/page'));
 const InformalMerchantsPage = lazy(() => import('../pages/informal-merchants/page'));
 const KomerciaPage = lazy(() => import('../pages/komercia/page'));
@@ -64,9 +70,21 @@ const routes: RouteObject[] = [
   },
   {
     path: '/commercial',
+    element: <CommercialPage />,
+  },
+  {
+    path: '/commercial/profile',
+    element: <CommercialProfilePage />,
+  },
+  {
+    path: '/commercial/call-for-tenders',
+    element: <CommercialCallForTendersPage />,
+  },
+  {
+    path: '/commercial/entretiens',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <CommercialPage />
+        <CommercialEntretiensPage />
       </Suspense>
     )
   },
@@ -187,28 +205,58 @@ const routes: RouteObject[] = [
     )
   },
   {
-    path: '/entreprise',
-    element: (
-      <Suspense fallback={<LoadingSpinner />}>
-        <EntreprisePage />
-      </Suspense>
-    )
-  },
-  {
-    path: '/entreprise/profile',
-    element: <EntrepriseProfilePage />,
-  },
-  {
-    path: '/entreprise/call-for-tenders',
-    element: <EntrepriseCallForTendersPage />,
-  },
-  {
-    path: '/entreprise/products',
-    element: (
-      <Suspense fallback={<LoadingSpinner />}>
-        <EntrepriseProductsPage />
-      </Suspense>
-    )
+    path: '/enterprise',
+    element: <EntrepriseLayout />,
+    children: [
+      {
+        index: true,
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <EntreprisePage />
+          </Suspense>
+        )
+      },
+      {
+        path: 'profile',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <EntrepriseProfilePage />
+          </Suspense>
+        )
+      },
+      {
+        path: 'call-for-tenders',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <EntrepriseCallForTendersPage />
+          </Suspense>
+        )
+      },
+      {
+        path: 'candidatures',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <EntrepriseCandidaturesPage />
+          </Suspense>
+        )
+      },
+      {
+        path: 'entretiens',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <EntrepriseEntretiensPage />
+          </Suspense>
+        )
+      },
+      {
+        path: 'products',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <EntrepriseProductsPage />
+          </Suspense>
+        )
+      }
+    ]
   },
   {
     path: '/merchants',

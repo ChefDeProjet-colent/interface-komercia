@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Sidebar from '../../../components/feature/Sidebar';
 import { Produit } from '../../../types/entreprise';
 
 interface ProductExtended extends Produit {
@@ -181,9 +180,7 @@ export default function EnterpriseProductsPage() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar userRole="enterprise" />
-      
-      <div className="flex-1 lg:ml-64">
+      <div className="flex-1">
         {/* Header */}
         <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
           <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">

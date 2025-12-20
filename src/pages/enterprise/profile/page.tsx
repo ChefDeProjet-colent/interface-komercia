@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import Card from '../../../components/base/Card';
 import Button from '../../../components/base/Button';
-import Sidebar from '../../../components/feature/Sidebar';
 import { Entreprise, ContactPrincipal, AutreContact, SecteurActivite, SECTEURS_ACTIVITE, TAILLES_ENTREPRISE, PAYS_AFRIQUE, VILLES_PAR_PAYS, PaysInfo } from '../../../types/entreprise';
 
 export default function EntrepriseProfilePage() {
@@ -132,9 +131,7 @@ export default function EntrepriseProfilePage() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar userRole="entreprise" />
-      
-      <div className="flex-1 lg:ml-64">
+      <div className="flex-1">
         {/* Header */}
         <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
           <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
@@ -914,7 +911,7 @@ export default function EntrepriseProfilePage() {
               value={newZone}
               onChange={(e) => setNewZone(e.target.value)}
               placeholder="Ex: Afrique de l'Ouest"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent mb-4 text-sm sm:text-base"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm sm:text-base"
             />
             <div className="flex flex-col sm:flex-row gap-3">
               <button

@@ -36,6 +36,7 @@ function SidebarLink({ href, icon, label, isActive, onClick }: SidebarLinkProps)
 }
 
 interface SidebarProps {
+  userRole?: string;
   onSectionChange?: (section: string) => void;
 }
 
@@ -44,53 +45,72 @@ export default function Sidebar({ userRole }: SidebarProps) {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
-  const menuItems = [
-    { icon: 'ri-dashboard-line', label: 'Tableau de Bord', path: '/dashboard' },
-    { icon: 'ri-user-line', label: 'Mon Profil', path: '/profile' },
-    { icon: 'ri-file-list-3-line', label: 'Appels d\'Offres', path: '/call-for-tenders' },
-    {
-      id: 'commercial',
-      label: 'Interface Commerciale',
-      icon: 'ri-dashboard-line',
-      path: '/commercial',
-      active: location.pathname === '/commercial' || location.pathname === '/dashboard'
-    },
-    {
-      id: 'leads',
-      label: 'Leads',
-      icon: 'ri-user-star-line',
-      path: '/leads',
-      active: location.pathname === '/leads'
-    },
-    {
-      id: 'pipeline',
-      label: 'Pipeline',
-      icon: 'ri-flow-chart',
-      path: '/pipeline',
-      active: location.pathname === '/pipeline'
-    },
-    {
-      id: 'activities',
-      label: 'Activités',
-      icon: 'ri-calendar-event-line',
-      path: '/activities',
-      active: location.pathname === '/activities'
-    },
-    {
-      id: 'analytics',
-      label: 'Analytics',
-      icon: 'ri-bar-chart-line',
-      path: '/analytics',
-      active: location.pathname === '/analytics'
-    },
-    {
-      id: 'commissions',
-      label: 'Commissions',
-      icon: 'ri-wallet-line',
-      path: '/commissions',
-      active: location.pathname === '/commissions'
-    }
+  // Menu items pour Commercial
+  const commercialMenuItems = [
+    { icon: 'ri-dashboard-line', label: 'Tableau de bord', path: '/commercial' },
+    { icon: 'ri-user-add-line', label: 'Leads', path: '/leads' },
+    { icon: 'ri-git-branch-line', label: 'Pipeline', path: '/pipeline' },
+    { icon: 'ri-calendar-check-line', label: 'Activités', path: '/activities' },
+    { icon: 'ri-bar-chart-line', label: 'Analytics', path: '/analytics' },
+    { icon: 'ri-money-dollar-circle-line', label: 'Commissions', path: '/commissions' },
+    { icon: 'ri-user-line', label: 'Mon Profil', path: '/commercial/profile' },
+    { icon: 'ri-file-list-3-line', label: 'Appels d\'Offres', path: '/commercial/call-for-tenders' },
+    { icon: 'ri-calendar-event-line', label: 'Entretiens', path: '/commercial/entretiens' },
   ];
+
+  // Déterminer les liens du menu en fonction du rôle et de la route actuelle
+  const getMenuItems = () => {
+    // Si on est sur une route entreprise
+    if (location.pathname.startsWith('/enterprise')) {
+      return [
+        { path: '/enterprise', icon: 'ri-dashboard-line', label: 'Tableau de bord' },
+        { path: '/enterprise/profile', icon: 'ri-building-line', label: 'Profil Entreprise' },
+        { path: '/enterprise/call-for-tenders', icon: 'ri-megaphone-line', label: 'Appels d\'Offres' },
+        { path: '/enterprise/candidatures', icon: 'ri-user-search-line', label: 'Candidatures' },
+        { path: '/enterprise/entretiens', icon: 'ri-calendar-check-line', label: 'Entretiens' },
+        { path: '/enterprise/products', icon: 'ri-shopping-bag-line', label: 'Produits & Services' },
+      ];
+    }
+    
+    // Si on est sur une route commercial
+    if (location.pathname.startsWith('/commercial')) {
+      return [
+        { path: '/commercial', icon: 'ri-dashboard-line', label: 'Tableau de bord' },
+        { path: '/leads', icon: 'ri-user-star-line', label: 'Leads' },
+        { path: '/pipeline', icon: 'ri-flow-chart', label: 'Pipeline' },
+        { path: '/activities', icon: 'ri-calendar-check-line', label: 'Activités' },
+        { path: '/analytics', icon: 'ri-line-chart-line', label: 'Analytics' },
+        { path: '/commissions', icon: 'ri-money-euro-circle-line', label: 'Commissions' },
+        { path: '/commercial/profile', icon: 'ri-user-line', label: 'Mon Profil' },
+        { path: '/commercial/call-for-tenders', icon: 'ri-file-list-3-line', label: 'Appels d\'Offres' },
+      ];
+    }
+
+    // Par défaut, afficher les liens commerciaux
+    return [
+      { path: '/commercial', icon: 'ri-dashboard-line', label: 'Tableau de bord' },
+      { path: '/leads', icon: 'ri-user-star-line', label: 'Leads' },
+      { path: '/pipeline', icon: 'ri-flow-chart', label: 'Pipeline' },
+      { path: '/activities', icon: 'ri-calendar-check-line', label: 'Activités' },
+      { path: '/analytics', icon: 'ri-line-chart-line', label: 'Analytics' },
+      { path: '/commissions', icon: 'ri-money-euro-circle-line', label: 'Commissions' },
+      { path: '/commercial/profile', icon: 'ri-user-line', label: 'Mon Profil' },
+      { path: '/commercial/call-for-tenders', icon: 'ri-file-list-3-line', label: 'Appels d\'Offres' },
+    ];
+  };
+
+  const menuItems = getMenuItems();
+
+  // Déterminer le label du rôle
+  const getRoleLabel = () => {
+    if (location.pathname.startsWith('/enterprise')) {
+      return 'Entreprise';
+    }
+    if (location.pathname.startsWith('/commercial')) {
+      return 'Commercial';
+    }
+    return userRole || 'Utilisateur';
+  };
 
   return (
     <>
@@ -124,7 +144,7 @@ export default function Sidebar({ userRole }: SidebarProps) {
             </div>
             <div>
               <h1 className="text-lg font-bold text-gray-900">Komercia</h1>
-              <p className="text-xs text-gray-600 capitalize">{userRole}</p>
+              <p className="text-xs text-gray-600 capitalize">{getRoleLabel()}</p>
             </div>
           </div>
         </div>
