@@ -15,7 +15,7 @@ import {
   LANGUES_DISPONIBLES,
   PAYS_AFRIQUE,
   TYPES_REMUNERATION,
-type  RemunerationDetails
+  RemunerationDetails
 } from '../../../types/entreprise';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';

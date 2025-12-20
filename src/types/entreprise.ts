@@ -234,30 +234,23 @@ export interface OffreRecrutement {
 export interface CandidatureCommercial {
   id?: string;
   offre_id: string;
-  
-  // Informations du candidat
+  offre_titre?: string; // Titre de l'offre pour affichage
   nom_candidat: string;
   email: string;
   telephone: string;
   code_pays?: string;
-  
-  // Expérience et compétences
   competences_principales: string[];
-  experience: string; // Ex: "5 ans en prospection B2B"
-  cv?: File | string;
-  lettre_motivation?: string;
-  
-  // Statut de la candidature
-  statut: 'En attente' | 'En cours d\'évaluation' | 'Acceptée' | 'Rejetée';
+  experience: string;
+  statut: typeof STATUTS_CANDIDATURE[number];
   date_candidature: string;
-  
-  // Notes et actions
-  notes?: string;
+  lettre_motivation?: string;
+  cv_url?: string;
   entretien_planifie?: {
     date: string;
     heure: string;
     lieu: string;
   };
+  notes?: string;
 }
 
 // Constantes pour les listes déroulantes
