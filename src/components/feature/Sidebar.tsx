@@ -48,14 +48,25 @@ export default function Sidebar({ userRole }: SidebarProps) {
   // Menu items pour Commercial
   const commercialMenuItems = [
     { icon: 'ri-dashboard-line', label: 'Tableau de bord', path: '/commercial' },
-    { icon: 'ri-user-add-line', label: 'Leads', path: '/leads' },
-    { icon: 'ri-git-branch-line', label: 'Pipeline', path: '/pipeline' },
+    { icon: 'ri-user-star-line', label: 'Leads', path: '/leads' },
+    { icon: 'ri-flow-chart', label: 'Pipeline', path: '/pipeline' },
     { icon: 'ri-calendar-check-line', label: 'Activités', path: '/activities' },
-    { icon: 'ri-bar-chart-line', label: 'Analytics', path: '/analytics' },
+    { icon: 'ri-line-chart-line', label: 'Analytics', path: '/analytics' },
     { icon: 'ri-money-dollar-circle-line', label: 'Commissions', path: '/commissions' },
-    { icon: 'ri-user-line', label: 'Mon Profil', path: '/commercial/profile' },
-    { icon: 'ri-file-list-3-line', label: 'Appels d\'Offres', path: '/commercial/call-for-tenders' },
+    { icon: 'ri-user-line', label: 'Profil', path: '/commercial/profile' },
+    { icon: 'ri-megaphone-line', label: 'Appels d\'offres', path: '/commercial/call-for-tenders' },
     { icon: 'ri-calendar-event-line', label: 'Entretiens', path: '/commercial/entretiens' },
+    { icon: 'ri-file-text-line', label: 'Contrats', path: '/commercial/contrats' },
+  ];
+
+  const enterpriseNavItems = [
+    { icon: 'ri-dashboard-line', label: 'Tableau de bord', path: '/enterprise' },
+    { icon: 'ri-file-list-3-line', label: 'Appels d\'Offres', path: '/enterprise/call-for-tenders' },
+    { icon: 'ri-calendar-event-line', label: 'Entretiens', path: '/enterprise/entretiens' },
+    { icon: 'ri-file-text-line', label: 'Contrats', path: '/enterprise/contrats' },
+    { icon: 'ri-briefcase-line', label: 'Produits/Services', path: '/enterprise/products' },
+    { icon: 'ri-team-line', label: 'Candidatures', path: '/enterprise/candidatures' },
+    { icon: 'ri-user-line', label: 'Mon Profil', path: '/enterprise/profile' },
   ];
 
   // Déterminer les liens du menu en fonction du rôle et de la route actuelle
@@ -68,6 +79,7 @@ export default function Sidebar({ userRole }: SidebarProps) {
         { path: '/enterprise/call-for-tenders', icon: 'ri-megaphone-line', label: 'Appels d\'Offres' },
         { path: '/enterprise/candidatures', icon: 'ri-user-search-line', label: 'Candidatures' },
         { path: '/enterprise/entretiens', icon: 'ri-calendar-check-line', label: 'Entretiens' },
+        { path: '/enterprise/contrats', icon: 'ri-file-text-line', label: 'Contrats' },
         { path: '/enterprise/products', icon: 'ri-shopping-bag-line', label: 'Produits & Services' },
       ];
     }
@@ -83,6 +95,8 @@ export default function Sidebar({ userRole }: SidebarProps) {
         { path: '/commissions', icon: 'ri-money-euro-circle-line', label: 'Commissions' },
         { path: '/commercial/profile', icon: 'ri-user-line', label: 'Mon Profil' },
         { path: '/commercial/call-for-tenders', icon: 'ri-file-list-3-line', label: 'Appels d\'Offres' },
+        { path: '/commercial/entretiens', icon: 'ri-calendar-event-line', label: 'Entretiens' },
+        { path: '/commercial/contrats', icon: 'ri-file-text-line', label: 'Contrats' },
       ];
     }
 
@@ -96,6 +110,8 @@ export default function Sidebar({ userRole }: SidebarProps) {
       { path: '/commissions', icon: 'ri-money-euro-circle-line', label: 'Commissions' },
       { path: '/commercial/profile', icon: 'ri-user-line', label: 'Mon Profil' },
       { path: '/commercial/call-for-tenders', icon: 'ri-file-list-3-line', label: 'Appels d\'Offres' },
+      { path: '/commercial/entretiens', icon: 'ri-calendar-event-line', label: 'Entretiens' },
+      { path: '/commercial/contrats', icon: 'ri-file-text-line', label: 'Contrats' },
     ];
   };
 

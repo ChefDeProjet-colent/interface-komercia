@@ -1,147 +1,163 @@
 import { useState } from 'react';
 import Sidebar from '../../../components/feature/Sidebar';
 
-interface Interview {
+interface Entretien {
   id: string;
-  company: string;
-  companyLogo: string;
-  position: string;
+  entreprise_nom: string;
+  entreprise_logo?: string;
+  offre_titre: string;
   date: string;
-  time: string;
-  location: string;
-  type: 'Visioconférence' | 'Bureau' | 'Téléphone' | 'Autre';
-  status: 'Planifié' | 'Confirmé' | 'Terminé' | 'Annulé';
-  interviewer: string;
-  interviewerRole: string;
-  notes?: string;
-  address?: string;
-  meetingLink?: string;
+  heure_debut: string;
+  heure_fin: string;
+  mode: 'En ligne' | 'En physique';
+  plateforme?: 'Meet' | 'Zoom' | 'WhatsApp';
+  lien_visio?: string;
+  adresse?: string;
+  latitude?: number;
+  longitude?: number;
+  recruteur_nom: string;
+  recruteur_fonction: string;
+  recruteur_email: string;
+  recruteur_telephone: string;
+  statut: 'Planifié' | 'Confirmé' | 'Terminé' | 'Annulé';
+  commentaire?: string;
 }
 
-const mockInterviews: Interview[] = [
-  {
-    id: '1',
-    company: 'TechCorp Solutions',
-    companyLogo: 'https://readdy.ai/api/search-image?query=modern%20technology%20company%20logo%20with%20blue%20and%20white%20colors%20professional%20corporate%20branding&width=80&height=80&seq=techcorp-logo-001&orientation=squarish',
-    position: 'Commercial Senior B2B',
-    date: '2024-02-15',
-    time: '10:00',
-    location: 'Visioconférence',
-    type: 'Visioconférence',
-    status: 'Confirmé',
-    interviewer: 'Marie Dubois',
-    interviewerRole: 'Directrice des Ressources Humaines',
-    meetingLink: 'https://meet.google.com/abc-defg-hij',
-    notes: 'Préparer une présentation de vos réalisations commerciales des 2 dernières années'
-  },
-  {
-    id: '2',
-    company: 'InnovateLab',
-    companyLogo: 'https://readdy.ai/api/search-image?query=innovative%20laboratory%20company%20logo%20with%20green%20and%20orange%20colors%20modern%20design%20professional%20branding&width=80&height=80&seq=innovate-logo-002&orientation=squarish',
-    position: 'Responsable Développement Commercial',
-    date: '2024-02-18',
-    time: '14:30',
-    location: 'Bureau',
-    type: 'Bureau',
-    status: 'Planifié',
-    interviewer: 'Jean Martin',
-    interviewerRole: 'Directeur Commercial',
-    address: '45 Avenue des Champs-Élysées, 75008 Paris',
-    notes: 'Entretien en présentiel avec l\'équipe commerciale'
-  },
-  {
-    id: '3',
-    company: 'GlobalTrade Inc',
-    companyLogo: 'https://readdy.ai/api/search-image?query=global%20trading%20company%20logo%20with%20red%20and%20black%20colors%20international%20business%20professional%20branding&width=80&height=80&seq=global-logo-003&orientation=squarish',
-    position: 'Business Developer',
-    date: '2024-02-12',
-    time: '11:00',
-    location: 'Visioconférence',
-    type: 'Visioconférence',
-    status: 'Terminé',
-    interviewer: 'Sophie Laurent',
-    interviewerRole: 'CEO',
-    meetingLink: 'https://zoom.us/j/123456789',
-    notes: 'Entretien terminé - En attente de retour'
-  },
-  {
-    id: '4',
-    company: 'FinanceHub',
-    companyLogo: 'https://readdy.ai/api/search-image?query=finance%20company%20logo%20with%20gold%20and%20navy%20blue%20colors%20banking%20professional%20corporate%20branding&width=80&height=80&seq=finance-logo-004&orientation=squarish',
-    position: 'Chargé de Clientèle Entreprises',
-    date: '2024-02-20',
-    time: '09:00',
-    location: 'Téléphone',
-    type: 'Téléphone',
-    status: 'Planifié',
-    interviewer: 'Pierre Durand',
-    interviewerRole: 'Responsable Recrutement',
-    notes: 'Premier entretien téléphonique de présélection'
-  },
-  {
-    id: '5',
-    company: 'EcoSolutions',
-    companyLogo: 'https://readdy.ai/api/search-image?query=eco%20friendly%20company%20logo%20with%20green%20and%20earth%20tones%20sustainable%20business%20professional%20branding&width=80&height=80&seq=eco-logo-005&orientation=squarish',
-    position: 'Commercial Grands Comptes',
-    date: '2024-02-08',
-    time: '15:00',
-    location: 'Bureau',
-    type: 'Bureau',
-    status: 'Annulé',
-    interviewer: 'Claire Moreau',
-    interviewerRole: 'Directrice Commerciale',
-    address: '12 Rue de la Paix, 69002 Lyon',
-    notes: 'Entretien annulé par l\'entreprise - Poste pourvu'
-  },
-  {
-    id: '6',
-    company: 'MediaPro Agency',
-    companyLogo: 'https://readdy.ai/api/search-image?query=media%20agency%20logo%20with%20purple%20and%20pink%20colors%20creative%20professional%20branding%20modern%20design&width=80&height=80&seq=media-logo-006&orientation=squarish',
-    position: 'Directeur Commercial Régional',
-    date: '2024-02-22',
-    time: '16:00',
-    location: 'Visioconférence',
-    type: 'Visioconférence',
-    status: 'Confirmé',
-    interviewer: 'Thomas Bernard',
-    interviewerRole: 'Directeur Général',
-    meetingLink: 'https://teams.microsoft.com/l/meetup-join/xyz',
-    notes: 'Entretien final avec le comité de direction'
-  }
-];
-
-export default function CommercialEntretiens() {
-  const [interviews] = useState<Interview[]>(mockInterviews);
+export default function CommercialEntretiensPage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [typeFilter, setTypeFilter] = useState<string>('all');
-  const [selectedInterview, setSelectedInterview] = useState<Interview | null>(null);
+  const [filterStatut, setFilterStatut] = useState<string>('Tous');
+  const [filterMode, setFilterMode] = useState<string>('Tous');
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [selectedEntretien, setSelectedEntretien] = useState<Entretien | null>(null);
+
+  // Données mockées des entretiens
+  const entretiens: Entretien[] = [
+    {
+      id: '1',
+      entreprise_nom: 'TechCorp Solutions',
+      offre_titre: 'Recrutement de commerciaux B2B pour l\'Afrique de l\'Ouest',
+      date: '2024-02-05',
+      heure_debut: '14:00',
+      heure_fin: '15:30',
+      mode: 'En ligne',
+      plateforme: 'Meet',
+      lien_visio: 'https://meet.google.com/abc-defg-hij',
+      recruteur_nom: 'Marie Kouassi',
+      recruteur_fonction: 'Directrice RH',
+      recruteur_email: 'marie.kouassi@techcorp.com',
+      recruteur_telephone: '+225 0712345678',
+      statut: 'Confirmé',
+      commentaire: 'Préparer présentation des résultats commerciaux des 3 dernières années. Entretien avec la direction RH et le directeur commercial.'
+    },
+    {
+      id: '2',
+      entreprise_nom: 'Digital Innovations',
+      offre_titre: 'Commercial Senior - Secteur Technologie',
+      date: '2024-02-08',
+      heure_debut: '10:00',
+      heure_fin: '11:30',
+      mode: 'En physique',
+      adresse: 'Immeuble Alpha 2000, 5ème étage, Avenue Chardy, Plateau, Abidjan',
+      latitude: 5.316667,
+      longitude: -4.033333,
+      recruteur_nom: 'Jean-Baptiste Traoré',
+      recruteur_fonction: 'Responsable Recrutement',
+      recruteur_email: 'jb.traore@digitalinnovations.ci',
+      recruteur_telephone: '+225 0723456789',
+      statut: 'Planifié',
+      commentaire: 'Apporter CV papier et références professionnelles. Prévoir 1h30 pour l\'entretien.'
+    },
+    {
+      id: '3',
+      entreprise_nom: 'AfriTech Group',
+      offre_titre: 'Responsable Développement Commercial',
+      date: '2024-02-10',
+      heure_debut: '15:30',
+      heure_fin: '17:00',
+      mode: 'En ligne',
+      plateforme: 'Zoom',
+      lien_visio: 'https://zoom.us/j/123456789',
+      recruteur_nom: 'Aminata Diallo',
+      recruteur_fonction: 'CEO',
+      recruteur_email: 'a.diallo@afritech.com',
+      recruteur_telephone: '+225 0734567890',
+      statut: 'Planifié'
+    },
+    {
+      id: '4',
+      entreprise_nom: 'West Africa Trading',
+      offre_titre: 'Commercial Export - Zone CEDEAO',
+      date: '2024-01-28',
+      heure_debut: '11:00',
+      heure_fin: '12:00',
+      mode: 'En physique',
+      adresse: 'Zone 4, Rue des Jardins, Marcory, Abidjan',
+      latitude: 5.283333,
+      longitude: -3.983333,
+      recruteur_nom: 'Kofi Mensah',
+      recruteur_fonction: 'Directeur Commercial',
+      recruteur_email: 'k.mensah@watrading.com',
+      recruteur_telephone: '+225 0745678901',
+      statut: 'Terminé',
+      commentaire: 'Entretien très positif. Attente de retour sous 48h.'
+    },
+    {
+      id: '5',
+      entreprise_nom: 'Startup Hub CI',
+      offre_titre: 'Business Developer',
+      date: '2024-01-25',
+      heure_debut: '09:00',
+      heure_fin: '10:00',
+      mode: 'En ligne',
+      plateforme: 'WhatsApp',
+      lien_visio: 'https://wa.me/2250756789012',
+      recruteur_nom: 'Sophie Laurent',
+      recruteur_fonction: 'Co-fondatrice',
+      recruteur_email: 's.laurent@startuphub.ci',
+      recruteur_telephone: '+225 0756789012',
+      statut: 'Annulé',
+      commentaire: 'Reporté à une date ultérieure suite à un imprévu.'
+    },
+    {
+      id: '6',
+      entreprise_nom: 'Global Services SARL',
+      offre_titre: 'Chef des Ventes - Côte d\'Ivoire',
+      date: '2024-02-12',
+      heure_debut: '16:00',
+      heure_fin: '17:30',
+      mode: 'En ligne',
+      plateforme: 'Meet',
+      lien_visio: 'https://meet.google.com/xyz-abcd-efg',
+      recruteur_nom: 'Ibrahim Sanogo',
+      recruteur_fonction: 'DRH',
+      recruteur_email: 'i.sanogo@globalservices.ci',
+      recruteur_telephone: '+225 0767890123',
+      statut: 'Planifié',
+      commentaire: 'Entretien technique avec test de mise en situation commerciale.'
+    }
+  ];
 
   // Statistiques
   const stats = {
-    total: interviews.length,
-    planifies: interviews.filter(i => i.status === 'Planifié').length,
-    confirmes: interviews.filter(i => i.status === 'Confirmé').length,
-    termines: interviews.filter(i => i.status === 'Terminé').length,
-    annules: interviews.filter(i => i.status === 'Annulé').length
+    total: entretiens.length,
+    planifies: entretiens.filter(e => e.statut === 'Planifié').length,
+    confirmes: entretiens.filter(e => e.statut === 'Confirmé').length,
+    termines: entretiens.filter(e => e.statut === 'Terminé').length,
+    annules: entretiens.filter(e => e.statut === 'Annulé').length
   };
 
-  // Filtrage
-  const filteredInterviews = interviews.filter(interview => {
-    const matchesSearch = 
-      interview.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      interview.position.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      interview.interviewer.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesStatus = statusFilter === 'all' || interview.status === statusFilter;
-    const matchesType = typeFilter === 'all' || interview.type === typeFilter;
-
-    return matchesSearch && matchesStatus && matchesType;
+  // Filtrage des entretiens
+  const filteredEntretiens = entretiens.filter(e => {
+    const matchSearch = e.entreprise_nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                       e.offre_titre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                       e.recruteur_nom.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchStatut = filterStatut === 'Tous' || e.statut === filterStatut;
+    const matchMode = filterMode === 'Tous' || e.mode === filterMode;
+    return matchSearch && matchStatut && matchMode;
   });
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
+  const getStatutColor = (statut: string) => {
+    switch (statut) {
       case 'Planifié': return 'bg-blue-100 text-blue-700';
       case 'Confirmé': return 'bg-green-100 text-green-700';
       case 'Terminé': return 'bg-gray-100 text-gray-700';
@@ -150,380 +166,401 @@ export default function CommercialEntretiens() {
     }
   };
 
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case 'Visioconférence': return 'ri-vidicon-line';
-      case 'Bureau': return 'ri-building-line';
-      case 'Téléphone': return 'ri-phone-line';
-      default: return 'ri-map-pin-line';
+  const getModeIcon = (mode: string) => {
+    return mode === 'En ligne' ? 'ri-vidicon-line' : 'ri-map-pin-line';
+  };
+
+  const getPlatformeIcon = (plateforme?: string) => {
+    switch (plateforme) {
+      case 'Meet': return 'ri-google-line';
+      case 'Zoom': return 'ri-vidicon-line';
+      case 'WhatsApp': return 'ri-whatsapp-line';
+      default: return 'ri-vidicon-line';
     }
   };
 
-  const handleViewDetails = (interview: Interview) => {
-    setSelectedInterview(interview);
-    setShowDetailsModal(true);
-  };
-
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('fr-FR', { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
+  const resetFilters = () => {
+    setSearchTerm('');
+    setFilterStatut('Tous');
+    setFilterMode('Tous');
   };
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar />
+      <Sidebar userRole="commercial" />
       
-      <main className="flex-1 ml-64 p-8">
-        {/* En-tête */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Mes Entretiens</h1>
-          <p className="text-gray-600">Consultez et gérez vos entretiens planifiés</p>
-        </div>
-
-        {/* Statistiques */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between">
+      <div className="flex-1 lg:ml-64">
+        {/* Header */}
+        <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+          <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
-                <p className="text-sm text-gray-600 mb-1">Total</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
-              </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <i className="ri-calendar-line text-2xl text-purple-600"></i>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600 mb-1">Planifiés</p>
-                <p className="text-2xl font-bold text-blue-600">{stats.planifies}</p>
-              </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <i className="ri-time-line text-2xl text-blue-600"></i>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600 mb-1">Confirmés</p>
-                <p className="text-2xl font-bold text-green-600">{stats.confirmes}</p>
-              </div>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <i className="ri-checkbox-circle-line text-2xl text-green-600"></i>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600 mb-1">Terminés</p>
-                <p className="text-2xl font-bold text-gray-600">{stats.termines}</p>
-              </div>
-              <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                <i className="ri-check-double-line text-2xl text-gray-600"></i>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600 mb-1">Annulés</p>
-                <p className="text-2xl font-bold text-red-600">{stats.annules}</p>
-              </div>
-              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                <i className="ri-close-circle-line text-2xl text-red-600"></i>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Mes Entretiens</h1>
+                <p className="text-sm sm:text-base text-gray-600 mt-1">Consultez et gérez vos entretiens programmés</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Filtres */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                <i className="ri-search-line mr-2"></i>
-                Rechercher
-              </label>
-              <input
-                type="text"
-                placeholder="Entreprise, poste, recruteur..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                <i className="ri-filter-line mr-2"></i>
-                Statut
-              </label>
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
-              >
-                <option value="all">Tous les statuts</option>
-                <option value="Planifié">Planifié</option>
-                <option value="Confirmé">Confirmé</option>
-                <option value="Terminé">Terminé</option>
-                <option value="Annulé">Annulé</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                <i className="ri-map-pin-line mr-2"></i>
-                Type
-              </label>
-              <select
-                value={typeFilter}
-                onChange={(e) => setTypeFilter(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
-              >
-                <option value="all">Tous les types</option>
-                <option value="Visioconférence">Visioconférence</option>
-                <option value="Bureau">Bureau</option>
-                <option value="Téléphone">Téléphone</option>
-                <option value="Autre">Autre</option>
-              </select>
-            </div>
-          </div>
-
-          {(searchTerm || statusFilter !== 'all' || typeFilter !== 'all') && (
-            <button
-              onClick={() => {
-                setSearchTerm('');
-                setStatusFilter('all');
-                setTypeFilter('all');
-              }}
-              className="mt-4 text-sm text-purple-600 hover:text-purple-700 font-medium whitespace-nowrap"
-            >
-              <i className="ri-refresh-line mr-1"></i>
-              Réinitialiser les filtres
-            </button>
-          )}
-        </div>
-
-        {/* Liste des entretiens */}
-        <div className="space-y-4">
-          {filteredInterviews.length === 0 ? (
-            <div className="bg-white rounded-xl p-12 text-center shadow-sm border border-gray-100">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i className="ri-calendar-line text-3xl text-gray-400"></i>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Aucun entretien trouvé</h3>
-              <p className="text-gray-600">Aucun entretien ne correspond à vos critères de recherche.</p>
-            </div>
-          ) : (
-            filteredInterviews.map((interview) => (
-              <div
-                key={interview.id}
-                className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
-              >
+        {/* Main Content */}
+        <div className="p-4 sm:p-6 lg:px-8 lg:py-8 max-w-7xl mx-auto">
+          {/* Stats */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 mb-6 sm:mb-8">
+            {[
+              { label: 'Total', value: stats.total, icon: 'ri-calendar-line', color: 'bg-blue-500' },
+              { label: 'Planifiés', value: stats.planifies, icon: 'ri-calendar-event-line', color: 'bg-yellow-500' },
+              { label: 'Confirmés', value: stats.confirmes, icon: 'ri-calendar-check-line', color: 'bg-green-500' },
+              { label: 'Terminés', value: stats.termines, icon: 'ri-checkbox-circle-line', color: 'bg-gray-500' },
+              { label: 'Annulés', value: stats.annules, icon: 'ri-close-circle-line', color: 'bg-red-500' }
+            ].map((stat, index) => (
+              <div key={index} className="bg-white rounded-xl shadow-sm p-4 sm:p-6 border border-gray-100">
                 <div className="flex items-start justify-between">
-                  <div className="flex items-start space-x-4 flex-1">
-                    <img
-                      src={interview.companyLogo}
-                      alt={interview.company}
-                      className="w-16 h-16 rounded-lg object-cover"
-                    />
-                    
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between mb-2">
-                        <div>
-                          <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                            {interview.position}
-                          </h3>
-                          <p className="text-sm text-gray-600 mb-2">{interview.company}</p>
-                        </div>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getStatusColor(interview.status)}`}>
-                          {interview.status}
-                        </span>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4 mb-3">
-                        <div className="flex items-center text-sm text-gray-600">
-                          <i className="ri-calendar-line mr-2 text-purple-600"></i>
-                          <span>{formatDate(interview.date)}</span>
-                        </div>
-                        <div className="flex items-center text-sm text-gray-600">
-                          <i className="ri-time-line mr-2 text-purple-600"></i>
-                          <span>{interview.time}</span>
-                        </div>
-                        <div className="flex items-center text-sm text-gray-600">
-                          <i className={`${getTypeIcon(interview.type)} mr-2 text-purple-600`}></i>
-                          <span>{interview.location}</span>
-                        </div>
-                        <div className="flex items-center text-sm text-gray-600">
-                          <i className="ri-user-line mr-2 text-purple-600"></i>
-                          <span>{interview.interviewer}</span>
-                        </div>
-                      </div>
-
-                      {interview.notes && (
-                        <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-3">
-                          <p className="text-sm text-amber-800">
-                            <i className="ri-information-line mr-2"></i>
-                            {interview.notes}
-                          </p>
-                        </div>
-                      )}
-
-                      <div className="flex items-center space-x-3">
-                        <button
-                          onClick={() => handleViewDetails(interview)}
-                          className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium whitespace-nowrap"
-                        >
-                          <i className="ri-eye-line mr-2"></i>
-                          Voir les détails
-                        </button>
-
-                        {interview.meetingLink && interview.status !== 'Annulé' && interview.status !== 'Terminé' && (
-                          <a
-                            href={interview.meetingLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium whitespace-nowrap"
-                          >
-                            <i className="ri-vidicon-line mr-2"></i>
-                            Rejoindre
-                          </a>
-                        )}
-                      </div>
-                    </div>
+                  <div className="flex-1">
+                    <p className="text-xs sm:text-sm text-gray-600 mb-1">{stat.label}</p>
+                    <p className="text-2xl sm:text-3xl font-bold text-gray-900">{stat.value}</p>
+                  </div>
+                  <div className={`${stat.color} w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center flex-shrink-0`}>
+                    <i className={`${stat.icon} text-lg sm:text-xl text-white`}></i>
                   </div>
                 </div>
               </div>
-            ))
-          )}
+            ))}
+          </div>
+
+          {/* Filtres */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Rechercher</label>
+                <div className="relative">
+                  <i className="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Entreprise, poste, recruteur..."
+                    className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Statut</label>
+                <select
+                  value={filterStatut}
+                  onChange={(e) => setFilterStatut(e.target.value)}
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm"
+                >
+                  <option value="Tous">Tous les statuts</option>
+                  <option value="Planifié">Planifiés</option>
+                  <option value="Confirmé">Confirmés</option>
+                  <option value="Terminé">Terminés</option>
+                  <option value="Annulé">Annulés</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Mode</label>
+                <select
+                  value={filterMode}
+                  onChange={(e) => setFilterMode(e.target.value)}
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm"
+                >
+                  <option value="Tous">Tous les modes</option>
+                  <option value="En ligne">En ligne</option>
+                  <option value="En physique">En physique</option>
+                </select>
+              </div>
+            </div>
+            {(searchTerm || filterStatut !== 'Tous' || filterMode !== 'Tous') && (
+              <div className="mt-4">
+                <button
+                  onClick={resetFilters}
+                  className="text-sm text-teal-600 hover:text-teal-700 font-medium flex items-center gap-2"
+                >
+                  <i className="ri-refresh-line"></i>
+                  Réinitialiser les filtres
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Liste des entretiens */}
+          <div className="space-y-4">
+            {filteredEntretiens.map((entretien) => (
+              <div key={entretien.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 hover:shadow-md transition-shadow">
+                <div className="flex flex-col lg:flex-row lg:items-start gap-4">
+                  {/* Info entretien */}
+                  <div className="flex-1">
+                    <div className="flex items-start gap-3 mb-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-teal-400 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i className="ri-building-line text-white text-xl"></i>
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex flex-wrap items-center gap-2 mb-1">
+                          <h3 className="text-lg font-bold text-gray-900">{entretien.entreprise_nom}</h3>
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatutColor(entretien.statut)}`}>
+                            {entretien.statut}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-2">
+                          <i className="ri-briefcase-line mr-1"></i>
+                          {entretien.offre_titre}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <i className="ri-calendar-line text-teal-500"></i>
+                        <span>{new Date(entretien.date).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <i className="ri-time-line text-teal-500"></i>
+                        <span>{entretien.heure_debut} - {entretien.heure_fin}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <i className={`${getModeIcon(entretien.mode)} text-teal-500`}></i>
+                        <span>{entretien.mode}</span>
+                        {entretien.mode === 'En ligne' && entretien.plateforme && (
+                          <span className="px-2 py-0.5 bg-teal-100 text-teal-700 rounded text-xs font-medium">
+                            {entretien.plateforme}
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <i className="ri-user-line text-teal-500"></i>
+                        <span>{entretien.recruteur_nom} - {entretien.recruteur_fonction}</span>
+                      </div>
+                    </div>
+
+                    {entretien.commentaire && (
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                        <p className="text-xs text-blue-700 font-medium mb-1">
+                          <i className="ri-information-line mr-1"></i>
+                          Informations importantes
+                        </p>
+                        <p className="text-sm text-blue-900">{entretien.commentaire}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex flex-col gap-2 lg:w-48">
+                    <button
+                      onClick={() => {
+                        setSelectedEntretien(entretien);
+                        setShowDetailsModal(true);
+                      }}
+                      className="w-full bg-gray-100 text-gray-700 px-4 py-2.5 rounded-lg hover:bg-gray-200 transition-colors text-sm whitespace-nowrap flex items-center justify-center gap-2"
+                    >
+                      <i className="ri-eye-line"></i>
+                      <span>Voir détails</span>
+                    </button>
+                    
+                    {entretien.mode === 'En ligne' && entretien.lien_visio && (entretien.statut === 'Planifié' || entretien.statut === 'Confirmé') && (
+                      <a
+                        href={entretien.lien_visio}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full bg-teal-500 text-white px-4 py-2.5 rounded-lg hover:bg-teal-600 transition-colors text-sm whitespace-nowrap flex items-center justify-center gap-2"
+                      >
+                        <i className={getPlatformeIcon(entretien.plateforme)}></i>
+                        <span>Rejoindre</span>
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {filteredEntretiens.length === 0 && (
+              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
+                <i className="ri-calendar-line text-6xl text-gray-300 mb-4"></i>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Aucun entretien</h3>
+                <p className="text-gray-600">Aucun entretien ne correspond à vos critères de recherche.</p>
+              </div>
+            )}
+          </div>
         </div>
-      </main>
+      </div>
 
       {/* Modal Détails */}
-      {showDetailsModal && selectedInterview && (
-        <div className="fixed inset-0 bg-black bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-              <h3 className="text-xl font-bold text-gray-900">Détails de l'entretien</h3>
+      {showDetailsModal && selectedEntretien && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl p-6 sm:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900">Détails de l'entretien</h3>
               <button
-                onClick={() => setShowDetailsModal(false)}
-                className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                onClick={() => {
+                  setShowDetailsModal(false);
+                  setSelectedEntretien(null);
+                }}
+                className="text-gray-400 hover:text-gray-600"
               >
-                <i className="ri-close-line text-xl"></i>
+                <i className="ri-close-line text-2xl"></i>
               </button>
             </div>
 
-            <div className="p-6 space-y-6">
+            <div className="space-y-6">
               {/* Entreprise */}
-              <div className="flex items-center space-x-4 pb-6 border-b border-gray-200">
-                <img
-                  src={selectedInterview.companyLogo}
-                  alt={selectedInterview.company}
-                  className="w-20 h-20 rounded-lg object-cover"
-                />
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-teal-400 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <i className="ri-building-line text-white text-2xl"></i>
+                </div>
                 <div>
-                  <h4 className="text-lg font-semibold text-gray-900">{selectedInterview.company}</h4>
-                  <p className="text-gray-600">{selectedInterview.position}</p>
-                  <span className={`inline-block mt-2 px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getStatusColor(selectedInterview.status)}`}>
-                    {selectedInterview.status}
+                  <h4 className="text-xl font-bold text-gray-900">{selectedEntretien.entreprise_nom}</h4>
+                  <p className="text-sm text-gray-600">{selectedEntretien.offre_titre}</p>
+                </div>
+              </div>
+
+              {/* Informations de l'entretien */}
+              <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                <h5 className="font-semibold text-gray-900 mb-3">Informations de l'entretien</h5>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-xs text-gray-500 mb-1">Date</p>
+                    <p className="text-sm font-medium text-gray-900">
+                      {new Date(selectedEntretien.date).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 mb-1">Horaire</p>
+                    <p className="text-sm font-medium text-gray-900">{selectedEntretien.heure_debut} - {selectedEntretien.heure_fin}</p>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Mode d'entretien</p>
+                  <div className="flex items-center gap-2">
+                    <i className={`${getModeIcon(selectedEntretien.mode)} text-teal-500`}></i>
+                    <p className="text-sm font-medium text-gray-900">{selectedEntretien.mode}</p>
+                  </div>
+                </div>
+
+                {selectedEntretien.mode === 'En ligne' && (
+                  <>
+                    {selectedEntretien.plateforme && (
+                      <div>
+                        <p className="text-xs text-gray-500 mb-1">Plateforme</p>
+                        <div className="flex items-center gap-2">
+                          <i className={`${getPlatformeIcon(selectedEntretien.plateforme)} text-teal-500`}></i>
+                          <p className="text-sm font-medium text-gray-900">{selectedEntretien.plateforme}</p>
+                        </div>
+                      </div>
+                    )}
+                    {selectedEntretien.lien_visio && (
+                      <div>
+                        <p className="text-xs text-gray-500 mb-1">Lien de visioconférence</p>
+                        <a
+                          href={selectedEntretien.lien_visio}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm font-medium text-teal-600 hover:text-teal-700 break-all"
+                        >
+                          {selectedEntretien.lien_visio}
+                        </a>
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {selectedEntretien.mode === 'En physique' && (
+                  <>
+                    {selectedEntretien.adresse && (
+                      <div>
+                        <p className="text-xs text-gray-500 mb-1">Adresse</p>
+                        <p className="text-sm font-medium text-gray-900">{selectedEntretien.adresse}</p>
+                      </div>
+                    )}
+                    {selectedEntretien.latitude && selectedEntretien.longitude && (
+                      <div>
+                        <p className="text-xs text-gray-500 mb-2">Localisation</p>
+                        <div className="w-full h-64 rounded-lg overflow-hidden border border-gray-200">
+                          <iframe
+                            src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${selectedEntretien.latitude},${selectedEntretien.longitude}&zoom=15`}
+                            width="100%"
+                            height="100%"
+                            style={{ border: 0 }}
+                            allowFullScreen
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                          ></iframe>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Statut</p>
+                  <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${getStatutColor(selectedEntretien.statut)}`}>
+                    {selectedEntretien.statut}
                   </span>
                 </div>
               </div>
 
-              {/* Informations */}
-              <div className="space-y-4">
+              {/* Informations du recruteur */}
+              <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                <h5 className="font-semibold text-gray-900 mb-3">Contact recruteur</h5>
+                
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Date et heure</label>
-                  <div className="flex items-center text-gray-900">
-                    <i className="ri-calendar-line mr-2 text-purple-600"></i>
-                    <span>{formatDate(selectedInterview.date)} à {selectedInterview.time}</span>
-                  </div>
+                  <p className="text-xs text-gray-500 mb-1">Nom</p>
+                  <p className="text-sm font-medium text-gray-900">{selectedEntretien.recruteur_nom}</p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Type d'entretien</label>
-                  <div className="flex items-center text-gray-900">
-                    <i className={`${getTypeIcon(selectedInterview.type)} mr-2 text-purple-600`}></i>
-                    <span>{selectedInterview.type}</span>
-                  </div>
+                  <p className="text-xs text-gray-500 mb-1">Fonction</p>
+                  <p className="text-sm font-medium text-gray-900">{selectedEntretien.recruteur_fonction}</p>
                 </div>
-
-                {selectedInterview.address && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
-                    <div className="flex items-start text-gray-900">
-                      <i className="ri-map-pin-line mr-2 text-purple-600 mt-1"></i>
-                      <span>{selectedInterview.address}</span>
-                    </div>
-                  </div>
-                )}
-
-                {selectedInterview.meetingLink && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Lien de visioconférence</label>
-                    <a
-                      href={selectedInterview.meetingLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center text-purple-600 hover:text-purple-700"
-                    >
-                      <i className="ri-vidicon-line mr-2"></i>
-                      <span className="underline">{selectedInterview.meetingLink}</span>
-                    </a>
-                  </div>
-                )}
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Recruteur</label>
-                  <div className="text-gray-900">
-                    <div className="flex items-center">
-                      <i className="ri-user-line mr-2 text-purple-600"></i>
-                      <span className="font-medium">{selectedInterview.interviewer}</span>
-                    </div>
-                    <p className="text-sm text-gray-600 ml-6">{selectedInterview.interviewerRole}</p>
-                  </div>
-                </div>
-
-                {selectedInterview.notes && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Notes importantes</label>
-                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-                      <p className="text-sm text-amber-800">
-                        <i className="ri-information-line mr-2"></i>
-                        {selectedInterview.notes}
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Actions */}
-              {selectedInterview.meetingLink && selectedInterview.status !== 'Annulé' && selectedInterview.status !== 'Terminé' && (
-                <div className="pt-4 border-t border-gray-200">
-                  <a
-                    href={selectedInterview.meetingLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium flex items-center justify-center whitespace-nowrap"
-                  >
-                    <i className="ri-vidicon-line mr-2"></i>
-                    Rejoindre l'entretien
+                  <p className="text-xs text-gray-500 mb-1">Email</p>
+                  <a href={`mailto:${selectedEntretien.recruteur_email}`} className="text-sm font-medium text-teal-600 hover:text-teal-700">
+                    {selectedEntretien.recruteur_email}
                   </a>
                 </div>
+
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Téléphone</p>
+                  <a href={`tel:${selectedEntretien.recruteur_telephone}`} className="text-sm font-medium text-teal-600 hover:text-teal-700">
+                    {selectedEntretien.recruteur_telephone}
+                  </a>
+                </div>
+              </div>
+
+              {/* Commentaire */}
+              {selectedEntretien.commentaire && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <p className="text-sm font-medium text-blue-700 mb-2">
+                    <i className="ri-information-line mr-1"></i>
+                    Commentaire
+                  </p>
+                  <p className="text-sm text-blue-900 whitespace-pre-wrap">{selectedEntretien.commentaire}</p>
+                </div>
               )}
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              {selectedEntretien.mode === 'En ligne' && selectedEntretien.lien_visio && (selectedEntretien.statut === 'Planifié' || selectedEntretien.statut === 'Confirmé') && (
+                <a
+                  href={selectedEntretien.lien_visio}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 bg-teal-500 text-white px-6 py-3 rounded-lg hover:bg-teal-600 transition-colors whitespace-nowrap text-center flex items-center justify-center gap-2"
+                >
+                  <i className={getPlatformeIcon(selectedEntretien.plateforme)}></i>
+                  Rejoindre la visioconférence
+                </a>
+              )}
+              <button
+                onClick={() => {
+                  setShowDetailsModal(false);
+                  setSelectedEntretien(null);
+                }}
+                className="flex-1 bg-gray-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 transition-colors whitespace-nowrap"
+              >
+                Fermer
+              </button>
             </div>
           </div>
         </div>

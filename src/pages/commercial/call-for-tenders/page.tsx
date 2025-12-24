@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../../components/feature/Sidebar';
 
 interface CallForTender {
@@ -108,10 +109,12 @@ const types = ['Tous', 'CDI', 'CDD', 'Freelance'];
 const statuses = ['Tous', 'Ouvert', 'Postulé', 'Fermé'];
 
 export default function CallForTendersPage() {
+  const navigate = useNavigate();
   const [calls, setCalls] = useState<CallForTender[]>(mockCallsForTenders);
   const [selectedCall, setSelectedCall] = useState<CallForTender | null>(null);
   const [showApplicationModal, setShowApplicationModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [selectedApplication, setSelectedApplication] = useState<any>(null);
   
   // Filters
   const [searchTerm, setSearchTerm] = useState('');
@@ -145,6 +148,54 @@ export default function CallForTendersPage() {
   const handleCancelApplication = (call: CallForTender) => {
     setSelectedCall(call);
     setShowCancelModal(true);
+  };
+
+  const handleViewApplication = (offer: any) => {
+    // Trouver la candidature correspondante
+    const application = {
+      id: offer.id,
+      offer: offer,
+      appliedDate: '15 janvier 2025',
+      status: offer.myApplication,
+      coverLetter: `Madame, Monsieur,
+
+Je me permets de vous adresser ma candidature pour le poste de ${offer.title} au sein de votre entreprise ${offer.company}.
+
+Fort de plusieurs années d'expérience dans le domaine commercial, j'ai développé une expertise solide en développement commercial, gestion de la relation client et négociation. Mon parcours m'a permis d'acquérir une connaissance approfondie du secteur ${offer.sector} et de ses enjeux.
+
+Mes compétences principales incluent :
+- Prospection et développement de nouveaux marchés
+- Gestion et fidélisation d'un portefeuille clients
+- Négociation et conclusion de contrats commerciaux
+- Analyse des besoins clients et proposition de solutions adaptées
+- Travail en équipe et collaboration inter-services
+
+Je suis particulièrement motivé par l'opportunité de rejoindre ${offer.company}, une entreprise reconnue pour son excellence et son innovation dans le secteur ${offer.sector}.
+
+Je reste à votre disposition pour un entretien afin de vous présenter plus en détail mon parcours et ma motivation.
+
+Cordialement,
+Jean Dupont`,
+      cv: 'CV_Jean_Dupont.pdf',
+      phone: '+33 6 12 34 56 78',
+      email: 'jean.dupont@email.com',
+      experience: '5 ans',
+      skills: ['Prospection', 'Négociation', 'Gestion client', 'Analyse marché'],
+      availability: 'Immédiate',
+      expectedSalary: offer.salary,
+      motivation: 'Très motivé',
+      references: [
+        { name: 'Marie Martin', company: 'TechCorp', position: 'Directrice Commerciale', phone: '+33 6 98 76 54 32' },
+        { name: 'Pierre Dubois', company: 'InnoSolutions', position: 'Manager', phone: '+33 6 45 67 89 01' }
+      ]
+    };
+    
+    setSelectedApplication(application);
+    setShowApplicationModal(true);
+  };
+
+  const handleViewDetails = (callId: string) => {
+    navigate(`/commercial/call-for-tenders/details/${callId}`);
   };
 
   const submitApplication = () => {
@@ -415,6 +466,13 @@ export default function CallForTendersPage() {
                     Publié le {new Date(call.postedDate).toLocaleDateString('fr-FR')}
                   </p>
                   <div className="flex gap-2">
+                    <button
+                      onClick={() => handleViewDetails(call.id)}
+                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors whitespace-nowrap"
+                    >
+                      <i className="ri-eye-line mr-2"></i>
+                      Voir les détails
+                    </button>
                     {call.status === 'open' && (
                       <button
                         onClick={() => handleApply(call)}
@@ -426,7 +484,10 @@ export default function CallForTendersPage() {
                     )}
                     {call.status === 'applied' && (
                       <>
-                        <button className="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors whitespace-nowrap">
+                        <button 
+                          onClick={() => handleViewApplication(call)}
+                          className="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors whitespace-nowrap"
+                        >
                           <i className="ri-eye-line mr-2"></i>
                           Voir ma candidature
                         </button>
@@ -626,6 +687,191 @@ export default function CallForTendersPage() {
                   Oui, annuler
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Détails de la candidature */}
+      {showApplicationModal && selectedApplication && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
+              <h3 className="text-xl font-bold text-gray-900">Ma Candidature</h3>
+              <button
+                onClick={() => setShowApplicationModal(false)}
+                className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <i className="ri-close-line text-xl"></i>
+              </button>
+            </div>
+
+            <div className="p-6 space-y-6">
+              {/* Informations de l'offre */}
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6">
+                <div className="flex items-start gap-4">
+                  <img
+                    src={selectedApplication.offer.logo}
+                    alt={selectedApplication.offer.company}
+                    className="w-16 h-16 rounded-lg object-cover"
+                  />
+                  <div className="flex-1">
+                    <h4 className="text-lg font-bold text-gray-900">{selectedApplication.offer.title}</h4>
+                    <p className="text-gray-600 mt-1">{selectedApplication.offer.company}</p>
+                    <div className="flex items-center gap-4 mt-3 text-sm text-gray-600">
+                      <span className="flex items-center gap-1">
+                        <i className="ri-map-pin-line"></i>
+                        {selectedApplication.offer.location}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <i className="ri-briefcase-line"></i>
+                        {selectedApplication.offer.type}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <i className="ri-money-euro-circle-line"></i>
+                        {selectedApplication.offer.salary}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Statut de la candidature */}
+              <div className="flex items-center justify-between p-4 bg-yellow-50 rounded-xl">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 flex items-center justify-center bg-yellow-100 rounded-lg">
+                    <i className="ri-time-line text-yellow-600 text-xl"></i>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Statut de la candidature</p>
+                    <p className="text-sm text-gray-600">Candidature envoyée le {selectedApplication.appliedDate}</p>
+                  </div>
+                </div>
+                <span className="px-4 py-2 bg-yellow-100 text-yellow-700 rounded-lg font-medium text-sm">
+                  En attente
+                </span>
+              </div>
+
+              {/* Informations personnelles */}
+              <div>
+                <h5 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <i className="ri-user-line text-blue-600"></i>
+                  Informations personnelles
+                </h5>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 bg-gray-50 rounded-lg">
+                    <p className="text-sm text-gray-600 mb-1">Email</p>
+                    <p className="font-medium text-gray-900">{selectedApplication.email}</p>
+                  </div>
+                  <div className="p-4 bg-gray-50 rounded-lg">
+                    <p className="text-sm text-gray-600 mb-1">Téléphone</p>
+                    <p className="font-medium text-gray-900">{selectedApplication.phone}</p>
+                  </div>
+                  <div className="p-4 bg-gray-50 rounded-lg">
+                    <p className="text-sm text-gray-600 mb-1">Expérience</p>
+                    <p className="font-medium text-gray-900">{selectedApplication.experience}</p>
+                  </div>
+                  <div className="p-4 bg-gray-50 rounded-lg">
+                    <p className="text-sm text-gray-600 mb-1">Disponibilité</p>
+                    <p className="font-medium text-gray-900">{selectedApplication.availability}</p>
+                  </div>
+                  <div className="p-4 bg-gray-50 rounded-lg">
+                    <p className="text-sm text-gray-600 mb-1">Salaire souhaité</p>
+                    <p className="font-medium text-gray-900">{selectedApplication.expectedSalary}</p>
+                  </div>
+                  <div className="p-4 bg-gray-50 rounded-lg">
+                    <p className="text-sm text-gray-600 mb-1">Niveau de motivation</p>
+                    <p className="font-medium text-gray-900">{selectedApplication.motivation}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Compétences */}
+              <div>
+                <h5 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <i className="ri-star-line text-blue-600"></i>
+                  Compétences principales
+                </h5>
+                <div className="flex flex-wrap gap-2">
+                  {selectedApplication.skills.map((skill: string, index: number) => (
+                    <span
+                      key={index}
+                      className="px-4 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Lettre de motivation */}
+              <div>
+                <h5 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <i className="ri-file-text-line text-blue-600"></i>
+                  Lettre de motivation
+                </h5>
+                <div className="p-6 bg-gray-50 rounded-xl">
+                  <p className="text-gray-700 whitespace-pre-line leading-relaxed">
+                    {selectedApplication.coverLetter}
+                  </p>
+                </div>
+              </div>
+
+              {/* CV */}
+              <div>
+                <h5 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <i className="ri-file-pdf-line text-blue-600"></i>
+                  Curriculum Vitae
+                </h5>
+                <div className="p-4 bg-gray-50 rounded-xl flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 flex items-center justify-center bg-red-100 rounded-lg">
+                      <i className="ri-file-pdf-line text-red-600 text-2xl"></i>
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">{selectedApplication.cv}</p>
+                      <p className="text-sm text-gray-600">Document PDF • 245 KB</p>
+                    </div>
+                  </div>
+                  <button className="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors whitespace-nowrap">
+                    <i className="ri-download-line mr-2"></i>
+                    Télécharger
+                  </button>
+                </div>
+              </div>
+
+              {/* Références */}
+              <div>
+                <h5 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <i className="ri-contacts-line text-blue-600"></i>
+                  Références professionnelles
+                </h5>
+                <div className="space-y-3">
+                  {selectedApplication.references.map((ref: any, index: number) => (
+                    <div key={index} className="p-4 bg-gray-50 rounded-xl">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <p className="font-semibold text-gray-900">{ref.name}</p>
+                          <p className="text-sm text-gray-600 mt-1">{ref.position} chez {ref.company}</p>
+                          <p className="text-sm text-gray-600 mt-1 flex items-center gap-2">
+                            <i className="ri-phone-line"></i>
+                            {ref.phone}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="sticky bottom-0 bg-white border-t px-6 py-4 flex items-center justify-end gap-3">
+              <button
+                onClick={() => setShowApplicationModal(false)}
+                className="px-6 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors whitespace-nowrap"
+              >
+                Fermer
+              </button>
             </div>
           </div>
         </div>

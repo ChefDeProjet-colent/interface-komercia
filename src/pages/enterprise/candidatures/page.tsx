@@ -9,6 +9,18 @@ export default function CandidaturesPage() {
   const [showEntretienModal, setShowEntretienModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [selectedCandidat, setSelectedCandidat] = useState<CandidatureCommercial | null>(null);
+  const [motifRejet, setMotifRejet] = useState('');
+
+  // Nouveaux états pour le formulaire d'entretien
+  const [entretienDate, setEntretienDate] = useState('');
+  const [entretienHeureDebut, setEntretienHeureDebut] = useState('');
+  const [entretienHeureFin, setEntretienHeureFin] = useState('');
+  const [modeEntretien, setModeEntretien] = useState<'physique' | 'ligne' | ''>('');
+  const [plateformeLigne, setPlateformeLigne] = useState<'meet' | 'zoom' | 'whatsapp' | ''>('');
+  const [lienEntretien, setLienEntretien] = useState('');
+  const [adressePhysique, setAdressePhysique] = useState('');
+  const [positionGeo, setPositionGeo] = useState({ lat: 5.3599517, lng: -4.0082563 }); // Abidjan par défaut
+  const [commentaireEntretien, setCommentaireEntretien] = useState('');
 
   // Données mockées des candidatures
   const [candidatures, setCandidatures] = useState<CandidatureCommercial[]>([
@@ -70,6 +82,7 @@ export default function CandidaturesPage() {
       entretien_planifie: {
         date: '2024-02-05',
         heure: '14:00',
+        heure_fin: '15:30',
         lieu: 'Visioconférence'
       },
       notes: 'Excellent profil, entretien confirmé pour le 5 février'
@@ -86,6 +99,7 @@ export default function CandidaturesPage() {
       experience: '3 ans en vente',
       statut: 'Rejetée',
       date_candidature: '2024-01-19',
+      motif_rejet: 'Expérience insuffisante pour le poste senior',
       notes: 'Expérience insuffisante pour le poste senior'
     },
     {
@@ -117,6 +131,7 @@ export default function CandidaturesPage() {
       entretien_planifie: {
         date: '2024-02-08',
         heure: '10:00',
+        heure_fin: '11:30',
         lieu: 'Bureau - Abidjan'
       },
       notes: 'Profil très prometteur, excellentes références'
@@ -157,35 +172,137 @@ export default function CandidaturesPage() {
 
   const handleAccepter = (candidat: CandidatureCommercial) => {
     setSelectedCandidat(candidat);
+    // Réinitialiser le formulaire
+    setEntretienDate('');
+    setEntretienHeureDebut('');
+    setEntretienHeureFin('');
+    setModeEntretien('');
+    setPlateformeLigne('');
+    setLienEntretien('');
+    setAdressePhysique('');
+    setCommentaireEntretien('');
     setShowEntretienModal(true);
   };
 
   const handleRejeter = (candidat: CandidatureCommercial) => {
     setSelectedCandidat(candidat);
+    setMotifRejet('');
     setShowRejectModal(true);
   };
 
   const confirmRejet = () => {
-    if (selectedCandidat) {
+    if (selectedCandidat && motifRejet.trim()) {
       setCandidatures(prev =>
-        prev.map(c => c.id === selectedCandidat.id ? { ...c, statut: 'Rejetée' } : c)
+        prev.map(c => c.id === selectedCandidat.id ? { 
+          ...c, 
+          statut: 'Rejetée',
+          motif_rejet: motifRejet 
+        } : c)
       );
       setShowRejectModal(false);
       setSelectedCandidat(null);
+      setMotifRejet('');
     }
   };
 
-  const handleSaveEntretien = (date: string, heure: string, lieu: string) => {
-    if (selectedCandidat) {
-      setCandidatures(prev =>
-        prev.map(c => c.id === selectedCandidat.id ? {
-          ...c,
-          statut: 'Acceptée',
-          entretien_planifie: { date, heure, lieu }
-        } : c)
+  // Vérifier si un créneau horaire est déjà pris
+  const isCreneauDisponible = (date: string, heureDebut: string, heureFin: string): boolean => {
+    return !candidatures.some(c => 
+      c.entretien_planifie && 
+      c.entretien_planifie.date === date &&
+      c.id !== selectedCandidat?.id &&
+      (
+        (heureDebut >= c.entretien_planifie.heure && heureDebut < (c.entretien_planifie.heure_fin || '23:59')) ||
+        (heureFin > c.entretien_planifie.heure && heureFin <= (c.entretien_planifie.heure_fin || '23:59')) ||
+        (heureDebut <= c.entretien_planifie.heure && heureFin >= (c.entretien_planifie.heure_fin || '23:59'))
+      )
+    );
+  };
+
+  const handleSaveEntretien = () => {
+    if (!selectedCandidat) return;
+
+    // Validation
+    if (!entretienDate || !entretienHeureDebut || !entretienHeureFin || !modeEntretien) {
+      alert('Veuillez remplir tous les champs obligatoires');
+      return;
+    }
+
+    if (entretienHeureFin <= entretienHeureDebut) {
+      alert('L\'heure de fin doit être après l\'heure de début');
+      return;
+    }
+
+    // Vérifier la disponibilité du créneau
+    if (!isCreneauDisponible(entretienDate, entretienHeureDebut, entretienHeureFin)) {
+      alert('Ce créneau horaire est déjà réservé pour un autre entretien');
+      return;
+    }
+
+    if (modeEntretien === 'ligne' && !lienEntretien.trim()) {
+      alert('Veuillez fournir le lien de l\'entretien en ligne');
+      return;
+    }
+
+    if (modeEntretien === 'physique' && !adressePhysique.trim()) {
+      alert('Veuillez fournir l\'adresse du lieu de l\'entretien');
+      return;
+    }
+
+    const lieuEntretien = modeEntretien === 'ligne' 
+      ? `En ligne (${plateformeLigne}) - ${lienEntretien}`
+      : `${adressePhysique}`;
+
+    setCandidatures(prev =>
+      prev.map(c => c.id === selectedCandidat.id ? {
+        ...c,
+        statut: 'Acceptée',
+        entretien_planifie: { 
+          date: entretienDate, 
+          heure: entretienHeureDebut,
+          heure_fin: entretienHeureFin,
+          lieu: lieuEntretien,
+          mode: modeEntretien,
+          commentaire: commentaireEntretien,
+          position_geo: modeEntretien === 'physique' ? positionGeo : undefined
+        }
+      } : c)
+    );
+    
+    setShowEntretienModal(false);
+    setSelectedCandidat(null);
+  };
+
+  // Fonction pour ouvrir la plateforme de visioconférence
+  const ouvrirPlateforme = (plateforme: string) => {
+    const urls: Record<string, string> = {
+      meet: 'https://meet.google.com/',
+      zoom: 'https://zoom.us/start/videomeeting',
+      whatsapp: 'https://web.whatsapp.com/'
+    };
+    
+    if (urls[plateforme]) {
+      window.open(urls[plateforme], '_blank');
+    }
+  };
+
+  // Fonction pour obtenir la position actuelle
+  const obtenirPositionActuelle = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setPositionGeo({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+        },
+        (error) => {
+          console.error('Erreur de géolocalisation:', error);
+          alert('Impossible d\'obtenir votre position. Veuillez vérifier les autorisations.');
+        }
       );
-      setShowEntretienModal(false);
-      setSelectedCandidat(null);
+    } else {
+      alert('La géolocalisation n\'est pas supportée par votre navigateur');
     }
   };
 
@@ -387,6 +504,14 @@ export default function CandidaturesPage() {
                     <button
                       onClick={() => {
                         setSelectedCandidat(candidat);
+                        // Pré-remplir les données si l'entretien existe déjà
+                        if (candidat.entretien_planifie) {
+                          setEntretienDate(candidat.entretien_planifie.date || '');
+                          setEntretienHeureDebut(candidat.entretien_planifie.heure || '');
+                          setEntretienHeureFin(candidat.entretien_planifie.heure_fin || '');
+                          setModeEntretien(candidat.entretien_planifie.mode || '');
+                          setCommentaireEntretien(candidat.entretien_planifie.commentaire || '');
+                        }
                         setShowEntretienModal(true);
                       }}
                       className="w-full bg-blue-500 text-white px-4 py-2.5 rounded-lg hover:bg-blue-600 transition-colors text-sm whitespace-nowrap flex items-center justify-center gap-2"
@@ -521,71 +646,231 @@ export default function CandidaturesPage() {
 
       {/* Modal Planifier Entretien */}
       {showEntretienModal && selectedCandidat && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl p-6 max-w-md w-full">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-white rounded-xl p-6 max-w-2xl w-full my-8 max-h-[90vh] overflow-y-auto">
             <h3 className="text-xl font-bold text-gray-900 mb-4">Planifier un entretien</h3>
-            <p className="text-sm text-gray-600 mb-6">Candidat : {selectedCandidat.nom_candidat}</p>
-            <form onSubmit={(e) => {
-              e.preventDefault();
-              const formData = new FormData(e.currentTarget);
-              handleSaveEntretien(
-                formData.get('date') as string,
-                formData.get('heure') as string,
-                formData.get('lieu') as string
-              );
-            }}>
-              <div className="space-y-4 mb-6">
+            <p className="text-sm text-gray-600 mb-6">Candidat : <strong>{selectedCandidat.nom_candidat}</strong></p>
+            
+            <div className="space-y-5">
+              {/* Date */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Date de l'entretien <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  value={entretienDate}
+                  onChange={(e) => setEntretienDate(e.target.value)}
+                  min={new Date().toISOString().split('T')[0]}
+                  required
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                />
+              </div>
+
+              {/* Heure de début et de fin */}
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Date</label>
-                  <input
-                    type="date"
-                    name="date"
-                    required
-                    defaultValue={selectedCandidat.entretien_planifie?.date}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Heure</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Heure de début <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="time"
-                    name="heure"
+                    value={entretienHeureDebut}
+                    onChange={(e) => setEntretienHeureDebut(e.target.value)}
                     required
-                    defaultValue={selectedCandidat.entretien_planifie?.heure}
                     className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Lieu</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Heure de fin <span className="text-red-500">*</span>
+                  </label>
                   <input
-                    type="text"
-                    name="lieu"
+                    type="time"
+                    value={entretienHeureFin}
+                    onChange={(e) => setEntretienHeureFin(e.target.value)}
                     required
-                    defaultValue={selectedCandidat.entretien_planifie?.lieu}
-                    placeholder="Ex: Visioconférence, Bureau, etc."
                     className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                   />
                 </div>
               </div>
-              <div className="flex gap-3">
-                <button
-                  type="submit"
-                  className="flex-1 bg-teal-500 text-white px-6 py-3 rounded-lg hover:bg-teal-600 transition-colors whitespace-nowrap"
-                >
-                  Enregistrer
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowEntretienModal(false);
-                    setSelectedCandidat(null);
+
+              {/* Mode d'entretien */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Mode d'entretien <span className="text-red-500">*</span>
+                </label>
+                <select
+                  value={modeEntretien}
+                  onChange={(e) => {
+                    setModeEntretien(e.target.value as 'physique' | 'ligne');
+                    setPlateformeLigne('');
+                    setLienEntretien('');
+                    setAdressePhysique('');
                   }}
-                  className="flex-1 bg-gray-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 transition-colors whitespace-nowrap"
+                  required
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                 >
-                  Annuler
-                </button>
+                  <option value="">Sélectionnez un mode</option>
+                  <option value="physique">En physique</option>
+                  <option value="ligne">En ligne</option>
+                </select>
               </div>
-            </form>
+
+              {/* Si mode en ligne */}
+              {modeEntretien === 'ligne' && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Plateforme <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      value={plateformeLigne}
+                      onChange={(e) => {
+                        const plateforme = e.target.value as 'meet' | 'zoom' | 'whatsapp';
+                        setPlateformeLigne(plateforme);
+                        if (plateforme) {
+                          ouvrirPlateforme(plateforme);
+                        }
+                      }}
+                      required
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    >
+                      <option value="">Sélectionnez une plateforme</option>
+                      <option value="meet">Google Meet</option>
+                      <option value="zoom">Zoom</option>
+                      <option value="whatsapp">WhatsApp</option>
+                    </select>
+                    {plateformeLigne && (
+                      <p className="text-xs text-blue-600 mt-2">
+                        <i className="ri-information-line mr-1"></i>
+                        La plateforme s'est ouverte dans un nouvel onglet. Créez votre lien et collez-le ci-dessous.
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Lien de l'entretien <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="url"
+                      value={lienEntretien}
+                      onChange={(e) => setLienEntretien(e.target.value)}
+                      placeholder="Collez le lien de la réunion ici"
+                      required
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    />
+                  </div>
+                </>
+              )}
+
+              {/* Si mode physique */}
+              {modeEntretien === 'physique' && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Adresse du lieu <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={adressePhysique}
+                      onChange={(e) => setAdressePhysique(e.target.value)}
+                      placeholder="Ex: 123 Avenue de la République, Abidjan"
+                      required
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Position géographique
+                    </label>
+                    <div className="space-y-3">
+                      <button
+                        type="button"
+                        onClick={obtenirPositionActuelle}
+                        className="w-full px-4 py-2.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors flex items-center justify-center gap-2 text-sm font-medium"
+                      >
+                        <i className="ri-map-pin-user-line"></i>
+                        Partager ma position actuelle
+                      </button>
+                      
+                      {/* Google Maps Embed */}
+                      <div className="border border-gray-300 rounded-lg overflow-hidden">
+                        <iframe
+                          src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${positionGeo.lat},${positionGeo.lng}&zoom=15`}
+                          width="100%"
+                          height="250"
+                          style={{ border: 0 }}
+                          allowFullScreen
+                          loading="lazy"
+                          referrerPolicy="no-referrer-when-downgrade"
+                        ></iframe>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-xs text-gray-600 mb-1">Latitude</label>
+                          <input
+                            type="number"
+                            step="any"
+                            value={positionGeo.lat}
+                            onChange={(e) => setPositionGeo({ ...positionGeo, lat: parseFloat(e.target.value) })}
+                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-600 mb-1">Longitude</label>
+                          <input
+                            type="number"
+                            step="any"
+                            value={positionGeo.lng}
+                            onChange={(e) => setPositionGeo({ ...positionGeo, lng: parseFloat(e.target.value) })}
+                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* Commentaire */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Commentaire sur l'entretien
+                </label>
+                <textarea
+                  value={commentaireEntretien}
+                  onChange={(e) => setCommentaireEntretien(e.target.value)}
+                  rows={3}
+                  placeholder="Ajoutez des notes ou instructions pour l'entretien..."
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <button
+                type="button"
+                onClick={handleSaveEntretien}
+                className="flex-1 bg-teal-500 text-white px-6 py-3 rounded-lg hover:bg-teal-600 transition-colors whitespace-nowrap font-medium"
+              >
+                <i className="ri-calendar-check-line mr-2"></i>
+                Confirmer l'entretien
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowEntretienModal(false);
+                  setSelectedCandidat(null);
+                }}
+                className="flex-1 bg-gray-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 transition-colors whitespace-nowrap font-medium"
+              >
+                Annuler
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -599,14 +884,33 @@ export default function CandidaturesPage() {
                 <i className="ri-close-circle-line text-3xl text-red-600"></i>
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">Rejeter la candidature</h3>
-              <p className="text-sm text-gray-600">
-                Êtes-vous sûr de vouloir rejeter la candidature de <strong>{selectedCandidat.nom_candidat}</strong> ?
+              <p className="text-sm text-gray-600 mb-4">
+                Candidat : <strong>{selectedCandidat.nom_candidat}</strong>
               </p>
             </div>
+
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Motif du rejet <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                value={motifRejet}
+                onChange={(e) => setMotifRejet(e.target.value)}
+                placeholder="Veuillez préciser la raison du rejet de cette candidature..."
+                rows={4}
+                required
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none text-sm"
+              />
+              {motifRejet.trim() === '' && (
+                <p className="text-xs text-gray-500 mt-1">Ce champ est obligatoire</p>
+              )}
+            </div>
+
             <div className="flex gap-3">
               <button
                 onClick={confirmRejet}
-                className="flex-1 bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors whitespace-nowrap"
+                disabled={!motifRejet.trim()}
+                className="flex-1 bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors whitespace-nowrap disabled:bg-gray-300 disabled:cursor-not-allowed"
               >
                 Confirmer le rejet
               </button>
@@ -614,6 +918,7 @@ export default function CandidaturesPage() {
                 onClick={() => {
                   setShowRejectModal(false);
                   setSelectedCandidat(null);
+                  setMotifRejet('');
                 }}
                 className="flex-1 bg-gray-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 transition-colors whitespace-nowrap"
               >

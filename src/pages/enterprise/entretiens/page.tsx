@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface Entretien {
   id: string;
@@ -7,20 +8,30 @@ interface Entretien {
   candidat_telephone: string;
   offre_titre: string;
   date: string;
-  heure: string;
-  lieu: string;
+  heure_debut: string;
+  heure_fin: string;
+  mode: 'En ligne' | 'En physique';
+  plateforme?: 'Meet' | 'Zoom' | 'WhatsApp';
+  lien_visio?: string;
+  adresse?: string;
+  latitude?: number;
+  longitude?: number;
   statut: 'Planifié' | 'Confirmé' | 'Terminé' | 'Annulé';
-  notes?: string;
+  commentaire?: string;
   resultat?: 'En attente' | 'Positif' | 'Négatif';
 }
 
 export default function EntretiensPage() {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatut, setFilterStatut] = useState<string>('Tous');
   const [filterDate, setFilterDate] = useState<string>('');
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [feedbackChoice, setFeedbackChoice] = useState<'reject' | 'accept' | null>(null);
+  const [rejectReason, setRejectReason] = useState('');
   const [selectedEntretien, setSelectedEntretien] = useState<Entretien | null>(null);
 
   // Données mockées des entretiens
@@ -32,10 +43,13 @@ export default function EntretiensPage() {
       candidat_telephone: '+225 0745678901',
       offre_titre: 'Recrutement de commerciaux B2B pour l\'Afrique de l\'Ouest',
       date: '2024-02-05',
-      heure: '14:00',
-      lieu: 'Visioconférence',
+      heure_debut: '14:00',
+      heure_fin: '15:30',
+      mode: 'En ligne',
+      plateforme: 'Meet',
+      lien_visio: 'https://meet.google.com/abc-defg-hij',
       statut: 'Confirmé',
-      notes: 'Candidat très motivé, excellentes références',
+      commentaire: 'Candidat très motivé, excellentes références',
       resultat: 'En attente'
     },
     {
@@ -45,10 +59,14 @@ export default function EntretiensPage() {
       candidat_telephone: '+225 0778901234',
       offre_titre: 'Commercial Senior - Secteur Technologie',
       date: '2024-02-08',
-      heure: '10:00',
-      lieu: 'Bureau - Abidjan',
+      heure_debut: '10:00',
+      heure_fin: '11:30',
+      mode: 'En physique',
+      adresse: 'Immeuble Alpha 2000, 5ème étage, Avenue Chardy, Plateau, Abidjan',
+      latitude: 5.316667,
+      longitude: -4.033333,
       statut: 'Planifié',
-      notes: 'Profil très prometteur, excellentes références'
+      commentaire: 'Profil très prometteur, excellentes références'
     },
     {
       id: '3',
@@ -57,8 +75,11 @@ export default function EntretiensPage() {
       candidat_telephone: '+225 0712345678',
       offre_titre: 'Recrutement de commerciaux B2B pour l\'Afrique de l\'Ouest',
       date: '2024-02-10',
-      heure: '15:30',
-      lieu: 'Visioconférence',
+      heure_debut: '15:30',
+      heure_fin: '17:00',
+      mode: 'En ligne',
+      plateforme: 'Zoom',
+      lien_visio: 'https://zoom.us/j/123456789',
       statut: 'Planifié'
     },
     {
@@ -68,10 +89,14 @@ export default function EntretiensPage() {
       candidat_telephone: '+225 0723456789',
       offre_titre: 'Recrutement de commerciaux B2B pour l\'Afrique de l\'Ouest',
       date: '2024-01-28',
-      heure: '11:00',
-      lieu: 'Bureau - Abidjan',
+      heure_debut: '11:00',
+      heure_fin: '12:00',
+      mode: 'En physique',
+      adresse: 'Zone 4, Rue des Jardins, Marcory, Abidjan',
+      latitude: 5.283333,
+      longitude: -3.983333,
       statut: 'Terminé',
-      notes: 'Entretien très positif, compétences solides',
+      commentaire: 'Entretien très positif, compétences solides',
       resultat: 'Positif'
     },
     {
@@ -81,10 +106,13 @@ export default function EntretiensPage() {
       candidat_telephone: '+225 0734567890',
       offre_titre: 'Recrutement de commerciaux B2B pour l\'Afrique de l\'Ouest',
       date: '2024-01-25',
-      heure: '09:00',
-      lieu: 'Visioconférence',
+      heure_debut: '09:00',
+      heure_fin: '10:00',
+      mode: 'En ligne',
+      plateforme: 'WhatsApp',
+      lien_visio: 'https://wa.me/2250734567890',
       statut: 'Annulé',
-      notes: 'Candidat a décliné l\'offre'
+      commentaire: 'Candidat a décliné l\'offre'
     },
     {
       id: '6',
@@ -93,8 +121,11 @@ export default function EntretiensPage() {
       candidat_telephone: '+225 0767890123',
       offre_titre: 'Commercial Senior - Secteur Technologie',
       date: '2024-02-12',
-      heure: '16:00',
-      lieu: 'Visioconférence',
+      heure_debut: '16:00',
+      heure_fin: '17:30',
+      mode: 'En ligne',
+      plateforme: 'Meet',
+      lien_visio: 'https://meet.google.com/xyz-abcd-efg',
       statut: 'Planifié'
     }
   ]);
@@ -137,6 +168,19 @@ export default function EntretiensPage() {
     }
   };
 
+  const getModeIcon = (mode: string) => {
+    return mode === 'En ligne' ? 'ri-vidicon-line' : 'ri-map-pin-line';
+  };
+
+  const getPlatformeIcon = (plateforme?: string) => {
+    switch (plateforme) {
+      case 'Meet': return 'ri-google-line';
+      case 'Zoom': return 'ri-vidicon-line';
+      case 'WhatsApp': return 'ri-whatsapp-line';
+      default: return 'ri-vidicon-line';
+    }
+  };
+
   const handleSaveEdit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -165,6 +209,205 @@ export default function EntretiensPage() {
       setShowCancelModal(false);
       setSelectedEntretien(null);
     }
+  };
+
+  const handleFeedbackSubmit = () => {
+    if (feedbackChoice === 'reject') {
+      if (rejectReason.length < 150) {
+        alert('Le motif du rejet doit contenir au minimum 150 caractères.');
+        return;
+      }
+      // Traiter le rejet
+      console.log('Candidature rejetée:', rejectReason);
+      setShowFeedbackModal(false);
+      setFeedbackChoice(null);
+      setRejectReason('');
+      setSelectedEntretien(null);
+    } else if (feedbackChoice === 'accept') {
+      // Rediriger vers la page d'élaboration du contrat
+      console.log('Redirection vers élaboration du contrat');
+      // TODO: Navigation vers la page du contrat
+      setShowFeedbackModal(false);
+      setFeedbackChoice(null);
+      setSelectedEntretien(null);
+    }
+  };
+
+  const handleContinueToContract = (entretien: any) => {
+    // Naviguer vers la page de création de contrat avec les données préremplies
+    navigate('/enterprise/contrats', {
+      state: {
+        fromInterview: true,
+        commercialName: entretien.candidat_nom,
+        enterpriseName: 'Mon Entreprise', // Nom par défaut de l'entreprise
+        interviewId: entretien.id
+      }
+    });
+    setShowFeedbackModal(false);
+    setSelectedEntretien(null);
+  };
+
+  const FeedbackModal = ({ entretien, onClose }: { entretien: Entretien; onClose: () => void }) => {
+    const navigate = useNavigate();
+
+    const handleContinueProcess = () => {
+      // Redirection vers la page d'élaboration du contrat
+      navigate('/enterprise/contrats');
+      onClose();
+    };
+
+    return (
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-900">Feedback de l'entretien</h3>
+            <button
+              onClick={() => {
+                setShowFeedbackModal(false);
+                setFeedbackChoice(null);
+                setRejectReason('');
+                setSelectedEntretien(null);
+              }}
+              className="text-gray-400 hover:text-gray-600"
+            >
+              <i className="ri-close-line text-2xl"></i>
+            </button>
+          </div>
+
+          <div className="mb-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-teal-400 to-teal-600 rounded-full flex items-center justify-center flex-shrink-0">
+                <span className="text-white font-bold text-lg">
+                  {entretien.candidat_nom.split(' ').map(n => n[0]).join('')}
+                </span>
+              </div>
+              <div>
+                <h4 className="text-lg font-bold text-gray-900">{entretien.candidat_nom}</h4>
+                <p className="text-sm text-gray-600">{entretien.offre_titre}</p>
+              </div>
+            </div>
+          </div>
+
+          {!feedbackChoice ? (
+            <div className="space-y-4">
+              <p className="text-sm text-gray-600 mb-6">Comment s'est passé l'entretien avec ce candidat ?</p>
+              
+              <button
+                onClick={() => setFeedbackChoice('reject')}
+                className="w-full bg-red-50 border-2 border-red-200 rounded-xl p-6 hover:bg-red-100 hover:border-red-300 transition-all text-left group"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                    <i className="ri-close-circle-line text-2xl text-white"></i>
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-lg font-bold text-gray-900 mb-2">Rejeter la candidature</h4>
+                    <p className="text-sm text-gray-600">Le candidat ne correspond pas aux attentes ou l'entretien ne s'est pas bien passé.</p>
+                  </div>
+                </div>
+              </button>
+
+              <button
+                onClick={() => setFeedbackChoice('accept')}
+                className="w-full bg-green-50 border-2 border-green-200 rounded-xl p-6 hover:bg-green-100 hover:border-green-300 transition-all text-left group"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                    <i className="ri-checkbox-circle-line text-2xl text-white"></i>
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-lg font-bold text-gray-900 mb-2">Continuer le processus</h4>
+                    <p className="text-sm text-gray-600">L'entretien s'est bien passé et vous souhaitez élaborer un contrat avec ce candidat.</p>
+                  </div>
+                </div>
+              </button>
+            </div>
+          ) : feedbackChoice === 'reject' ? (
+            <div>
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <div className="flex items-start gap-3">
+                  <i className="ri-error-warning-line text-red-600 text-xl flex-shrink-0 mt-0.5"></i>
+                  <div>
+                    <h4 className="text-sm font-bold text-red-900 mb-1">Rejet de la candidature</h4>
+                    <p className="text-xs text-red-700">Veuillez expliquer les raisons du rejet (minimum 150 caractères).</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Motif du rejet <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  value={rejectReason}
+                  onChange={(e) => setRejectReason(e.target.value)}
+                  rows={6}
+                  maxLength={500}
+                  placeholder="Expliquez pourquoi ce candidat ne correspond pas au poste (compétences manquantes, expérience insuffisante, etc.)..."
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm resize-none"
+                />
+                <div className="flex items-center justify-between mt-2">
+                  <p className={`text-xs ${rejectReason.length < 150 ? 'text-red-600' : 'text-green-600'}`}>
+                    {rejectReason.length} / 150 caractères minimum
+                  </p>
+                  <p className="text-xs text-gray-500">{rejectReason.length} / 500</p>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={handleFeedbackSubmit}
+                  disabled={rejectReason.length < 150}
+                  className="flex-1 bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors whitespace-nowrap disabled:bg-gray-300 disabled:cursor-not-allowed"
+                >
+                  Confirmer le rejet
+                </button>
+                <button
+                  onClick={() => {
+                    setFeedbackChoice(null);
+                    setRejectReason('');
+                  }}
+                  className="flex-1 bg-gray-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 transition-colors whitespace-nowrap"
+                >
+                  Retour
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6 text-center">
+                <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i className="ri-checkbox-circle-line text-3xl text-white"></i>
+                </div>
+                <h4 className="text-lg font-bold text-gray-900 mb-2">Excellent !</h4>
+                <p className="text-sm text-gray-600">Vous allez être redirigé vers la page d'élaboration du contrat pour finaliser le recrutement de ce candidat.</p>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => handleContinueToContract(selectedEntretien)}
+                  className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-4 rounded-xl hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-3 group"
+                >
+                  <i className="ri-file-text-line text-2xl group-hover:scale-110 transition-transform"></i>
+                  <div className="text-left">
+                    <div className="font-semibold">Continuer le processus</div>
+                    <div className="text-sm text-emerald-50">Élaborer le contrat</div>
+                  </div>
+                </button>
+                <button
+                  onClick={() => {
+                    setFeedbackChoice(null);
+                  }}
+                  className="flex-1 bg-gray-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 transition-colors whitespace-nowrap"
+                >
+                  Retour
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -285,11 +528,16 @@ export default function EntretiensPage() {
                     </div>
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <i className="ri-time-line text-teal-500"></i>
-                      <span>{entretien.heure}</span>
+                      <span>{entretien.heure_debut} - {entretien.heure_fin}</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <i className="ri-map-pin-line text-teal-500"></i>
-                      <span>{entretien.lieu}</span>
+                      <i className={`${getModeIcon(entretien.mode)} text-teal-500`}></i>
+                      <span>{entretien.mode}</span>
+                      {entretien.mode === 'En ligne' && entretien.plateforme && (
+                        <span className="px-2 py-0.5 bg-teal-100 text-teal-700 rounded text-xs font-medium">
+                          {entretien.plateforme}
+                        </span>
+                      )}
                     </div>
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <i className="ri-phone-line text-teal-500"></i>
@@ -297,13 +545,13 @@ export default function EntretiensPage() {
                     </div>
                   </div>
 
-                  {entretien.notes && (
+                  {entretien.commentaire && (
                     <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
                       <p className="text-xs text-yellow-700 font-medium mb-1">
                         <i className="ri-sticky-note-line mr-1"></i>
-                        Notes
+                        Commentaire
                       </p>
-                      <p className="text-sm text-yellow-900">{entretien.notes}</p>
+                      <p className="text-sm text-yellow-900">{entretien.commentaire}</p>
                     </div>
                   )}
                 </div>
@@ -347,16 +595,28 @@ export default function EntretiensPage() {
                   )}
 
                   {entretien.statut === 'Terminé' && (
-                    <button
-                      onClick={() => {
-                        setSelectedEntretien(entretien);
-                        setShowEditModal(true);
-                      }}
-                      className="w-full bg-blue-500 text-white px-4 py-2.5 rounded-lg hover:bg-blue-600 transition-colors text-sm whitespace-nowrap flex items-center justify-center gap-2"
-                    >
-                      <i className="ri-edit-line"></i>
-                      <span>Ajouter résultat</span>
-                    </button>
+                    <>
+                      <button
+                        onClick={() => {
+                          setSelectedEntretien(entretien);
+                          setShowEditModal(true);
+                        }}
+                        className="w-full bg-blue-500 text-white px-4 py-2.5 rounded-lg hover:bg-blue-600 transition-colors text-sm whitespace-nowrap flex items-center justify-center gap-2"
+                      >
+                        <i className="ri-edit-line"></i>
+                        <span>Ajouter résultat</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSelectedEntretien(entretien);
+                          setShowFeedbackModal(true);
+                        }}
+                        className="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white px-4 py-2.5 rounded-lg hover:from-purple-600 hover:to-purple-700 transition-colors text-sm whitespace-nowrap flex items-center justify-center gap-2"
+                      >
+                        <i className="ri-feedback-line"></i>
+                        <span>Feedback</span>
+                      </button>
+                    </>
                   )}
                 </div>
               </div>
@@ -372,6 +632,19 @@ export default function EntretiensPage() {
           )}
         </div>
       </div>
+
+      {/* Modal Feedback */}
+      {showFeedbackModal && selectedEntretien && (
+        <FeedbackModal
+          entretien={selectedEntretien}
+          onClose={() => {
+            setShowFeedbackModal(false);
+            setFeedbackChoice(null);
+            setRejectReason('');
+            setSelectedEntretien(null);
+          }}
+        />
+      )}
 
       {/* Modal Détails */}
       {showDetailsModal && selectedEntretien && (
@@ -414,14 +687,72 @@ export default function EntretiensPage() {
                     <p className="text-sm font-medium text-gray-900">{selectedEntretien.date}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Heure</p>
-                    <p className="text-sm font-medium text-gray-900">{selectedEntretien.heure}</p>
+                    <p className="text-xs text-gray-500">Horaire</p>
+                    <p className="text-sm font-medium text-gray-900">{selectedEntretien.heure_debut} - {selectedEntretien.heure_fin}</p>
                   </div>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500">Lieu</p>
-                  <p className="text-sm font-medium text-gray-900">{selectedEntretien.lieu}</p>
+                  <p className="text-xs text-gray-500">Mode d'entretien</p>
+                  <div className="flex items-center gap-2">
+                    <i className={`${getModeIcon(selectedEntretien.mode)} text-teal-500`}></i>
+                    <p className="text-sm font-medium text-gray-900">{selectedEntretien.mode}</p>
+                  </div>
                 </div>
+                
+                {selectedEntretien.mode === 'En ligne' && (
+                  <>
+                    {selectedEntretien.plateforme && (
+                      <div>
+                        <p className="text-xs text-gray-500">Plateforme</p>
+                        <div className="flex items-center gap-2">
+                          <i className={`${getPlatformeIcon(selectedEntretien.plateforme)} text-teal-500`}></i>
+                          <p className="text-sm font-medium text-gray-900">{selectedEntretien.plateforme}</p>
+                        </div>
+                      </div>
+                    )}
+                    {selectedEntretien.lien_visio && (
+                      <div>
+                        <p className="text-xs text-gray-500">Lien de visioconférence</p>
+                        <a
+                          href={selectedEntretien.lien_visio}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm font-medium text-teal-600 hover:text-teal-700 break-all"
+                        >
+                          {selectedEntretien.lien_visio}
+                        </a>
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {selectedEntretien.mode === 'En physique' && (
+                  <>
+                    {selectedEntretien.adresse && (
+                      <div>
+                        <p className="text-xs text-gray-500">Adresse</p>
+                        <p className="text-sm font-medium text-gray-900">{selectedEntretien.adresse}</p>
+                      </div>
+                    )}
+                    {selectedEntretien.latitude && selectedEntretien.longitude && (
+                      <div>
+                        <p className="text-xs text-gray-500 mb-2">Localisation</p>
+                        <div className="w-full h-64 rounded-lg overflow-hidden border border-gray-200">
+                          <iframe
+                            src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${selectedEntretien.latitude},${selectedEntretien.longitude}&zoom=15`}
+                            width="100%"
+                            height="100%"
+                            style={{ border: 0 }}
+                            allowFullScreen
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                          ></iframe>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+
                 <div>
                   <p className="text-xs text-gray-500">Téléphone</p>
                   <p className="text-sm font-medium text-gray-900">{selectedEntretien.candidat_telephone}</p>
@@ -444,13 +775,13 @@ export default function EntretiensPage() {
                 </div>
               </div>
 
-              {selectedEntretien.notes && (
+              {selectedEntretien.commentaire && (
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                   <p className="text-sm font-medium text-yellow-700 mb-2">
                     <i className="ri-sticky-note-line mr-1"></i>
-                    Notes
+                    Commentaire
                   </p>
-                  <p className="text-sm text-yellow-900 whitespace-pre-wrap">{selectedEntretien.notes}</p>
+                  <p className="text-sm text-yellow-900 whitespace-pre-wrap">{selectedEntretien.commentaire}</p>
                 </div>
               )}
             </div>
@@ -494,7 +825,7 @@ export default function EntretiensPage() {
                     type="time"
                     name="heure"
                     required
-                    defaultValue={selectedEntretien.heure}
+                    defaultValue={selectedEntretien.heure_debut}
                     className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                   />
                 </div>
@@ -504,7 +835,7 @@ export default function EntretiensPage() {
                     type="text"
                     name="lieu"
                     required
-                    defaultValue={selectedEntretien.lieu}
+                    defaultValue={selectedEntretien.mode === 'En ligne' ? 'En ligne' : selectedEntretien.adresse}
                     placeholder="Ex: Visioconférence, Bureau, etc."
                     className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                   />
@@ -539,7 +870,7 @@ export default function EntretiensPage() {
                   <textarea
                     name="notes"
                     rows={4}
-                    defaultValue={selectedEntretien.notes}
+                    defaultValue={selectedEntretien.commentaire}
                     placeholder="Ajoutez vos notes..."
                     className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                   />
@@ -578,7 +909,7 @@ export default function EntretiensPage() {
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">Annuler l'entretien</h3>
               <p className="text-sm text-gray-600">
-                Êtes-vous sûr de vouloir annuler l'entretien avec <strong>{selectedEntretien.candidat_nom}</strong> prévu le {selectedEntretien.date} à {selectedEntretien.heure} ?
+                Êtes-vous sûr de vouloir annuler l'entretien avec <strong>{selectedEntretien.candidat_nom}</strong> prévu le {selectedEntretien.date} à {selectedEntretien.heure_debut} ?
               </p>
             </div>
             <div className="flex gap-3">

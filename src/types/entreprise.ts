@@ -248,9 +248,17 @@ export interface CandidatureCommercial {
   entretien_planifie?: {
     date: string;
     heure: string;
+    heure_fin?: string;
     lieu: string;
+    mode?: 'physique' | 'ligne';
+    commentaire?: string;
+    position_geo?: {
+      lat: number;
+      lng: number;
+    };
   };
   notes?: string;
+  motif_rejet?: string;
 }
 
 // Constantes pour les listes déroulantes
