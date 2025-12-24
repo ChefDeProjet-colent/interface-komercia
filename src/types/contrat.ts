@@ -1,112 +1,58 @@
-// ============================================
-// INTERFACES POUR GESTION DES CONTRATS
-// ============================================
-
-export interface Clause {
-  id?: string;
-  description: string;
-}
-
-export interface EcheancePaiement {
-  id?: string;
-  date: string;
-  montant: number;
-  statut?: 'En attente' | 'Payé' | 'En retard';
-}
-
-export interface ObjectifContrat {
-  id?: string;
-  description: string;
-  atteint: boolean;
-  date_realisation?: string;
-}
-
-export interface ModificationContrat {
-  id?: string;
-  date: string;
-  auteur: string;
-  description: string;
-  champs_modifies: string[];
-}
-
 export interface Contrat {
-  id?: string;
-  
-  // Section 1: Informations Générales sur le Contrat
-  titre: string; // obligatoire - Ex: "Contrat de prestation avec John Doe"
-  type_contrat: 'Prestation de service' | 'Contrat de vente' | 'Contrat de partenariat'; // obligatoire
+  id: string;
+  titreContrat: string;
+  typeContrat: 'prestation-service' | 'contrat-vente' | 'contrat-partenariat';
   
   // Parties impliquées
-  nom_entreprise: string; // obligatoire
-  nom_commercial_client: string; // obligatoire - Nom du commercial ou client
-  email_commercial?: string;
-  telephone_commercial?: string;
-  code_pays_commercial?: string;
+  nomEntreprise: string;
+  nomCommercialClient: string;
   
-  date_debut: string; // obligatoire
-  date_fin?: string; // optionnel
-  statut: 'En cours' | 'Terminé' | 'Résilié' | 'En attente de signature'; // obligatoire
+  // Dates
+  dateDebut: string;
+  dateFin?: string;
+  statutContrat: 'en-cours' | 'termine' | 'resilie' | 'attente-signature';
   
-  // Section 2: Détails du Contrat
-  objet_contrat: string; // obligatoire - Ex: "Prestation de services de prospection commerciale"
-  clauses_principales: Clause[]; // obligatoire - Liste des clauses
-  montant_contrat?: number; // optionnel
-  mode_paiement?: 'Virement bancaire' | 'Mobile Money' | 'Chèque'; // optionnel
-  echeances_paiement?: EcheancePaiement[]; // optionnel - Liste des échéances
+  // Détails
+  objetContrat: string;
+  clausesPrincipales: string[];
+  montantContrat?: number;
+  modePaiement?: 'virement-bancaire' | 'mobile-money' | 'cheque';
+  echeancesPaiement?: {
+    date: string;
+    montant: number;
+    statut: 'paye' | 'en-attente' | 'en-retard';
+  }[];
   
-  // Section 3: Suivi et Gestion des Contrats
-  progression?: number; // Pourcentage 0-100
-  objectifs?: ObjectifContrat[]; // Liste des objectifs
+  // Suivi
+  progression: number;
+  objectifsAtteints: string[];
   
-  // Notifications et rappels (gérés automatiquement)
-  notifications_actives?: boolean;
+  // Documents
+  documentsAssocies: {
+    nom: string;
+    url: string;
+    type: string;
+    dateAjout: string;
+  }[];
   
-  // Documents associés
-  documents?: (File | string)[]; // PDF, Word, etc.
+  // Historique
+  historique: {
+    date: string;
+    champModifie: string;
+    ancienneValeur: string;
+    nouvelleValeur: string;
+    auteur: string;
+  }[];
   
-  // Section 4: Historique et Modifications
-  historique_modifications?: ModificationContrat[];
-  commentaires_internes?: string;
+  // Commentaires
+  commentairesInternes: string;
   
-  // Section 5: Résiliation et Clôture
-  motif_resiliation?: string;
-  date_resiliation?: string;
-  statut_final?: 'Terminé avec succès' | 'Résilié' | 'Non conclu';
+  // Résiliation
+  motifResiliation?: string;
+  dateResiliation?: string;
+  statutFinal?: 'termine-succes' | 'resilie' | 'non-conclu';
   
   // Métadonnées
-  date_creation?: string;
-  created_by?: string;
-  entreprise_id?: string;
+  dateCreation: string;
+  derniereMiseAJour: string;
 }
-
-// Constantes pour les listes déroulantes
-export const TYPES_CONTRAT_GESTION = [
-  'Prestation de service',
-  'Contrat de vente',
-  'Contrat de partenariat'
-] as const;
-
-export const STATUTS_CONTRAT = [
-  'En cours',
-  'Terminé',
-  'Résilié',
-  'En attente de signature'
-] as const;
-
-export const MODES_PAIEMENT = [
-  'Virement bancaire',
-  'Mobile Money',
-  'Chèque'
-] as const;
-
-export const STATUTS_FINAUX = [
-  'Terminé avec succès',
-  'Résilié',
-  'Non conclu'
-] as const;
-
-export const STATUTS_ECHEANCE = [
-  'En attente',
-  'Payé',
-  'En retard'
-] as const;

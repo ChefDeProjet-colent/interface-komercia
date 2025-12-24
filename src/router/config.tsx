@@ -1,4 +1,4 @@
-import { type RouteObject } from 'react-router-dom';
+import { RouteObject } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import HomePage from '../pages/home/page';
 import RegisterPage from '../pages/register/page';
@@ -8,9 +8,11 @@ import EntrepriseLayout from '../pages/enterprise/layout';
 // Lazy load components
 const LoginPage = lazy(() => import('../pages/login/page'));
 const CommercialPage = lazy(() => import('../pages/commercial/page'));
-const CommercialProfilePage = lazy(() => import('../pages/commercial/profile/ProfileCommercial'));
+const CommercialProfilePage = lazy(() => import('../pages/commercial/profile/page'));
 const CommercialCallForTendersPage = lazy(() => import('../pages/commercial/call-for-tenders/page'));
+const CommercialCallForTendersDetailsPage = lazy(() => import('../pages/commercial/call-for-tenders/details/page'));
 const CommercialEntretiensPage = lazy(() => import('../pages/commercial/entretiens/page'));
+const CommercialContratsPage = lazy(() => import('../pages/commercial/contrats/page'));
 const LeadsPage = lazy(() => import('../pages/leads/page'));
 const PipelinePage = lazy(() => import('../pages/pipeline/page'));
 const ActivitiesPage = lazy(() => import('../pages/activities/page'));
@@ -30,6 +32,7 @@ const EntrepriseCallForTendersPage = lazy(() => import('../pages/enterprise/call
 const EntrepriseProductsPage = lazy(() => import('../pages/enterprise/products/page'));
 const EntrepriseCandidaturesPage = lazy(() => import('../pages/enterprise/candidatures/page'));
 const EntrepriseEntretiensPage = lazy(() => import('../pages/enterprise/entretiens/page'));
+const EntrepriseContratsPage = lazy(() => import('../pages/enterprise/contrats/page'));
 const MerchantsPage = lazy(() => import('../pages/merchants/page'));
 const InformalMerchantsPage = lazy(() => import('../pages/informal-merchants/page'));
 const KomerciaPage = lazy(() => import('../pages/komercia/page'));
@@ -81,10 +84,26 @@ const routes: RouteObject[] = [
     element: <CommercialCallForTendersPage />,
   },
   {
+    path: '/commercial/call-for-tenders/details/:id',
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <CommercialCallForTendersDetailsPage />
+      </Suspense>
+    )
+  },
+  {
     path: '/commercial/entretiens',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
         <CommercialEntretiensPage />
+      </Suspense>
+    )
+  },
+  {
+    path: '/commercial/contrats',
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <CommercialContratsPage />
       </Suspense>
     )
   },
@@ -253,6 +272,14 @@ const routes: RouteObject[] = [
         element: (
           <Suspense fallback={<LoadingSpinner />}>
             <EntrepriseProductsPage />
+          </Suspense>
+        )
+      },
+      {
+        path: 'contrats',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <EntrepriseContratsPage />
           </Suspense>
         )
       }
