@@ -13,8 +13,11 @@ const CommercialCallForTendersPage = lazy(() => import('../pages/commercial/call
 const CommercialCallForTendersDetailsPage = lazy(() => import('../pages/commercial/call-for-tenders/details/page'));
 const CommercialEntretiensPage = lazy(() => import('../pages/commercial/entretiens/page'));
 const CommercialContratsPage = lazy(() => import('../pages/commercial/contrats/page'));
+<<<<<<< HEAD
 const CommercialProduitsPage = lazy(() => import('../pages/commercial/produits/page'));
 const CommercialProduitsDetailsPage = lazy(() => import('../pages/commercial/produits/details/page'));
+=======
+>>>>>>> b1ef38051ac497610ab47d12ce0c7f3bac1fa130
 const LeadsPage = lazy(() => import('../pages/leads/page'));
 const PipelinePage = lazy(() => import('../pages/pipeline/page'));
 const ActivitiesPage = lazy(() => import('../pages/activities/page'));
@@ -110,6 +113,7 @@ const routes: RouteObject[] = [
     element: (
       <Suspense fallback={<LoadingSpinner />}>
         <CommercialContratsPage />
+<<<<<<< HEAD
       </Suspense>
     )
   },
@@ -142,6 +146,8 @@ const routes: RouteObject[] = [
     element: (
       <Suspense fallback={<LoadingSpinner />}>
         <PipelinePage />
+=======
+>>>>>>> b1ef38051ac497610ab47d12ce0c7f3bac1fa130
       </Suspense>
     )
   },
