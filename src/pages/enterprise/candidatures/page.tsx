@@ -38,35 +38,8 @@ export default function CandidaturesPage() {
       date_candidature: '2024-01-15',
       lettre_motivation: 'Je suis très intéressée par ce poste de commercial. Avec 5 ans d\'expérience dans la vente B2B dans le secteur technologique, j\'ai développé des compétences solides en prospection, négociation et closing. J\'ai notamment réussi à augmenter le chiffre d\'affaires de mon entreprise actuelle de 40% en 2 ans.'
     },
-    {
-      id: '2',
-      offre_id: '1',
-      offre_titre: 'Recrutement de commerciaux B2B pour l\'Afrique de l\'Ouest',
-      nom_candidat: 'Thomas Dubois',
-      email: 'thomas.dubois@email.com',
-      telephone: '0723456789',
-      code_pays: '+225',
-      competences_principales: ['Développement commercial', 'Management', 'Stratégie', 'Négociation'],
-      experience: '7 ans en développement commercial',
-      statut: 'En cours d\'évaluation',
-      date_candidature: '2024-01-16',
-      lettre_motivation: 'Fort de 7 années d\'expérience en développement commercial, je souhaite rejoindre votre équipe pour contribuer à votre croissance.',
-      notes: 'Profil intéressant, expérience solide dans le secteur B2B'
-    },
-    {
-      id: '3',
-      offre_id: '1',
-      offre_titre: 'Recrutement de commerciaux B2B pour l\'Afrique de l\'Ouest',
-      nom_candidat: 'Marie Lefebvre',
-      email: 'marie.lefebvre@email.com',
-      telephone: '0734567890',
-      code_pays: '+225',
-      competences_principales: ['Vente B2B', 'Relation client', 'Prospection digitale', 'CRM'],
-      experience: '4 ans en vente B2B',
-      statut: 'En attente',
-      date_candidature: '2024-01-17',
-      lettre_motivation: 'Passionnée par la vente et le développement commercial, je souhaite mettre mes compétences au service de votre entreprise.'
-    },
+    
+  
     {
       id: '4',
       offre_id: '1',
@@ -87,55 +60,8 @@ export default function CandidaturesPage() {
       },
       notes: 'Excellent profil, entretien confirmé pour le 5 février'
     },
-    {
-      id: '5',
-      offre_id: '1',
-      offre_titre: 'Recrutement de commerciaux B2B pour l\'Afrique de l\'Ouest',
-      nom_candidat: 'Julie Moreau',
-      email: 'julie.moreau@email.com',
-      telephone: '0756789012',
-      code_pays: '+225',
-      competences_principales: ['Prospection', 'Relation client', 'Vente', 'Communication'],
-      experience: '3 ans en vente',
-      statut: 'Rejetée',
-      date_candidature: '2024-01-19',
-      motif_rejet: 'Expérience insuffisante pour le poste senior',
-      notes: 'Expérience insuffisante pour le poste senior'
-    },
-    {
-      id: '6',
-      offre_id: '2',
-      offre_titre: 'Commercial Senior - Secteur Technologie',
-      nom_candidat: 'Pierre Durand',
-      email: 'pierre.durand@email.com',
-      telephone: '0767890123',
-      code_pays: '+225',
-      competences_principales: ['Vente B2B', 'Technologie', 'SaaS', 'Négociation', 'Closing'],
-      experience: '8 ans dans la vente de solutions technologiques',
-      statut: 'En attente',
-      date_candidature: '2024-01-20',
-      lettre_motivation: 'Avec 8 ans d\'expérience dans la vente de solutions technologiques, je suis convaincu de pouvoir apporter une réelle valeur ajoutée à votre entreprise.'
-    },
-    {
-      id: '7',
-      offre_id: '2',
-      offre_titre: 'Commercial Senior - Secteur Technologie',
-      nom_candidat: 'Isabelle Rousseau',
-      email: 'isabelle.rousseau@email.com',
-      telephone: '0778901234',
-      code_pays: '+225',
-      competences_principales: ['Account management', 'Vente consultative', 'CRM', 'Leadership'],
-      experience: '6 ans en tant que Key Account Manager',
-      statut: 'Acceptée',
-      date_candidature: '2024-01-21',
-      entretien_planifie: {
-        date: '2024-02-08',
-        heure: '10:00',
-        heure_fin: '11:30',
-        lieu: 'Bureau - Abidjan'
-      },
-      notes: 'Profil très prometteur, excellentes références'
-    }
+    
+   
   ]);
 
   // Liste des offres pour le filtre
