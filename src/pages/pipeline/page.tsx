@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import Card from '../../components/base/Card';
 import Badge from '../../components/base/Badge';
 import Button from '../../components/base/Button';
-import AdBanner from '../../components/feature/AdBanner';
-import { useAdManager } from '../../components/feature/AdManager';
+import Sidebar from '../../components/feature/Sidebar';
 
 interface PipelineItem {
   id: string;
@@ -26,13 +25,6 @@ interface Task {
 }
 
 export default function PipelinePage() {
-  const { trackAction } = useAdManager();
-
-  useEffect(() => {
-    // Tracker l'accès au pipeline
-    trackAction('view-pipeline');
-  }, [trackAction]);
-
   const [pipelineData, setPipelineData] = useState<PipelineItem[]>([
     {
       id: '1',
@@ -105,11 +97,176 @@ export default function PipelinePage() {
       tasks: [
         { id: '7', title: 'Relance pour signature', completed: false, dueDate: '2024-01-08' }
       ]
+    },
+    {
+      id: '6',
+      company: 'CloudSystems Pro',
+      contact: 'Jean Dupont',
+      value: '95,000€',
+      stage: 'prospection',
+      probability: 25,
+      nextAction: 'Premier rendez-vous',
+      dueDate: '2024-01-20',
+      notes: 'Contact via LinkedIn',
+      tasks: []
+    },
+    {
+      id: '7',
+      company: 'FinanceHub SA',
+      contact: 'Claire Bernard',
+      value: '150,000€',
+      stage: 'qualification',
+      probability: 55,
+      nextAction: 'Démonstration technique',
+      dueDate: '2024-01-16',
+      notes: 'Besoin urgent de solution',
+      tasks: [
+        { id: '8', title: 'Préparer démo', completed: false, dueDate: '2024-01-15' }
+      ]
+    },
+    {
+      id: '8',
+      company: 'RetailMax Group',
+      contact: 'Marc Lefebvre',
+      value: '65,000€',
+      stage: 'proposition',
+      probability: 70,
+      nextAction: 'Présentation offre finale',
+      dueDate: '2024-01-13',
+      notes: 'Comparaison avec 2 concurrents',
+      tasks: []
+    },
+    {
+      id: '9',
+      company: 'BioTech Innovations',
+      contact: 'Isabelle Petit',
+      value: '180,000€',
+      stage: 'negociation',
+      probability: 80,
+      nextAction: 'Finalisation conditions',
+      dueDate: '2024-01-19',
+      notes: 'Négociation sur délais livraison',
+      tasks: [
+        { id: '9', title: 'Consulter équipe technique', completed: true, dueDate: '2024-01-17' }
+      ]
+    },
+    {
+      id: '10',
+      company: 'EduLearn Platform',
+      contact: 'François Roux',
+      value: '55,000€',
+      stage: 'signature',
+      probability: 90,
+      nextAction: 'Obtenir signature DG',
+      dueDate: '2024-01-09',
+      notes: 'Accord verbal obtenu',
+      tasks: []
+    },
+    {
+      id: '11',
+      company: 'AutoParts Distribution',
+      contact: 'Nathalie Girard',
+      value: '40,000€',
+      stage: 'prospection',
+      probability: 35,
+      nextAction: 'Qualification besoins',
+      dueDate: '2024-01-22',
+      notes: 'Recommandé par client existant',
+      tasks: []
+    },
+    {
+      id: '12',
+      company: 'SmartHome Solutions',
+      contact: 'Olivier Blanc',
+      value: '110,000€',
+      stage: 'qualification',
+      probability: 65,
+      nextAction: 'Audit technique',
+      dueDate: '2024-01-17',
+      notes: 'Projet de transformation digitale',
+      tasks: [
+        { id: '10', title: 'Planifier audit', completed: false, dueDate: '2024-01-16' }
+      ]
+    },
+    {
+      id: '13',
+      company: 'LogiTrans Express',
+      contact: 'Sylvie Mercier',
+      value: '90,000€',
+      stage: 'proposition',
+      probability: 60,
+      nextAction: 'Révision proposition',
+      dueDate: '2024-01-14',
+      notes: 'Demande ajustements tarifaires',
+      tasks: []
+    },
+    {
+      id: '14',
+      company: 'MediaCom Agency',
+      contact: 'Laurent Morel',
+      value: '135,000€',
+      stage: 'negociation',
+      probability: 85,
+      nextAction: 'Validation juridique',
+      dueDate: '2024-01-21',
+      notes: 'Derniers détails contractuels',
+      tasks: [
+        { id: '11', title: 'Révision contrat', completed: false, dueDate: '2024-01-20' }
+      ]
+    },
+    {
+      id: '15',
+      company: 'HealthCare Plus',
+      contact: 'Émilie Garnier',
+      value: '170,000€',
+      stage: 'signature',
+      probability: 92,
+      nextAction: 'Planifier kick-off',
+      dueDate: '2024-01-10',
+      notes: 'Contrat signé, attente paiement',
+      tasks: []
+    },
+    {
+      id: '16',
+      company: 'FoodChain Logistics',
+      contact: 'Philippe Durand',
+      value: '78,000€',
+      stage: 'prospection',
+      probability: 40,
+      nextAction: 'Rendez-vous découverte',
+      dueDate: '2024-01-23',
+      notes: 'Intérêt pour optimisation supply chain',
+      tasks: []
+    },
+    {
+      id: '17',
+      company: 'TravelTech Solutions',
+      contact: 'Caroline Faure',
+      value: '105,000€',
+      stage: 'qualification',
+      probability: 50,
+      nextAction: 'Analyse besoins détaillée',
+      dueDate: '2024-01-18',
+      notes: 'Projet multi-sites',
+      tasks: []
+    },
+    {
+      id: '18',
+      company: 'SecureNet Systems',
+      contact: 'Alain Perrin',
+      value: '145,000€',
+      stage: 'proposition',
+      probability: 75,
+      nextAction: 'Présentation solution sécurité',
+      dueDate: '2024-01-15',
+      notes: 'Priorité haute sécurité',
+      tasks: [
+        { id: '12', title: 'Préparer audit sécurité', completed: true, dueDate: '2024-01-13' }
+      ]
     }
   ]);
 
   const [selectedLead, setSelectedLead] = useState<PipelineItem | null>(null);
-  const [showTaskModal, setShowTaskModal] = useState(false);
   const [showAddOpportunityModal, setShowAddOpportunityModal] = useState(false);
   const [newNote, setNewNote] = useState('');
   const [newTask, setNewTask] = useState('');
@@ -133,17 +290,6 @@ export default function PipelinePage() {
       const value = parseInt(item.value.replace(/[€,]/g, ''));
       return total + (value * item.probability / 100);
     }, 0);
-  };
-
-  const getStageColor = (stage: string) => {
-    switch (stage) {
-      case 'prospection': return 'text-gray-600';
-      case 'qualification': return 'text-blue-600';
-      case 'proposition': return 'text-yellow-600';
-      case 'negociation': return 'text-orange-600';
-      case 'signature': return 'text-green-600';
-      default: return 'text-gray-600';
-    }
   };
 
   const moveToNextStage = (leadId: string) => {
@@ -240,26 +386,6 @@ export default function PipelinePage() {
       notes: ''
     });
     setShowAddOpportunityModal(false);
-    trackAction('add-opportunity', { stage: opportunity.stage, value: opportunity.value });
-  };
-
-  const handleLeadClick = (lead: PipelineItem) => {
-    setSelectedLead(lead);
-    trackAction('view-opportunity-details', { stage: lead.stage, value: lead.value });
-  };
-
-  const handleStageMove = (leadId: string) => {
-    moveToNextStage(leadId);
-    trackAction('move-opportunity-stage', { leadId });
-  };
-
-  const handleAddOpportunity = () => {
-    setShowAddOpportunityModal(true);
-    trackAction('add-opportunity');
-  };
-
-  const handleManageOpportunity = (opportunityId: string) => {
-    trackAction('manage-opportunities', { opportunityId });
   };
 
   const stages = [
@@ -271,12 +397,12 @@ export default function PipelinePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* ... existing sidebar code ... */}
+    <div className="min-h-screen bg-gray-50 flex">
+      <Sidebar />
 
-      <div className="ml-64 p-8">
+      <div className="flex-1 ml-64 p-8">
         <div className="space-y-6">
-          {/* Header and introductory content */}
+          {/* Header */}
           <div className="mb-6">
             <h1 className="text-2xl font-bold text-gray-900">Pipeline de Ventes</h1>
             <p className="text-gray-600 mt-1">Suivez vos opportunités commerciales</p>
@@ -331,12 +457,6 @@ export default function PipelinePage() {
             </Card>
           </div>
 
-          {/* Bannière publicitaire ciblée */}
-          <AdBanner
-            type="header"
-            position="pipeline-header"
-          />
-
           {/* Pipeline Kanban */}
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
             {stages.map((stage) => {
@@ -358,12 +478,12 @@ export default function PipelinePage() {
                     <p className="font-semibold text-gray-900">{stageValue.toLocaleString()}€</p>
                   </div>
 
-                  <div className="space-y-3">
+                  <div className="space-y-3 max-h-[calc(100vh-400px)] overflow-y-auto pr-2">
                     {stageItems.map((item) => (
                       <div
                         key={item.id}
                         className="p-3 border border-gray-200 rounded-lg hover:shadow-md transition-shadow cursor-pointer"
-                        onClick={() => handleLeadClick(item)}
+                        onClick={() => setSelectedLead(item)}
                       >
                         <div className="flex items-start justify-between mb-2">
                           <h4 className="font-medium text-gray-900 text-sm">{item.company}</h4>
@@ -405,9 +525,9 @@ export default function PipelinePage() {
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleStageMove(item.id);
+                              moveToNextStage(item.id);
                             }}
-                            className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded hover:bg-blue-200 transition-colors"
+                            className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded hover:bg-blue-200 transition-colors whitespace-nowrap"
                           >
                             Avancer
                           </button>
@@ -420,34 +540,23 @@ export default function PipelinePage() {
             })}
           </div>
 
-          {/* Bannière publicitaire entre les colonnes */}
-          <div className="mt-8">
-            <AdBanner
-              type="footer"
-              position="pipeline-footer"
-            />
-          </div>
-
           {/* Actions rapides */}
           <Card className="mt-8">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Actions Rapides</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Button
                 variant="primary"
-                className="flex items-center justify-center"
-                onClick={() => {
-                  setShowAddOpportunityModal(true);
-                  trackAction('click-add-opportunity');
-                }}
+                className="flex items-center justify-center whitespace-nowrap"
+                onClick={() => setShowAddOpportunityModal(true)}
               >
                 <i className="ri-add-line mr-2"></i>
                 Ajouter une opportunité
               </Button>
-              <Button variant="outline" className="flex items-center justify-center">
+              <Button variant="outline" className="flex items-center justify-center whitespace-nowrap">
                 <i className="ri-file-excel-line mr-2"></i>
                 Exporter le pipeline
               </Button>
-              <Button variant="outline" className="flex items-center justify-center">
+              <Button variant="outline" className="flex items-center justify-center whitespace-nowrap">
                 <i className="ri-bar-chart-line mr-2"></i>
                 Analyser les performances
               </Button>
@@ -462,7 +571,7 @@ export default function PipelinePage() {
                   <h2 className="text-xl font-bold text-gray-900">Nouvelle Opportunité</h2>
                   <button
                     onClick={() => setShowAddOpportunityModal(false)}
-                    className="text-gray-500 hover:text-gray-700"
+                    className="text-gray-500 hover:text-gray-700 cursor-pointer"
                   >
                     <i className="ri-close-line text-xl"></i>
                   </button>
@@ -516,7 +625,7 @@ export default function PipelinePage() {
                       <select
                         value={newOpportunity.stage}
                         onChange={(e) => setNewOpportunity(prev => ({ ...prev, stage: e.target.value as any }))}
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
+                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8 cursor-pointer"
                       >
                         <option value="prospection">Prospection</option>
                         <option value="qualification">Qualification</option>
@@ -538,7 +647,7 @@ export default function PipelinePage() {
                         max="100"
                         value={newOpportunity.probability}
                         onChange={(e) => setNewOpportunity(prev => ({ ...prev, probability: parseInt(e.target.value) }))}
-                        className="w-full"
+                        className="w-full cursor-pointer"
                       />
                       <div className="text-center text-sm text-gray-600 mt-1">
                         {newOpportunity.probability}%
@@ -552,7 +661,7 @@ export default function PipelinePage() {
                         type="date"
                         value={newOpportunity.dueDate}
                         onChange={(e) => setNewOpportunity(prev => ({ ...prev, dueDate: e.target.value }))}
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer"
                       />
                     </div>
                   </div>
@@ -587,7 +696,7 @@ export default function PipelinePage() {
                     <Button
                       variant="primary"
                       onClick={addNewOpportunity}
-                      className="flex-1"
+                      className="flex-1 whitespace-nowrap"
                     >
                       <i className="ri-add-line mr-2"></i>
                       Créer l'opportunité
@@ -595,6 +704,7 @@ export default function PipelinePage() {
                     <Button
                       variant="outline"
                       onClick={() => setShowAddOpportunityModal(false)}
+                      className="whitespace-nowrap"
                     >
                       Annuler
                     </Button>
@@ -612,7 +722,7 @@ export default function PipelinePage() {
                   <h2 className="text-xl font-bold text-gray-900">{selectedLead.company}</h2>
                   <button
                     onClick={() => setSelectedLead(null)}
-                    className="text-gray-500 hover:text-gray-700"
+                    className="text-gray-500 hover:text-gray-700 cursor-pointer"
                   >
                     <i className="ri-close-line text-xl"></i>
                   </button>
@@ -650,7 +760,7 @@ export default function PipelinePage() {
                             type="checkbox"
                             checked={task.completed}
                             onChange={() => toggleTask(selectedLead.id, task.id)}
-                            className="rounded"
+                            className="rounded cursor-pointer"
                           />
                           <span className={`text-sm ${task.completed ? 'line-through text-gray-500' : 'text-gray-900'}`}>
                             {task.title}
@@ -671,6 +781,7 @@ export default function PipelinePage() {
                         variant="primary"
                         size="sm"
                         onClick={() => addTask(selectedLead.id)}
+                        className="whitespace-nowrap"
                       >
                         Ajouter
                       </Button>
@@ -694,6 +805,7 @@ export default function PipelinePage() {
                         variant="primary"
                         size="sm"
                         onClick={() => addNote(selectedLead.id)}
+                        className="whitespace-nowrap"
                       >
                         Ajouter
                       </Button>
@@ -703,12 +815,6 @@ export default function PipelinePage() {
               </div>
             </div>
           )}
-
-          {/* Bannière popup ciblée (apparaît parfois) */}
-          <AdBanner
-            type="popup"
-            position="pipeline-popup"
-          />
         </div>
       </div>
     </div>

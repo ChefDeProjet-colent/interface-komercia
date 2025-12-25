@@ -1,112 +1,117 @@
-
 import { useState, useEffect } from 'react';
 import Card from '../../components/base/Card';
 import Badge from '../../components/base/Badge';
 import Button from '../../components/base/Button';
-import AdBanner from '../../components/feature/AdBanner';
-import { useAdManager } from '../../components/feature/AdManager';
+import Sidebar from '../../components/feature/Sidebar';
 
 export default function CommissionsPage() {
-  const [commissions] = useState<Commission[]>([
+  // Données des contrats avec commissions
+  const [contrats] = useState([
     {
       id: '1',
-      client: 'TechCorp Solutions',
-      product: 'CRM Enterprise',
-      saleAmount: 75000,
-      commissionRate: 8,
-      commissionAmount: 6000,
-      status: 'paid',
-      saleDate: '2024-01-05',
-      paymentDate: '2024-01-10'
+      entreprise: {
+        nom: 'TechCorp Solutions',
+        logo: 'https://readdy.ai/api/search-image?query=modern%20technology%20company%20logo%20with%20blue%20and%20white%20colors%20professional%20corporate%20branding%20minimalist%20design&width=100&height=100&seq=techcorp001&orientation=squarish',
+        estVerifie: true,
+        secteur: 'Technologie'
+      },
+      reference: 'CTR-2024-001',
+      titre: 'Commercial CRM Enterprise',
+      type: 'Commission',
+      dateDebut: '2024-01-01',
+      remuneration: {
+        type: 'Commission',
+        tauxCommission: 8,
+        devise: 'EUR'
+      },
+      statut: 'Actif'
     },
     {
       id: '2',
-      client: 'InnovateSAS',
-      product: 'CRM Professional',
-      saleAmount: 45000,
-      commissionRate: 10,
-      commissionAmount: 4500,
-      status: 'processing',
-      saleDate: '2024-01-08'
+      entreprise: {
+        nom: 'InnovateSAS',
+        logo: 'https://readdy.ai/api/search-image?query=innovative%20startup%20company%20logo%20with%20orange%20and%20gray%20colors%20modern%20tech%20branding%20creative%20design&width=100&height=100&seq=innovate002&orientation=squarish',
+        estVerifie: true,
+        secteur: 'Innovation'
+      },
+      reference: 'CTR-2024-002',
+      titre: 'Commercial Solutions Digitales',
+      type: 'Fixe + Commission',
+      dateDebut: '2024-01-15',
+      remuneration: {
+        type: 'Fixe + Commission',
+        salaireFixe: 2500,
+        tauxCommission: 10,
+        devise: 'EUR'
+      },
+      statut: 'Actif'
     },
     {
       id: '3',
-      client: 'DataFlow Analytics',
-      product: 'CRM Custom',
-      saleAmount: 120000,
-      commissionRate: 12,
-      commissionAmount: 14400,
-      status: 'pending',
-      saleDate: '2024-01-12'
+      entreprise: {
+        nom: 'DataFlow Analytics',
+        logo: 'https://readdy.ai/api/search-image?query=data%20analytics%20company%20logo%20with%20purple%20and%20blue%20gradient%20colors%20professional%20tech%20branding%20modern%20design&width=100&height=100&seq=dataflow003&orientation=squarish',
+        estVerifie: true,
+        secteur: 'Data & Analytics'
+      },
+      reference: 'CTR-2024-003',
+      titre: 'Commercial Solutions BI',
+      type: 'Commission',
+      dateDebut: '2023-12-01',
+      remuneration: {
+        type: 'Commission',
+        tauxCommission: 12,
+        devise: 'EUR'
+      },
+      statut: 'Actif'
     },
     {
       id: '4',
-      client: 'GreenTech Energy',
-      product: 'CRM Starter',
-      saleAmount: 25000,
-      commissionRate: 6,
-      commissionAmount: 1500,
-      status: 'paid',
-      saleDate: '2023-12-28',
-      paymentDate: '2024-01-03'
-    },
-    {
-      id: '5',
-      client: 'MedCare Solutions',
-      product: 'CRM Healthcare',
-      saleAmount: 85000,
-      commissionRate: 9,
-      commissionAmount: 7650,
-      status: 'processing',
-      saleDate: '2024-01-15'
-    },
-    {
-      id: '6',
-      client: 'RetailPlus',
-      product: 'CRM Retail',
-      saleAmount: 35000,
-      commissionRate: 7,
-      commissionAmount: 2450,
-      status: 'paid',
-      saleDate: '2023-12-20',
-      paymentDate: '2023-12-28'
-    },
-    {
-      id: '7',
-      client: 'LogiFlow',
-      product: 'CRM Logistics',
-      saleAmount: 95000,
-      commissionRate: 11,
-      commissionAmount: 10450,
-      status: 'pending',
-      saleDate: '2024-01-18'
+      entreprise: {
+        nom: 'GreenTech Energy',
+        logo: 'https://readdy.ai/api/search-image?query=green%20energy%20company%20logo%20with%20green%20and%20white%20colors%20eco%20friendly%20sustainable%20branding%20clean%20design&width=100&height=100&seq=greentech004&orientation=squarish',
+        estVerifie: false,
+        secteur: 'Énergie'
+      },
+      reference: 'CTR-2023-045',
+      titre: 'Commercial Énergies Renouvelables',
+      type: 'Fixe + Commission',
+      dateDebut: '2023-11-01',
+      remuneration: {
+        type: 'Fixe + Commission',
+        salaireFixe: 3000,
+        tauxCommission: 6,
+        devise: 'EUR'
+      },
+      statut: 'Actif'
     }
   ]);
 
-  const [performanceData] = useState<PerformanceData[]>([
-    { period: 'Semaine 1', sales: 3, leads: 15, conversionRate: 20, commissions: 8950 },
-    { period: 'Semaine 2', sales: 5, leads: 22, conversionRate: 23, commissions: 12400 },
-    { period: 'Semaine 3', sales: 4, leads: 18, conversionRate: 22, commissions: 9800 },
-    { period: 'Semaine 4', sales: 6, leads: 25, conversionRate: 24, commissions: 15300 }
+  // Ventes réalisées par contrat
+  const [ventes] = useState([
+    // TechCorp Solutions
+    { id: '1', contratId: '1', entreprise: 'TechCorp Solutions', client: 'Société ABC', produit: 'CRM Enterprise - Licence Annuelle', montant: 75000, tauxCommission: 8, commission: 6000, dateVente: '2024-01-05', statut: 'paid', datePaiement: '2024-01-10' },
+    { id: '2', contratId: '1', entreprise: 'TechCorp Solutions', client: 'Entreprise XYZ', produit: 'CRM Enterprise - Pack Premium', montant: 95000, tauxCommission: 8, commission: 7600, dateVente: '2024-01-18', statut: 'processing', datePaiement: null },
+    { id: '3', contratId: '1', entreprise: 'TechCorp Solutions', client: 'Groupe Delta', produit: 'CRM Enterprise - Solution Complète', montant: 120000, tauxCommission: 8, commission: 9600, dateVente: '2024-01-25', statut: 'pending', datePaiement: null },
+    
+    // InnovateSAS
+    { id: '4', contratId: '2', entreprise: 'InnovateSAS', client: 'StartUp Innovante', produit: 'Solution Digitale Pro', montant: 45000, tauxCommission: 10, commission: 4500, dateVente: '2024-01-08', statut: 'processing', datePaiement: null },
+    { id: '5', contratId: '2', entreprise: 'InnovateSAS', client: 'Tech Solutions Ltd', produit: 'Pack Transformation Digitale', montant: 68000, tauxCommission: 10, commission: 6800, dateVente: '2024-01-22', statut: 'paid', datePaiement: '2024-01-28' },
+    
+    // DataFlow Analytics
+    { id: '6', contratId: '3', entreprise: 'DataFlow Analytics', client: 'Retail Plus', produit: 'Solution BI Avancée', montant: 85000, tauxCommission: 12, commission: 10200, dateVente: '2024-01-12', statut: 'pending', datePaiement: null },
+    { id: '7', contratId: '3', entreprise: 'DataFlow Analytics', client: 'Finance Corp', produit: 'Analytics Dashboard Pro', montant: 110000, tauxCommission: 12, commission: 13200, dateVente: '2024-01-20', statut: 'processing', datePaiement: null },
+    { id: '8', contratId: '3', entreprise: 'DataFlow Analytics', client: 'MedCare Solutions', produit: 'BI Healthcare Suite', montant: 95000, tauxCommission: 12, commission: 11400, dateVente: '2024-01-15', statut: 'paid', datePaiement: '2024-01-22' },
+    
+    // GreenTech Energy
+    { id: '9', contratId: '4', entreprise: 'GreenTech Energy', client: 'Ville de Lyon', produit: 'Installation Solaire 500kW', montant: 250000, tauxCommission: 6, commission: 15000, dateVente: '2023-12-28', statut: 'paid', datePaiement: '2024-01-03' },
+    { id: '10', contratId: '4', entreprise: 'GreenTech Energy', client: 'Industrie Verte SA', produit: 'Parc Éolien 2MW', montant: 450000, tauxCommission: 6, commission: 27000, dateVente: '2024-01-10', statut: 'processing', datePaiement: null },
+    { id: '11', contratId: '4', entreprise: 'GreenTech Energy', client: 'EcoBuilding Group', produit: 'Solution Énergétique Complète', montant: 180000, tauxCommission: 6, commission: 10800, dateVente: '2024-01-16', statut: 'pending', datePaiement: null }
   ]);
 
-  const [monthlyComparison] = useState<MonthlyData[]>([
-    { month: 'Octobre', sales: 18, commissions: 42500, conversionRate: 22 },
-    { month: 'Novembre', sales: 22, commissions: 51200, conversionRate: 25 },
-    { month: 'Décembre', sales: 25, commissions: 58900, conversionRate: 28 },
-    { month: 'Janvier', sales: 18, commissions: 46650, conversionRate: 23 }
-  ]);
-
-  const [quarterlyComparison] = useState<QuarterlyData[]>([
-    { quarter: 'Q3 2023', sales: 65, commissions: 145000, conversionRate: 24 },
-    { quarter: 'Q4 2023', sales: 72, commissions: 168500, conversionRate: 26 },
-    { quarter: 'Q1 2024', sales: 63, commissions: 152300, conversionRate: 25 }
-  ]);
-
-  const [selectedPeriod, setSelectedPeriod] = useState('current-month');
-  const [selectedComparison, setSelectedComparison] = useState<'weekly' | 'monthly' | 'quarterly'>('weekly');
-  const [showPerformanceChart, setShowPerformanceChart] = useState(true);
-  const [showCommissionCalculator, setShowCommissionCalculator] = useState(false);
+  const [selectedContrat, setSelectedContrat] = useState<string>('all');
+  const [selectedStatut, setSelectedStatut] = useState<string>('all');
+  const [showCalculator, setShowCalculator] = useState(false);
   const [calculatorAmount, setCalculatorAmount] = useState('');
   const [calculatorRate, setCalculatorRate] = useState('');
 
@@ -128,197 +133,139 @@ export default function CommissionsPage() {
     }
   };
 
+  const getFilteredVentes = () => {
+    return ventes.filter(vente => {
+      const contratMatch = selectedContrat === 'all' || vente.contratId === selectedContrat;
+      const statutMatch = selectedStatut === 'all' || vente.statut === selectedStatut;
+      return contratMatch && statutMatch;
+    });
+  };
+
   const getTotalCommissions = () => {
-    return commissions.reduce((total, commission) => total + commission.commissionAmount, 0);
+    return getFilteredVentes().reduce((total, vente) => total + vente.commission, 0);
   };
 
   const getPaidCommissions = () => {
-    return commissions
-      .filter(c => c.status === 'paid')
-      .reduce((total, commission) => total + commission.commissionAmount, 0);
+    return getFilteredVentes()
+      .filter(v => v.statut === 'paid')
+      .reduce((total, vente) => total + vente.commission, 0);
   };
 
   const getPendingCommissions = () => {
-    return commissions
-      .filter(c => c.status === 'pending' || c.status === 'processing')
-      .reduce((total, commission) => total + commission.commissionAmount, 0);
+    return getFilteredVentes()
+      .filter(v => v.statut === 'pending' || v.statut === 'processing')
+      .reduce((total, vente) => total + vente.commission, 0);
   };
 
-  const getConversionRate = () => {
-    const totalLeads = performanceData.reduce((sum, data) => sum + data.leads, 0);
-    const totalSales = performanceData.reduce((sum, data) => sum + data.sales, 0);
-    return totalLeads > 0 ? Math.round((totalSales / totalLeads) * 100) : 0;
+  const getCommissionsByContrat = (contratId: string) => {
+    return ventes
+      .filter(v => v.contratId === contratId)
+      .reduce((total, vente) => total + vente.commission, 0);
   };
 
-  const calculateCommission = (saleAmount: number, rate: number) => {
-    return (saleAmount * rate) / 100;
+  const getVentesByContrat = (contratId: string) => {
+    return ventes.filter(v => v.contratId === contratId).length;
   };
 
-  const getCommissionBaremes = () => {
-    return [
-      { range: '0 - 25 000€', rate: 5, description: 'Taux de base' },
-      { range: '25 001 - 50 000€', rate: 7, description: 'Taux intermédiaire' },
-      { range: '50 001 - 100 000€', rate: 10, description: 'Taux élevé' },
-      { range: '100 001€ +', rate: 12, description: 'Taux premium' }
-    ];
+  const calculateCommission = () => {
+    const amount = parseFloat(calculatorAmount) || 0;
+    const rate = parseFloat(calculatorRate) || 0;
+    return (amount * rate) / 100;
   };
 
-  const calculateCommissionByBareme = (saleAmount: number) => {
-    if (saleAmount <= 25000) return saleAmount * 0.05;
-    if (saleAmount <= 50000) return 25000 * 0.05 + (saleAmount - 25000) * 0.07;
-    if (saleAmount <= 100000) return 25000 * 0.05 + 25000 * 0.07 + (saleAmount - 50000) * 0.10;
-    return 25000 * 0.05 + 25000 * 0.07 + 50000 * 0.10 + (saleAmount - 100000) * 0.12;
-  };
-
-  const getPerformanceEvolution = () => {
-    const currentMonth = monthlyComparison[monthlyComparison.length - 1];
-    const previousMonth = monthlyComparison[monthlyComparison.length - 2];
-    
-    return {
-      salesGrowth: ((currentMonth.sales - previousMonth.sales) / previousMonth.sales * 100).toFixed(1),
-      commissionsGrowth: ((currentMonth.commissions - previousMonth.commissions) / previousMonth.commissions * 100).toFixed(1),
-      conversionGrowth: ((currentMonth.conversionRate - previousMonth.conversionRate) / previousMonth.conversionRate * 100).toFixed(1)
-    };
-  };
-
-  const renderComparisonChart = () => {
-    let data: any[] = [];
-    let maxValue = 0;
-
-    switch (selectedComparison) {
-      case 'weekly':
-        data = performanceData;
-        maxValue = Math.max(...data.map(d => d.commissions));
-        break;
-      case 'monthly':
-        data = monthlyComparison;
-        maxValue = Math.max(...data.map(d => d.commissions));
-        break;
-      case 'quarterly':
-        data = quarterlyComparison;
-        maxValue = Math.max(...data.map(d => d.commissions));
-        break;
-    }
-
-    return (
-      <div className="space-y-4">
-        {data.map((item, index) => (
-          <div key={index} className="flex items-center justify-between">
-            <span className="text-sm text-gray-600 w-20">
-              {selectedComparison === 'weekly' ? item.period : 
-               selectedComparison === 'monthly' ? item.month : item.quarter}
-            </span>
-            <div className="flex-1 mx-4">
-              <div className="flex items-center space-x-2">
-                <div className="w-full bg-gray-200 rounded-full h-3">
-                  <div
-                    className="bg-gradient-to-r from-green-500 to-emerald-600 h-3 rounded-full transition-all duration-500"
-                    style={{ width: `${(item.commissions / maxValue) * 100}%` }}
-                  ></div>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
+      <Sidebar />
+      
+      <div className="ml-64 p-8">
+        <div className="max-w-7xl mx-auto space-y-8">
+          {/* Header avec gradient */}
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 p-8 text-white shadow-xl">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
+            <div className="relative">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-3xl font-bold mb-2">💰 Mes Commissions</h1>
+                  <p className="text-emerald-100 text-lg">Suivez vos gains par contrat et par entreprise</p>
                 </div>
-                <span className="text-sm font-medium text-gray-900 w-20 text-right">
-                  {item.commissions.toLocaleString()}€
-                </span>
-              </div>
-              <div className="flex justify-between text-xs text-gray-500 mt-1">
-                <span>{item.sales} ventes</span>
-                <span>{item.conversionRate}% conversion</span>
+                <div className="text-right">
+                  <div className="text-5xl font-bold">{getTotalCommissions().toLocaleString()}€</div>
+                  <div className="text-emerald-100 mt-1">Total des commissions</div>
+                </div>
               </div>
             </div>
           </div>
-        ))}
-      </div>
-    );
-  };
 
-  const { trackAction } = useAdManager();
-
-  useEffect(() => {
-    trackAction('view-commissions');
-  }, []);
-
-  const handleManageCommission = () => {
-    trackAction('manage-commissions');
-  };
-
-  const evolution = getPerformanceEvolution();
-
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="ml-64 p-8">
-        <div className="space-y-6">
-          {/* Header */}
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">Commissions et Performances</h1>
-            <p className="text-gray-600 mt-1">Suivez vos gains et analysez vos performances commerciales</p>
-          </div>
-
-          {/* Statistiques des commissions */}
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
-            <Card>
-              <div className="text-center">
-                <p className="text-2xl font-bold text-green-600">{getTotalCommissions().toLocaleString()}€</p>
-                <p className="text-sm text-gray-600">Total commissions</p>
-                <div className="flex items-center justify-center mt-1">
-                  <i className={`ri-arrow-${evolution.commissionsGrowth.startsWith('-') ? 'down' : 'up'}-line text-xs ${evolution.commissionsGrowth.startsWith('-') ? 'text-red-500' : 'text-green-500'}`}></i>
-                  <span className={`text-xs ${evolution.commissionsGrowth.startsWith('-') ? 'text-red-500' : 'text-green-500'}`}>
-                    {evolution.commissionsGrowth}%
-                  </span>
+          {/* Statistiques principales */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">Commissions payées</p>
+                  <p className="text-3xl font-bold text-green-600">{getPaidCommissions().toLocaleString()}€</p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {getFilteredVentes().filter(v => v.statut === 'paid').length} paiements
+                  </p>
+                </div>
+                <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center">
+                  <i className="ri-money-dollar-circle-line text-3xl text-white"></i>
                 </div>
               </div>
             </Card>
-            <Card>
-              <div className="text-center">
-                <p className="text-2xl font-bold text-blue-600">{getPaidCommissions().toLocaleString()}€</p>
-                <p className="text-sm text-gray-600">Commissions payées</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  {commissions.filter(c => c.status === 'paid').length} paiements
-                </p>
-              </div>
-            </Card>
-            <Card>
-              <div className="text-center">
-                <p className="text-2xl font-bold text-orange-600">{getPendingCommissions().toLocaleString()}€</p>
-                <p className="text-sm text-gray-600">En attente</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  {commissions.filter(c => c.status !== 'paid').length} en cours
-                </p>
-              </div>
-            </Card>
-            <Card>
-              <div className="text-center">
-                <p className="text-2xl font-bold text-purple-600">
-                  {Math.round(commissions.reduce((sum, c) => sum + c.commissionRate, 0) / commissions.length)}%
-                </p>
-                <p className="text-sm text-gray-600">Taux moyen</p>
-                <div className="flex items-center justify-center mt-1">
-                  <i className="ri-trending-up-line text-xs text-green-500"></i>
-                  <span className="text-xs text-green-500">+2.1%</span>
+
+            <Card className="bg-gradient-to-br from-orange-50 to-amber-50 border-orange-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">En attente</p>
+                  <p className="text-3xl font-bold text-orange-600">{getPendingCommissions().toLocaleString()}€</p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {getFilteredVentes().filter(v => v.statut !== 'paid').length} en cours
+                  </p>
+                </div>
+                <div className="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center">
+                  <i className="ri-time-line text-3xl text-white"></i>
                 </div>
               </div>
             </Card>
-            <Card>
-              <div className="text-center">
-                <p className="text-2xl font-bold text-indigo-600">{getConversionRate()}%</p>
-                <p className="text-sm text-gray-600">Taux conversion</p>
-                <div className="flex items-center justify-center mt-1">
-                  <i className={`ri-arrow-${evolution.conversionGrowth.startsWith('-') ? 'down' : 'up'}-line text-xs ${evolution.conversionGrowth.startsWith('-') ? 'text-red-500' : 'text-green-500'}`}></i>
-                  <span className={`text-xs ${evolution.conversionGrowth.startsWith('-') ? 'text-red-500' : 'text-green-500'}`}>
-                    {evolution.conversionGrowth}%
-                  </span>
+
+            <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">Contrats actifs</p>
+                  <p className="text-3xl font-bold text-blue-600">{contrats.length}</p>
+                  <p className="text-xs text-gray-500 mt-1">Entreprises partenaires</p>
+                </div>
+                <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center">
+                  <i className="ri-file-text-line text-3xl text-white"></i>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">Ventes totales</p>
+                  <p className="text-3xl font-bold text-purple-600">{getFilteredVentes().length}</p>
+                  <p className="text-xs text-gray-500 mt-1">Ce mois-ci</p>
+                </div>
+                <div className="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center">
+                  <i className="ri-shopping-cart-line text-3xl text-white"></i>
                 </div>
               </div>
             </Card>
           </div>
 
-          {/* Barèmes de commission */}
-          <Card className="mb-8">
+          {/* Mes contrats avec commissions */}
+          <Card>
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">Barèmes de Commission</h3>
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">📋 Mes Contrats</h2>
+                <p className="text-sm text-gray-600 mt-1">Vos contrats actifs avec taux de commission</p>
+              </div>
               <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowCommissionCalculator(!showCommissionCalculator)}
+                variant="primary"
+                onClick={() => setShowCalculator(!showCalculator)}
               >
                 <i className="ri-calculator-line mr-2"></i>
                 Calculateur
@@ -326,412 +273,326 @@ export default function CommissionsPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h4 className="font-medium text-gray-900 mb-4">Grille Tarifaire</h4>
-                <div className="space-y-3">
-                  {getCommissionBaremes().map((bareme, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div>
-                        <p className="font-medium text-gray-900">{bareme.range}</p>
-                        <p className="text-sm text-gray-600">{bareme.description}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-lg font-bold text-green-600">{bareme.rate}%</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {showCommissionCalculator && (
-                <div>
-                  <h4 className="font-medium text-gray-900 mb-4">Calculateur de Commission</h4>
-                  <div className="space-y-4 p-4 bg-blue-50 rounded-lg">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Montant de la vente (€)
-                      </label>
-                      <input
-                        type="number"
-                        value={calculatorAmount}
-                        onChange={(e) => setCalculatorAmount(e.target.value)}
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="Ex: 75000"
-                      />
-                    </div>
-                    
-                    {calculatorAmount && (
-                      <div className="p-3 bg-white rounded-lg border">
-                        <p className="text-sm text-gray-600 mb-2">Commission calculée automatiquement :</p>
-                        <p className="text-2xl font-bold text-green-600">
-                          {calculateCommissionByBareme(parseFloat(calculatorAmount) || 0).toLocaleString()}€
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          Taux effectif : {((calculateCommissionByBareme(parseFloat(calculatorAmount) || 0) / (parseFloat(calculatorAmount) || 1)) * 100).toFixed(2)}%
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-          </Card>
-
-          {/* Graphiques de performance avec comparaisons */}
-          <Card className="mb-8">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">Évolution des Performances</h3>
-              <div className="flex items-center space-x-2">
-                <div className="flex bg-gray-100 rounded-lg p-1">
-                  <button
-                    onClick={() => setSelectedComparison('weekly')}
-                    className={`px-3 py-1 rounded text-sm whitespace-nowrap ${selectedComparison === 'weekly' ? 'bg-white shadow-sm' : ''}`}
-                  >
-                    Hebdomadaire
-                  </button>
-                  <button
-                    onClick={() => setSelectedComparison('monthly')}
-                    className={`px-3 py-1 rounded text-sm whitespace-nowrap ${selectedComparison === 'monthly' ? 'bg-white shadow-sm' : ''}`}
-                  >
-                    Mensuelle
-                  </button>
-                  <button
-                    onClick={() => setSelectedComparison('quarterly')}
-                    className={`px-3 py-1 rounded text-sm whitespace-nowrap ${selectedComparison === 'quarterly' ? 'bg-white shadow-sm' : ''}`}
-                  >
-                    Trimestrielle
-                  </button>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowPerformanceChart(!showPerformanceChart)}
+              {contrats.map((contrat) => (
+                <div
+                  key={contrat.id}
+                  className="relative overflow-hidden rounded-xl border-2 border-gray-200 hover:border-emerald-400 transition-all duration-300 hover:shadow-lg cursor-pointer group"
+                  onClick={() => setSelectedContrat(contrat.id)}
                 >
-                  <i className={`ri-${showPerformanceChart ? 'eye-off' : 'eye'}-line mr-2`}></i>
-                  {showPerformanceChart ? 'Masquer' : 'Afficher'}
-                </Button>
-              </div>
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full -mr-16 -mt-16 opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                  
+                  <div className="relative p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-12 h-12 flex items-center justify-center">
+                          <img
+                            src={contrat.entreprise.logo}
+                            alt={contrat.entreprise.nom}
+                            className="w-full h-full object-cover rounded-lg"
+                          />
+                        </div>
+                        <div>
+                          <div className="flex items-center space-x-2">
+                            <h3 className="font-bold text-gray-900">{contrat.entreprise.nom}</h3>
+                            {contrat.entreprise.estVerifie && (
+                              <i className="ri-verified-badge-fill text-blue-500 text-lg"></i>
+                            )}
+                          </div>
+                          <p className="text-sm text-gray-600">{contrat.reference}</p>
+                        </div>
+                      </div>
+                      <Badge variant="success">{contrat.statut}</Badge>
+                    </div>
+
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-3 bg-emerald-50 rounded-lg">
+                        <div>
+                          <p className="text-sm text-gray-600">Taux de commission</p>
+                          <p className="text-2xl font-bold text-emerald-600">
+                            {contrat.remuneration.tauxCommission}%
+                          </p>
+                        </div>
+                        {contrat.remuneration.type === 'Fixe + Commission' && (
+                          <div className="text-right">
+                            <p className="text-sm text-gray-600">Salaire fixe</p>
+                            <p className="text-lg font-bold text-gray-900">
+                              {contrat.remuneration.salaireFixe?.toLocaleString()}€
+                            </p>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="p-3 bg-blue-50 rounded-lg">
+                          <p className="text-xs text-gray-600 mb-1">Ventes réalisées</p>
+                          <p className="text-xl font-bold text-blue-600">{getVentesByContrat(contrat.id)}</p>
+                        </div>
+                        <div className="p-3 bg-green-50 rounded-lg">
+                          <p className="text-xs text-gray-600 mb-1">Commissions gagnées</p>
+                          <p className="text-xl font-bold text-green-600">
+                            {getCommissionsByContrat(contrat.id).toLocaleString()}€
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="pt-3 border-t border-gray-200">
+                        <p className="text-xs text-gray-500">
+                          <i className="ri-calendar-line mr-1"></i>
+                          Actif depuis le {new Date(contrat.dateDebut).toLocaleDateString('fr-FR')}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-
-            {showPerformanceChart && (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Graphique principal des commissions */}
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-lg border border-green-200">
-                  <h4 className="font-medium text-gray-900 mb-4 flex items-center">
-                    <i className="ri-money-dollar-circle-line text-green-600 mr-2"></i>
-                    Commissions par {selectedComparison === 'weekly' ? 'semaine' : selectedComparison === 'monthly' ? 'mois' : 'trimestre'}
-                  </h4>
-                  {renderComparisonChart()}
-                </div>
-
-                {/* Graphique des ventes */}
-                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-200">
-                  <h4 className="font-medium text-gray-900 mb-4 flex items-center">
-                    <i className="ri-line-chart-line text-blue-600 mr-2"></i>
-                    Évolution des Ventes
-                  </h4>
-                  <div className="space-y-3">
-                    {(selectedComparison === 'weekly' ? performanceData : 
-                      selectedComparison === 'monthly' ? monthlyComparison : quarterlyComparison).map((data, index) => (
-                      <div key={index} className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">
-                          {selectedComparison === 'weekly' ? data.period : 
-                           selectedComparison === 'monthly' ? data.month : data.quarter}
-                        </span>
-                        <div className="flex items-center space-x-2">
-                          <div className="w-32 bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full"
-                              style={{ width: `${(data.sales / Math.max(...(selectedComparison === 'weekly' ? performanceData : selectedComparison === 'monthly' ? monthlyComparison : quarterlyComparison).map(d => d.sales))) * 100}%` }}
-                            ></div>
-                          </div>
-                          <span className="text-sm font-medium w-8">{data.sales}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Graphique du taux de conversion */}
-                <div className="bg-gradient-to-br from-orange-50 to-red-50 p-6 rounded-lg border border-orange-200">
-                  <h4 className="font-medium text-gray-900 mb-4 flex items-center">
-                    <i className="ri-percent-line text-orange-600 mr-2"></i>
-                    Taux de Conversion
-                  </h4>
-                  <div className="space-y-3">
-                    {(selectedComparison === 'weekly' ? performanceData : 
-                      selectedComparison === 'monthly' ? monthlyComparison : quarterlyComparison).map((data, index) => (
-                      <div key={index} className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">
-                          {selectedComparison === 'weekly' ? data.period : 
-                           selectedComparison === 'monthly' ? data.month : data.quarter}
-                        </span>
-                        <div className="flex items-center space-x-2">
-                          <div className="w-32 bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-gradient-to-r from-orange-500 to-red-600 h-2 rounded-full"
-                              style={{ width: `${(data.conversionRate / 30) * 100}%` }}
-                            ></div>
-                          </div>
-                          <span className="text-sm font-medium w-8">{data.conversionRate}%</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Graphique des leads contactés */}
-                <div className="bg-gradient-to-br from-purple-50 to-indigo-50 p-6 rounded-lg border border-purple-200">
-                  <h4 className="font-medium text-gray-900 mb-4 flex items-center">
-                    <i className="ri-contacts-line text-purple-600 mr-2"></i>
-                    Leads Contactés
-                  </h4>
-                  <div className="space-y-3">
-                    {(selectedComparison === 'weekly' ? performanceData : []).map((data, index) => (
-                      <div key={index} className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">{data.period}</span>
-                        <div className="flex items-center space-x-2">
-                          <div className="w-32 bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-gradient-to-r from-purple-500 to-indigo-600 h-2 rounded-full"
-                              style={{ width: `${(data.leads / 25) * 100}%` }}
-                            ></div>
-                          </div>
-                          <span className="text-sm font-medium w-8">{data.leads}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
           </Card>
 
-          {/* Bannière publicitaire sous les graphiques de performance */}
-          <div className="mb-8">
-            <AdBanner
-              type="header"
-              title="Solutions de Paiement Avancées"
-              description="Optimisez vos processus de paiement et accélérez vos encaissements avec nos outils financiers intelligents"
-              buttonText="Découvrir les solutions"
-              gradient="from-green-600 to-teal-600"
-              icon="ri-money-dollar-circle-line"
-            />
-          </div>
+          {/* Calculateur de commission */}
+          {showCalculator && (
+            <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-bold text-gray-900">
+                  <i className="ri-calculator-line mr-2 text-blue-600"></i>
+                  Calculateur de Commission
+                </h3>
+                <button
+                  onClick={() => setShowCalculator(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <i className="ri-close-line text-xl"></i>
+                </button>
+              </div>
 
-          {/* Filtres et liste des commissions */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Montant de la vente (€)
+                  </label>
+                  <input
+                    type="number"
+                    value={calculatorAmount}
+                    onChange={(e) => setCalculatorAmount(e.target.value)}
+                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg"
+                    placeholder="Ex: 75000"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Taux de commission (%)
+                  </label>
+                  <input
+                    type="number"
+                    value={calculatorRate}
+                    onChange={(e) => setCalculatorRate(e.target.value)}
+                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg"
+                    placeholder="Ex: 8"
+                  />
+                </div>
+
+                <div className="flex items-end">
+                  <div className="w-full p-4 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-lg text-white">
+                    <p className="text-sm mb-1">Commission calculée</p>
+                    <p className="text-3xl font-bold">
+                      {calculateCommission().toLocaleString()}€
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          )}
+
+          {/* Filtres et liste des ventes */}
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             {/* Filtres */}
             <div className="lg:col-span-1">
-              <Card>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Filtres et Outils</h3>
+              <Card className="sticky top-8">
+                <h3 className="text-lg font-bold text-gray-900 mb-4">
+                  <i className="ri-filter-3-line mr-2 text-gray-600"></i>
+                  Filtres
+                </h3>
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Période d'analyse</label>
-                    <div className="relative">
-                      <select
-                        value={selectedPeriod}
-                        onChange={(e) => setSelectedPeriod(e.target.value)}
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-8"
-                      >
-                        <option value="current-month">Mois en cours</option>
-                        <option value="last-month">Mois dernier</option>
-                        <option value="current-quarter">Trimestre en cours</option>
-                        <option value="last-quarter">Trimestre dernier</option>
-                        <option value="current-year">Année en cours</option>
-                        <option value="last-year">Année dernière</option>
-                      </select>
-                      <i className="ri-arrow-down-s-line absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
-                    </div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Par contrat
+                    </label>
+                    <select
+                      value={selectedContrat}
+                      onChange={(e) => setSelectedContrat(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option value="all">Tous les contrats</option>
+                      {contrats.map((contrat) => (
+                        <option key={contrat.id} value={contrat.id}>
+                          {contrat.entreprise.nom}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Statut des commissions</label>
-                    <div className="space-y-2">
-                      <label className="flex items-center">
-                        <input type="checkbox" className="mr-2 rounded" defaultChecked />
-                        <span className="text-sm">Payées ({commissions.filter(c => c.status === 'paid').length})</span>
-                      </label>
-                      <label className="flex items-center">
-                        <input type="checkbox" className="mr-2 rounded" defaultChecked />
-                        <span className="text-sm">En cours ({commissions.filter(c => c.status === 'processing').length})</span>
-                      </label>
-                      <label className="flex items-center">
-                        <input type="checkbox" className="mr-2 rounded" defaultChecked />
-                        <span className="text-sm">En attente ({commissions.filter(c => c.status === 'pending').length})</span>
-                      </label>
-                    </div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Par statut
+                    </label>
+                    <select
+                      value={selectedStatut}
+                      onChange={(e) => setSelectedStatut(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option value="all">Tous les statuts</option>
+                      <option value="paid">Payées</option>
+                      <option value="processing">En cours</option>
+                      <option value="pending">En attente</option>
+                    </select>
                   </div>
 
                   <div className="pt-4 border-t border-gray-200">
-                    <h4 className="text-sm font-medium text-gray-700 mb-3">Objectifs du mois</h4>
-                    <div className="space-y-3">
-                      <div>
-                        <div className="flex justify-between text-sm mb-1">
-                          <span>Ventes</span>
-                          <span>18/25</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="bg-blue-600 h-2 rounded-full" style={{ width: '72%' }}></div>
-                        </div>
-                      </div>
-                      <div>
-                        <div className="flex justify-between text-sm mb-1">
-                          <span>Commissions</span>
-                          <span>46 650€/60 000€</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="bg-green-600 h-2 rounded-full" style={{ width: '78%' }}></div>
-                        </div>
-                      </div>
+                    <div className="text-center p-4 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-lg">
+                      <p className="text-sm text-gray-600 mb-1">Résultats filtrés</p>
+                      <p className="text-2xl font-bold text-emerald-600">
+                        {getFilteredVentes().length}
+                      </p>
+                      <p className="text-xs text-gray-500">ventes</p>
                     </div>
                   </div>
-                </div>
 
-                <div className="mt-6 pt-4 border-t border-gray-200 space-y-2">
-                  <Button variant="outline" className="w-full">
-                    <i className="ri-download-line mr-2"></i>
-                    Exporter les données
-                  </Button>
-                  <Button variant="outline" className="w-full">
-                    <i className="ri-file-pdf-line mr-2"></i>
-                    Rapport PDF
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => {
+                      setSelectedContrat('all');
+                      setSelectedStatut('all');
+                    }}
+                  >
+                    <i className="ri-refresh-line mr-2"></i>
+                    Réinitialiser
                   </Button>
                 </div>
               </Card>
             </div>
 
-            {/* Liste des commissions */}
-            <div className="lg:col-span-2">
+            {/* Liste des ventes */}
+            <div className="lg:col-span-3">
               <Card>
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-semibold text-gray-900">Historique des Commissions</h3>
-                  <Button variant="primary" size="sm" onClick={handleManageCommission}>
-                    <i className="ri-add-line mr-2"></i>
-                    Nouvelle vente
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-900">💼 Historique des Ventes</h2>
+                    <p className="text-sm text-gray-600 mt-1">
+                      {getFilteredVentes().length} vente{getFilteredVentes().length > 1 ? 's' : ''} • {getTotalCommissions().toLocaleString()}€ de commissions
+                    </p>
+                  </div>
+                  <Button variant="outline">
+                    <i className="ri-download-line mr-2"></i>
+                    Exporter
                   </Button>
                 </div>
 
                 <div className="space-y-4">
-                  {commissions.map((commission) => (
-                    <div
-                      key={commission.id}
-                      className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
-                    >
-                      <div className="flex items-start justify-between mb-3">
-                        <div>
-                          <h4 className="font-medium text-gray-900">{commission.client}</h4>
-                          <p className="text-sm text-gray-600">{commission.product}</p>
-                        </div>
-                        <Badge variant={getStatusVariant(commission.status)}>
-                          {getStatusLabel(commission.status)}
-                        </Badge>
-                      </div>
+                  {getFilteredVentes().map((vente) => {
+                    const contrat = contrats.find(c => c.id === vente.contratId);
+                    return (
+                      <div
+                        key={vente.id}
+                        className="relative overflow-hidden rounded-xl border-2 border-gray-200 hover:border-emerald-300 transition-all duration-300 hover:shadow-md"
+                      >
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full -mr-12 -mt-12 opacity-30"></div>
+                        
+                        <div className="relative p-5">
+                          <div className="flex items-start justify-between mb-4">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-12 h-12 flex items-center justify-center">
+                                <img
+                                  src={contrat?.entreprise.logo}
+                                  alt={vente.entreprise}
+                                  className="w-full h-full object-cover rounded-lg"
+                                />
+                              </div>
+                              <div>
+                                <div className="flex items-center space-x-2">
+                                  <h4 className="font-bold text-gray-900">{vente.client}</h4>
+                                  {contrat?.entreprise.estVerifie && (
+                                    <i className="ri-verified-badge-fill text-blue-500"></i>
+                                  )}
+                                </div>
+                                <p className="text-sm text-gray-600">{vente.entreprise}</p>
+                                <p className="text-xs text-gray-500 mt-1">{vente.produit}</p>
+                              </div>
+                            </div>
+                            <Badge variant={getStatusVariant(vente.statut)}>
+                              {getStatusLabel(vente.statut)}
+                            </Badge>
+                          </div>
 
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                        <div>
-                          <p className="text-gray-600">Montant vente</p>
-                          <p className="font-medium">{commission.saleAmount.toLocaleString()}€</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-600">Taux commission</p>
-                          <p className="font-medium">{commission.commissionRate}%</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-600">Commission</p>
-                          <p className="font-medium text-green-600">{commission.commissionAmount.toLocaleString()}€</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-600">Date vente</p>
-                          <p className="font-medium">{new Date(commission.saleDate).toLocaleDateString('fr-FR')}</p>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                            <div className="p-3 bg-blue-50 rounded-lg">
+                              <p className="text-xs text-gray-600 mb-1">Montant vente</p>
+                              <p className="text-lg font-bold text-blue-600">
+                                {vente.montant.toLocaleString()}€
+                              </p>
+                            </div>
+                            <div className="p-3 bg-purple-50 rounded-lg">
+                              <p className="text-xs text-gray-600 mb-1">Taux</p>
+                              <p className="text-lg font-bold text-purple-600">
+                                {vente.tauxCommission}%
+                              </p>
+                            </div>
+                            <div className="p-3 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-lg">
+                              <p className="text-xs text-gray-600 mb-1">Commission</p>
+                              <p className="text-lg font-bold text-emerald-600">
+                                {vente.commission.toLocaleString()}€
+                              </p>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-lg">
+                              <p className="text-xs text-gray-600 mb-1">Date vente</p>
+                              <p className="text-sm font-medium text-gray-900">
+                                {new Date(vente.dateVente).toLocaleDateString('fr-FR')}
+                              </p>
+                            </div>
+                          </div>
+
+                          {vente.datePaiement && (
+                            <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                              <div className="flex items-center space-x-2">
+                                <i className="ri-check-double-line text-green-600 text-xl"></i>
+                                <span className="text-sm font-medium text-green-700">
+                                  Payée le {new Date(vente.datePaiement).toLocaleDateString('fr-FR')}
+                                </span>
+                              </div>
+                              <span className="text-sm text-green-600 font-bold">
+                                +{vente.commission.toLocaleString()}€
+                              </span>
+                            </div>
+                          )}
+
+                          {!vente.datePaiement && (
+                            <div className="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
+                              <div className="flex items-center space-x-2">
+                                <i className="ri-time-line text-orange-600 text-xl"></i>
+                                <span className="text-sm font-medium text-orange-700">
+                                  {vente.statut === 'processing' ? 'Paiement en cours de traitement' : 'En attente de validation'}
+                                </span>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
-
-                      {commission.paymentDate && (
-                        <div className="mt-3 pt-3 border-t border-gray-100">
-                          <p className="text-sm text-gray-600">
-                            <i className="ri-check-line text-green-600 mr-1"></i>
-                            Payée le {new Date(commission.paymentDate).toLocaleDateString('fr-FR')}
-                          </p>
-                        </div>
-                      )}
-
-                      <div className="mt-3 flex items-center justify-between">
-                        <div className="text-xs text-gray-500">
-                          Commission calculée selon barème automatique
-                        </div>
-                        <div className="flex space-x-2">
-                          <button className="text-blue-600 hover:text-blue-700 text-sm">
-                            <i className="ri-eye-line mr-1"></i>Détails
-                          </button>
-                          <button className="text-gray-600 hover:text-gray-700 text-sm">
-                            <i className="ri-edit-line mr-1"></i>Modifier
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-gray-200 text-center">
-                  <Button variant="outline">
-                    <i className="ri-refresh-line mr-2"></i>
-                    Charger plus de commissions
-                  </Button>
-                </div>
+                {getFilteredVentes().length === 0 && (
+                  <div className="text-center py-12">
+                    <i className="ri-inbox-line text-6xl text-gray-300 mb-4"></i>
+                    <p className="text-gray-500">Aucune vente trouvée avec ces filtres</p>
+                  </div>
+                )}
               </Card>
             </div>
-          </div>
-
-          {/* Bannière publicitaire pour outils d'analyse */}
-          <div className="mt-8">
-            <AdBanner
-              type="footer"
-              title="Outils d'Analyse de Performance Avancés"
-              description="Analysez vos données de vente en profondeur avec nos tableaux de bord intelligents et rapports personnalisés"
-              buttonText="Essayer gratuitement"
-              gradient="from-indigo-600 to-blue-600"
-              icon="ri-bar-chart-box-line"
-            />
           </div>
         </div>
       </div>
     </div>
   );
-}
-
-// Types
-interface Commission {
-  id: string;
-  client: string;
-  product: string;
-  saleAmount: number;
-  commissionRate: number;
-  commissionAmount: number;
-  status: 'pending' | 'paid' | 'processing';
-  saleDate: string;
-  paymentDate?: string;
-}
-
-interface PerformanceData {
-  period: string;
-  sales: number;
-  leads: number;
-  conversionRate: number;
-  commissions: number;
-}
-
-interface MonthlyData {
-  month: string;
-  sales: number;
-  commissions: number;
-  conversionRate: number;
-}
-
-interface QuarterlyData {
-  quarter: string;
-  sales: number;
-  commissions: number;
-  conversionRate: number;
 }
