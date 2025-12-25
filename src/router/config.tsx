@@ -13,6 +13,11 @@ const CommercialCallForTendersPage = lazy(() => import('../pages/commercial/call
 const CommercialCallForTendersDetailsPage = lazy(() => import('../pages/commercial/call-for-tenders/details/page'));
 const CommercialEntretiensPage = lazy(() => import('../pages/commercial/entretiens/page'));
 const CommercialContratsPage = lazy(() => import('../pages/commercial/contrats/page'));
+<<<<<<< HEAD
+const CommercialProduitsPage = lazy(() => import('../pages/commercial/produits/page'));
+const CommercialProduitsDetailsPage = lazy(() => import('../pages/commercial/produits/details/page'));
+=======
+>>>>>>> b1ef38051ac497610ab47d12ce0c7f3bac1fa130
 const LeadsPage = lazy(() => import('../pages/leads/page'));
 const PipelinePage = lazy(() => import('../pages/pipeline/page'));
 const ActivitiesPage = lazy(() => import('../pages/activities/page'));
@@ -38,6 +43,10 @@ const InformalMerchantsPage = lazy(() => import('../pages/informal-merchants/pag
 const KomerciaPage = lazy(() => import('../pages/komercia/page'));
 const NotFoundPage = lazy(() => import('../pages/NotFound'));
 const EndCustomersPage = lazy(() => import('../pages/end-customers/page'));
+const EndCustomersProduitsPage = lazy(() => import('../pages/end-customers/produits/page'));
+const EndCustomersCommercialPage = lazy(() => import('../pages/end-customers/commercial/page'));
+const EndCustomersCheckoutPage = lazy(() => import('../pages/end-customers/checkout/page'));
+const EndCustomersOrdersPage = lazy(() => import('../pages/end-customers/orders/page'));
 
 // Loading component
 const LoadingSpinner = () => (
@@ -104,6 +113,41 @@ const routes: RouteObject[] = [
     element: (
       <Suspense fallback={<LoadingSpinner />}>
         <CommercialContratsPage />
+<<<<<<< HEAD
+      </Suspense>
+    )
+  },
+  {
+    path: '/commercial/produits',
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <CommercialProduitsPage />
+      </Suspense>
+    )
+  },
+  {
+    path: '/commercial/produits/details/:id',
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <CommercialProduitsDetailsPage />
+      </Suspense>
+    )
+  },
+  {
+    path: '/commercial/leads',
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <LeadsPage />
+      </Suspense>
+    )
+  },
+  {
+    path: '/commercial/pipeline',
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <PipelinePage />
+=======
+>>>>>>> b1ef38051ac497610ab47d12ce0c7f3bac1fa130
       </Suspense>
     )
   },
@@ -141,14 +185,22 @@ const routes: RouteObject[] = [
   },
   {
     path: '/analytics',
+    element: <AnalyticsPage />,
+  },
+  {
+    path: '/commercial/performance',
+    element: <AnalyticsPage />,
+  },
+  {
+    path: '/commissions',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <AnalyticsPage />
+        <CommissionsPage />
       </Suspense>
     )
   },
   {
-    path: '/commissions',
+    path: '/commercial/commissions',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
         <CommissionsPage />
@@ -165,11 +217,31 @@ const routes: RouteObject[] = [
   },
   {
     path: '/end-customers',
+    element: <EndCustomersPage />,
+  },
+  {
+    path: '/end-customers/produits',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <EndCustomersPage />
+        <EndCustomersProduitsPage />
       </Suspense>
-    )
+    ),
+  },
+  {
+    path: '/end-customers/commercial',
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <EndCustomersCommercialPage />
+      </Suspense>
+    ),
+  },
+  {
+    path: '/end-customers/checkout',
+    element: <EndCustomersCheckoutPage />
+  },
+  {
+    path: '/end-customers/orders',
+    element: <EndCustomersOrdersPage />
   },
   {
     path: '/consultants',

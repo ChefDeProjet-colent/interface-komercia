@@ -40,7 +40,7 @@ interface SidebarProps {
   onSectionChange?: (section: string) => void;
 }
 
-export default function Sidebar({ userRole }: SidebarProps) {
+export function Sidebar({ userRole }: SidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
@@ -48,6 +48,18 @@ export default function Sidebar({ userRole }: SidebarProps) {
   // Menu items pour Commercial
   const commercialMenuItems = [
     { icon: 'ri-dashboard-line', label: 'Tableau de bord', path: '/commercial' },
+<<<<<<< HEAD
+    { icon: 'ri-line-chart-line', label: 'Performance', path: '/commercial/performance' },
+    { icon: 'ri-git-branch-line', label: 'Pipeline', path: '/commercial/pipeline' },
+    { icon: 'ri-user-add-line', label: 'Leads', path: '/leads' },
+    { icon: 'ri-calendar-line', label: 'Activités', path: '/commercial/activities' },
+    { icon: 'ri-shopping-bag-line', label: 'Produits', path: '/commercial/produits' },
+    { icon: 'ri-file-text-line', label: 'Appels d\'offres', path: '/commercial/call-for-tenders' },
+    { icon: 'ri-file-list-line', label: 'Contrats', path: '/commercial/contrats' },
+    { icon: 'ri-group-line', label: 'Entretiens', path: '/commercial/entretiens' },
+    { icon: 'ri-money-dollar-circle-line', label: 'Commissions', path: '/commercial/commissions' },
+    { icon: 'ri-user-line', label: 'Mon profil', path: '/commercial/profile' },
+=======
     { icon: 'ri-user-star-line', label: 'Leads', path: '/leads' },
     { icon: 'ri-flow-chart', label: 'Pipeline', path: '/pipeline' },
     { icon: 'ri-calendar-check-line', label: 'Activités', path: '/activities' },
@@ -57,6 +69,7 @@ export default function Sidebar({ userRole }: SidebarProps) {
     { icon: 'ri-megaphone-line', label: 'Appels d\'offres', path: '/commercial/call-for-tenders' },
     { icon: 'ri-calendar-event-line', label: 'Entretiens', path: '/commercial/entretiens' },
     { icon: 'ri-file-text-line', label: 'Contrats', path: '/commercial/contrats' },
+>>>>>>> b1ef38051ac497610ab47d12ce0c7f3bac1fa130
   ];
 
   const enterpriseNavItems = [
@@ -91,7 +104,12 @@ export default function Sidebar({ userRole }: SidebarProps) {
         { path: '/leads', icon: 'ri-user-star-line', label: 'Leads' },
         { path: '/pipeline', icon: 'ri-flow-chart', label: 'Pipeline' },
         { path: '/activities', icon: 'ri-calendar-check-line', label: 'Activités' },
+<<<<<<< HEAD
+        { path: '/analytics', icon: 'ri-line-chart-line', label: 'Performance' },
+        { path: '/commercial/produits', icon: 'ri-shopping-bag-line', label: 'Produits' },
+=======
         { path: '/analytics', icon: 'ri-line-chart-line', label: 'Analytics' },
+>>>>>>> b1ef38051ac497610ab47d12ce0c7f3bac1fa130
         { path: '/commissions', icon: 'ri-money-euro-circle-line', label: 'Commissions' },
         { path: '/commercial/profile', icon: 'ri-user-line', label: 'Mon Profil' },
         { path: '/commercial/call-for-tenders', icon: 'ri-file-list-3-line', label: 'Appels d\'Offres' },
@@ -106,7 +124,12 @@ export default function Sidebar({ userRole }: SidebarProps) {
       { path: '/leads', icon: 'ri-user-star-line', label: 'Leads' },
       { path: '/pipeline', icon: 'ri-flow-chart', label: 'Pipeline' },
       { path: '/activities', icon: 'ri-calendar-check-line', label: 'Activités' },
+<<<<<<< HEAD
+      { path: '/analytics', icon: 'ri-line-chart-line', label: 'Performance' },
+      { path: '/commercial/produits', icon: 'ri-shopping-bag-line', label: 'Produits' },
+=======
       { path: '/analytics', icon: 'ri-line-chart-line', label: 'Analytics' },
+>>>>>>> b1ef38051ac497610ab47d12ce0c7f3bac1fa130
       { path: '/commissions', icon: 'ri-money-euro-circle-line', label: 'Commissions' },
       { path: '/commercial/profile', icon: 'ri-user-line', label: 'Mon Profil' },
       { path: '/commercial/call-for-tenders', icon: 'ri-file-list-3-line', label: 'Appels d\'Offres' },
@@ -209,3 +232,5 @@ export default function Sidebar({ userRole }: SidebarProps) {
     </>
   );
 }
+
+export default Sidebar;

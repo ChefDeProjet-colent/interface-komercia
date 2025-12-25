@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card } from '../../../components/base/Card';
 import { Button } from '../../../components/base/Button';
@@ -52,6 +51,30 @@ const recentProducts = [
   },
 ];
 
+const promotionalSlides = [
+  {
+    title: "Jusqu'à -40% sur tous nos produits",
+    description: "Profitez de nos offres exceptionnelles sur une sélection de produits premium",
+    cta: "Découvrir les offres",
+    image: "https://readdy.ai/api/search-image?query=modern%20e-commerce%20promotional%20banner%20with%20shopping%20cart%2C%20discount%20tags%2C%20vibrant%20teal%20and%20emerald%20colors%2C%20professional%20product%20display%2C%20clean%20minimalist%20design%2C%20bright%20lighting&width=1200&height=400&seq=promo-1&orientation=landscape",
+    overlay: "bg-gradient-to-r from-teal-600/80 to-emerald-600/80"
+  },
+  {
+    title: "Nouveautés 2025",
+    description: "Découvrez nos derniers produits et services innovants pour booster votre activité",
+    cta: "Voir les nouveautés",
+    image: "https://readdy.ai/api/search-image?query=innovative%20technology%20products%20showcase%2C%20modern%20gadgets%20display%2C%20futuristic%20business%20tools%2C%20teal%20and%20white%20theme%2C%20professional%20photography%2C%20clean%20background&width=1200&height=400&seq=promo-2&orientation=landscape",
+    overlay: "bg-gradient-to-r from-blue-600/80 to-teal-600/80"
+  },
+  {
+    title: "Formations Certifiantes",
+    description: "Développez vos compétences avec nos formations professionnelles reconnues",
+    cta: "Explorer les formations",
+    image: "https://readdy.ai/api/search-image?query=professional%20training%20classroom%2C%20business%20education%2C%20modern%20learning%20environment%2C%20people%20studying%2C%20emerald%20and%20teal%20colors%2C%20bright%20professional%20setting&width=1200&height=400&seq=promo-3&orientation=landscape",
+    overlay: "bg-gradient-to-r from-emerald-600/80 to-teal-600/80"
+  }
+];
+
 const notifications = [
   {
     id: 1,
@@ -83,6 +106,59 @@ const notifications = [
 ];
 
 export const EndCustomerDashboard = ({ onTabChange }: EndCustomerDashboardProps) => {
+  const [currentPromoSlide, setCurrentPromoSlide] = useState(0);
+
+  const nextPromoSlide = () => {
+    setCurrentPromoSlide((prev) => (prev + 1) % promotionalSlides.length);
+  };
+
+  const prevPromoSlide = () => {
+    setCurrentPromoSlide((prev) => (prev - 1 + promotionalSlides.length) % promotionalSlides.length);
+  };
+
+  const experts = [
+    {
+      id: 1,
+      name: 'Sophie Martin',
+      role: 'Expert Commercial',
+      specialization: 'Logiciels & Technologies',
+      rating: 4.9,
+      reviews: 127,
+      image: 'https://readdy.ai/api/search-image?query=professional%20french%20businesswoman%20expert%20consultant%20smiling%20confident%20modern%20office%20background%20professional%20headshot%20portrait%20clean%20simple%20background&width=300&height=300&seq=exp1&orientation=squarish',
+      availability: 'Disponible'
+    },
+    {
+      id: 2,
+      name: 'Thomas Dubois',
+      role: 'Conseiller Commercial',
+      specialization: 'Formations Professionnelles',
+      rating: 4.8,
+      reviews: 98,
+      image: 'https://readdy.ai/api/search-image?query=professional%20french%20businessman%20consultant%20expert%20smiling%20confident%20modern%20office%20background%20professional%20headshot%20portrait%20clean%20simple%20background&width=300&height=300&seq=exp2&orientation=squarish',
+      availability: 'Disponible'
+    },
+    {
+      id: 3,
+      name: 'Marie Lefebvre',
+      role: 'Expert Commercial',
+      specialization: 'Services Financiers',
+      rating: 5.0,
+      reviews: 156,
+      image: 'https://readdy.ai/api/search-image?query=professional%20french%20businesswoman%20financial%20expert%20consultant%20smiling%20confident%20modern%20office%20background%20professional%20headshot%20portrait%20clean%20simple%20background&width=300&height=300&seq=exp3&orientation=squarish',
+      availability: 'Occupé'
+    },
+    {
+      id: 4,
+      name: 'Alexandre Rousseau',
+      role: 'Conseiller Technique',
+      specialization: 'Infrastructure IT',
+      rating: 4.7,
+      reviews: 84,
+      image: 'https://readdy.ai/api/search-image?query=professional%20french%20businessman%20IT%20technical%20expert%20consultant%20smiling%20confident%20modern%20office%20background%20professional%20headshot%20portrait%20clean%20simple%20background&width=300&height=300&seq=exp4&orientation=squarish',
+      availability: 'Disponible'
+    }
+  ];
+
   return (
     <div className="space-y-8">
       {/* Bannière publicitaire en haut */}
@@ -98,326 +174,130 @@ export const EndCustomerDashboard = ({ onTabChange }: EndCustomerDashboardProps)
         </div>
       </div>
 
-      {/* Résumé des activités */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="p-6 bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
-          <div className="flex items-center">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
-              <i className="ri-shopping-bag-line text-white text-xl"></i>
+      {/* Experts Section */}
+      <section id="commerciaux" className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-center mb-12">
+            <div>
+              <h2 className="text-4xl font-bold text-gray-900 mb-2">Nos Experts</h2>
+              <p className="text-gray-600">Des professionnels qualifiés à votre service</p>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-blue-600">Services Actifs</p>
-              <p className="text-2xl font-bold text-blue-900">5</p>
-              <p className="text-xs text-blue-500">+2 ce mois</p>
-            </div>
+            <button 
+              onClick={() => window.REACT_APP_NAVIGATE('/end-customers/commercial')}
+              className="bg-gradient-to-r from-teal-500 to-emerald-500 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg transition-all duration-300 whitespace-nowrap cursor-pointer"
+            >
+              Voir tous les experts
+              <i className="ri-arrow-right-line ml-2"></i>
+            </button>
           </div>
-        </Card>
 
-        <Card className="p-6 bg-gradient-to-br from-green-50 to-green-100 border-green-200">
-          <div className="flex items-center">
-            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center">
-              <i className="ri-time-line text-white text-xl"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-green-600">Essais en Cours</p>
-              <p className="text-2xl font-bold text-green-900">2</p>
-              <p className="text-xs text-green-500">Expire dans 12j</p>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {experts.map((expert) => (
+              <div
+                key={expert.id}
+                className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group"
+              >
+                <div className="relative">
+                  <div className="w-full h-64 overflow-hidden">
+                    <img
+                      src={expert.image}
+                      alt={expert.name}
+                      className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500"
+                    />
+                  </div>
+                  <div className={`absolute top-4 right-4 w-3 h-3 rounded-full ${
+                    expert.availability === 'Disponible' ? 'bg-green-500' : 'bg-orange-500'
+                  } shadow-lg`}></div>
+                </div>
+
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-gray-900 mb-1">{expert.name}</h3>
+                  <p className="text-sm text-gray-600 mb-2">{expert.role}</p>
+                  <p className="text-sm text-teal-600 font-medium mb-3">{expert.specialization}</p>
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="flex items-center">
+                      <i className="ri-star-fill text-yellow-400"></i>
+                      <span className="ml-1 text-sm font-semibold text-gray-900">{expert.rating}</span>
+                    </div>
+                    <span className="text-sm text-gray-500">({expert.reviews} avis)</span>
+                  </div>
+                  <button className="w-full bg-gradient-to-r from-teal-500 to-emerald-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 whitespace-nowrap">
+                    <i className="ri-message-3-line mr-2"></i>
+                    Contacter
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
-        </Card>
+        </div>
+      </section>
 
-        <Card className="p-6 bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
-          <div className="flex items-center">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
-              <i className="ri-team-line text-white text-xl"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-purple-600">Consultations</p>
-              <p className="text-2xl font-bold text-purple-900">8</p>
-              <p className="text-xs text-purple-500">+3 cette semaine</p>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="p-6 bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200">
-          <div className="flex items-center">
-            <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center">
-              <i className="ri-customer-service-line text-white text-xl"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-orange-600">Support Tickets</p>
-              <p className="text-2xl font-bold text-orange-900">1</p>
-              <p className="text-xs text-orange-500">En cours</p>
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Applications/Services récemment consultés */}
-        <div className="lg:col-span-2">
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">
-                Applications/Services Récemment Consultés
-              </h3>
-              <Button variant="outline" size="sm" onClick={() => onTabChange("products")}>
-                Voir tout
-                <i className="ri-arrow-right-line ml-2"></i>
-              </Button>
-            </div>
-            <div className="space-y-4">
-              {recentProducts.map((product) => (
+      {/* Promotional Carousel */}
+      <section className="py-16 bg-gradient-to-br from-teal-50 to-emerald-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+            <div className="relative h-96">
+              {promotionalSlides.map((slide, index) => (
                 <div
-                  key={product.id}
-                  className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
+                  key={index}
+                  className={`absolute inset-0 transition-opacity duration-700 ${
+                    currentPromoSlide === index ? 'opacity-100' : 'opacity-0'
+                  }`}
                 >
                   <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-16 h-16 rounded-lg object-cover"
+                    src={slide.image}
+                    alt={slide.title}
+                    className="w-full h-full object-cover"
                   />
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-1">
-                      <h4 className="font-medium text-gray-900">{product.name}</h4>
-                      {product.badge && (
-                        <Badge variant="secondary" className="text-xs">{product.badge}</Badge>
-                      )}
-                    </div>
-                    <p className="text-sm text-gray-600">{product.description}</p>
-                    <div className="flex items-center space-x-4 mt-2">
-                      <div className="flex items-center space-x-1">
-                        <span className="text-sm font-medium text-blue-600">{product.price}</span>
-                        {product.originalPrice && (
-                          <span className="text-xs text-gray-400 line-through">{product.originalPrice}</span>
-                        )}
-                      </div>
-                      <span
-                        className={`text-xs px-2 py-1 rounded-full ${
-                          product.status === "Consulté"
-                            ? "bg-gray-100 text-gray-700"
-                            : product.status === "Ajouté au panier"
-                            ? "bg-blue-100 text-blue-700"
-                            : "bg-green-100 text-green-700"
-                        }`}
-                      >
-                        {product.status}
-                      </span>
-                      <span className="text-xs text-gray-500">{product.lastViewed}</span>
-                      {product.rating && (
-                        <div className="flex items-center space-x-1">
-                          <span className="text-xs text-yellow-500">★</span>
-                          <span className="text-xs text-gray-600">{product.rating}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <Button size="sm" variant="outline">
-                    Voir détails
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </Card>
-
-          {/* Historique des interactions avec les commerciaux */}
-          <Card className="p-6 mt-6">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">Historique des Interactions avec les Commerciaux</h3>
-              <Button variant="outline" size="sm" onClick={() => onTabChange("history")}>
-                Voir tout
-                <i className="ri-arrow-right-line ml-2"></i>
-              </Button>
-            </div>
-            <div className="space-y-4">
-              {[
-                {
-                  id: 1,
-                  commercial: "Jean Dupont",
-                  type: "Consultation CRM",
-                  date: "15 Jan 2024",
-                  time: "14:30",
-                  status: "Terminé",
-                  duration: "45 min",
-                  rating: 4.9,
-                },
-                {
-                  id: 2,
-                  commercial: "Marie Laurent",
-                  type: "Démonstration Analytics",
-                  date: "12 Jan 2024",
-                  time: "10:00",
-                  status: "Terminé",
-                  duration: "60 min",
-                  rating: 4.8,
-                },
-                {
-                  id: 3,
-                  commercial: "Sophie Dubois",
-                  type: "Formation équipe",
-                  date: "10 Jan 2024",
-                  time: "09:00",
-                  status: "Planifié",
-                  duration: "120 min",
-                  rating: null,
-                },
-              ].map((interaction) => (
-                <div
-                  key={interaction.id}
-                  className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
-                >
-                  <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                      <i className="ri-user-line text-blue-600"></i>
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-gray-900">{interaction.commercial}</h4>
-                      <p className="text-sm text-gray-600">{interaction.type}</p>
-                      <p className="text-xs text-gray-500">
-                        {interaction.date} à {interaction.time} • {interaction.duration}
+                  <div className={`absolute inset-0 ${slide.overlay}`}></div>
+                  <div className="absolute inset-0 flex items-center justify-center text-center px-4">
+                    <div className="max-w-3xl">
+                      <h2 className="text-5xl font-bold text-white mb-6">
+                        {slide.title}
+                      </h2>
+                      <p className="text-xl text-white/90 mb-8">
+                        {slide.description}
                       </p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <span
-                      className={`text-xs px-2 py-1 rounded-full ${
-                        interaction.status === "Terminé"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-blue-100 text-blue-700"
-                      }`}
-                    >
-                      {interaction.status}
-                    </span>
-                    {interaction.rating && (
-                      <div className="flex items-center justify-end space-x-1 mt-1">
-                        <span className="text-xs text-yellow-500">★</span>
-                        <span className="text-xs text-gray-600">{interaction.rating}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
-
-        {/* Sidebar avec notifications et actions rapides */}
-        <div className="space-y-6">
-          {/* Notifications sur les offres ou promotions en cours */}
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Notifications</h3>
-            <div className="space-y-4">
-              {notifications.map((notification) => (
-                <div
-                  key={notification.id}
-                  className={`p-4 rounded-lg border-l-4 ${
-                    notification.type === "warning"
-                      ? "bg-orange-50 border-orange-400"
-                      : notification.type === "success"
-                      ? "bg-green-50 border-green-400"
-                      : "bg-blue-50 border-blue-400"
-                  } ${notification.urgent ? "ring-2 ring-red-200" : ""}`}
-                >
-                  <div className="flex items-start">
-                    <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                        notification.type === "warning"
-                          ? "bg-orange-100"
-                          : notification.type === "success"
-                          ? "bg-green-100"
-                          : "bg-blue-100"
-                      }`}
-                    >
-                      <i
-                        className={`${
-                          notification.type === "warning"
-                            ? "ri-alert-line text-orange-600"
-                            : notification.type === "success"
-                            ? "ri-check-line text-green-600"
-                            : "ri-information-line text-blue-600"
-                        } text-sm`}
-                      ></i>
-                    </div>
-                    <div className="ml-3 flex-1">
-                      <h4 className="text-sm font-medium text-gray-900">{notification.title}</h4>
-                      <p className="text-sm text-gray-600 mt-1">{notification.message}</p>
-                      <div className="flex items-center justify-between mt-2">
-                        <span className="text-xs text-gray-500">{notification.time}</span>
-                        <Button size="sm" variant="outline">
-                          {notification.action}
-                        </Button>
-                      </div>
+                      <button className="bg-white text-teal-600 px-8 py-4 rounded-full font-semibold hover:bg-teal-50 transition-all transform hover:scale-105 shadow-lg whitespace-nowrap">
+                        {slide.cta}
+                      </button>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
-          </Card>
 
-          {/* Accès rapide */}
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Accès Rapide</h3>
-            <div className="space-y-3">
-              <Button 
-                className="w-full justify-start" 
-                variant="outline"
-                onClick={() => onTabChange("commercials")}
-              >
-                <i className="ri-team-line mr-3"></i>
-                Contacter un Commercial
-              </Button>
-              <Button 
-                className="w-full justify-start" 
-                variant="outline"
-                onClick={() => onTabChange("products")}
-              >
-                <i className="ri-shopping-bag-line mr-3"></i>
-                Parcourir le Catalogue
-              </Button>
-              <Button 
-                className="w-full justify-start" 
-                variant="outline"
-                onClick={() => onTabChange("support")}
-              >
-                <i className="ri-customer-service-line mr-3"></i>
-                Ouvrir un Ticket
-              </Button>
-              <Button 
-                className="w-full justify-start" 
-                variant="outline"
-                onClick={() => onTabChange("history")}
-              >
-                <i className="ri-file-text-line mr-3"></i>
-                Mes Factures
-              </Button>
-            </div>
-          </Card>
+            {/* Navigation Arrows */}
+            <button
+              onClick={prevPromoSlide}
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white p-3 rounded-full transition-all z-10 w-12 h-12 flex items-center justify-center"
+            >
+              <i className="ri-arrow-left-s-line text-2xl"></i>
+            </button>
+            <button
+              onClick={nextPromoSlide}
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white p-3 rounded-full transition-all z-10 w-12 h-12 flex items-center justify-center"
+            >
+              <i className="ri-arrow-right-s-line text-2xl"></i>
+            </button>
 
-          {/* Bannière publicitaire sidebar */}
-          <div className="bg-gradient-to-br from-green-500 to-teal-600 rounded-xl p-6 text-white">
-            <div className="text-center">
-              <h4 className="font-bold mb-2">🎯 Services de Conseil Personnalisés</h4>
-              <p className="text-sm text-green-100 mb-4">Bénéficiez de l'expertise de nos consultants</p>
-              <Button variant="outline" size="sm" className="bg-white text-green-600 hover:bg-green-50">
-                Consulter un Expert
-              </Button>
+            {/* Indicators */}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+              {promotionalSlides.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentPromoSlide(index)}
+                  className={`w-3 h-3 rounded-full transition-all ${
+                    currentPromoSlide === index
+                      ? 'bg-white w-8'
+                      : 'bg-white/50 hover:bg-white/75'
+                  }`}
+                />
+              ))}
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Bannière publicitaire en bas */}
-      <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-6 text-white">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-xl font-bold mb-2">💼 Solutions Entreprise Avancées</h3>
-            <p className="text-purple-100">Des solutions sur-mesure pour les PME et grandes entreprises</p>
-          </div>
-          <Button variant="outline" className="bg-white text-purple-600 hover:bg-purple-50">
-            Voir Solutions
-          </Button>
-        </div>
-      </div>
+      </section>
     </div>
   );
 };
