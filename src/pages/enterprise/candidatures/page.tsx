@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CandidatureCommercial } from '../../../types/entreprise';
+import { type CandidatureCommercial } from '../../../types/entreprise';
 
 export default function CandidaturesPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -792,7 +792,7 @@ export default function CandidaturesPage() {
                   setShowEntretienModal(false);
                   setSelectedCandidat(null);
                 }}
-                className="flex-1 bg-gray-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 transition-colors whitespace-nowrap font-medium"
+                className="flex-1 bg-red-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 transition-colors whitespace-nowrap font-medium"
               >
                 Annuler
               </button>

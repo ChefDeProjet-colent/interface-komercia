@@ -145,32 +145,17 @@ const routes: RouteObject[] = [
       </Suspense>
     )
   },
+  // {
+  //   path: '/dashboard',
+  //   element: (
+  //     <Suspense fallback={<LoadingSpinner />}>
+  //       <CommercialPage />
+  //     </Suspense>
+  //   )
+  // },
+ 
   {
-    path: '/dashboard',
-    element: (
-      <Suspense fallback={<LoadingSpinner />}>
-        <CommercialPage />
-      </Suspense>
-    )
-  },
-  {
-    path: '/leads',
-    element: (
-      <Suspense fallback={<LoadingSpinner />}>
-        <LeadsPage />
-      </Suspense>
-    )
-  },
-  {
-    path: '/pipeline',
-    element: (
-      <Suspense fallback={<LoadingSpinner />}>
-        <PipelinePage />
-      </Suspense>
-    )
-  },
-  {
-    path: '/activities',
+    path: '/commercial/activities',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
         <ActivitiesPage />
@@ -178,21 +163,14 @@ const routes: RouteObject[] = [
     )
   },
   {
-    path: '/analytics',
+    path: '/commercial/analytics',
     element: <AnalyticsPage />,
   },
   {
     path: '/commercial/performance',
     element: <AnalyticsPage />,
   },
-  {
-    path: '/commissions',
-    element: (
-      <Suspense fallback={<LoadingSpinner />}>
-        <CommissionsPage />
-      </Suspense>
-    )
-  },
+ 
   {
     path: '/commercial/commissions',
     element: (

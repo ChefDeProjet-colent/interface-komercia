@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import type { Contrat } from '../../../types/contrat';
 
 const ContratsPage = () => {
   const location = useLocation();
